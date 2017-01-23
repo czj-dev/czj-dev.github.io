@@ -4,8 +4,7 @@ title: "Wecome to Just Blog"
 date: 2017-1-23 15:23:24
 author: "chenzhaojun"
 header-img: "img/post-bg-2015.jpg"
-tags:	
-	-生活
+tags: -生活
 ---
 
 > A new start
