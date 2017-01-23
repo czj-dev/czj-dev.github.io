@@ -68,8 +68,7 @@ duoshuo_share: true                     # set to false if you want to use Commen
 
 # Sidebar settings
 sidebar: true                           # whether or not using Sidebar.
-sidebar-about-description: "一个人会喜欢你，甚至爱上你，很大程度上跟你究竟会些什么并没有多大关系，不管你最初因为什么得到对方的注目和欣赏，随着相处的深入，总归是要
-褪去这些外衣的。长的好看也罢，才华横溢也罢，你是不是真正从骨子里有魅力的人，这是决定你最终是否被认可的一个决定性的因素。"
+sidebar-about-description: "你以后会遇到很多机遇，但你的平庸会毁掉它们。当你觉得自己做的还不错的时候，你已经杀死了那个能够让你做的更好的自己"
 sidebar-avatar: /img/user.jpg      # use absolute URL, seeing it's used in both `/` and `/about/`
 
 
