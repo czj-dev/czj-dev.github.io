@@ -1,0 +1,23 @@
+---
+layout: post
+title: "Wecome to Just Blog"
+date: 2017-1-23 15:23:24
+author: "chenzhaojun"
+header-img: "img/post-bg-2015.jpg"
+tags:	
+	-生活
+---
+
+> A new start
+
+
+
+## 前言
+
+年底的几天公司没什么任务，想到[郭神](http://my.csdn.net/sinyu890807)之前发过一篇使用[hexo](https://hexo.io/)+[GithubPages](https://pages.github.com/)搭建博客的文章，就想尝试一下就搭建了一个以next为主题的blog，但是在配置的过程感觉不够精(zhuang)细(bi)，随即又花功夫去找了别的主题,最后看到了[黄玄](https://huangxuan.me/)的博客感觉看的非常舒适，虽然并不是[hexo](https://hexo.io/)而是[jekll](http://jekyll.com.cn/)构建的但也无法阻拦我们了，最后就有了现在博客的样式。在此感谢[黄玄](https://huangxuan.me/)的开源，感兴趣的可以去start一下。
+
+
+
+## 正文
+
+搭建博客的目前除了开阔新视野、尝试一下新东西，也是想要在新的一年有一个新的开始。虽然今年的我依然是个弱鸡，但还是在新年里对自己抱有小小的期待，能够之前努力那么一点点。这个blog就是用来记录自己工作生活的点点滴滴。
