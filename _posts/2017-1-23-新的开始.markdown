@@ -1,13 +1,12 @@
-
 ---
-layout:     post
-title:      "Hello Blog"
-subtitle:   "Wecome to Just Blog"
-date:       2017-1-23 15:23:24
-author:     "chenzhaojun"
-header-img: "img/post-bg-2015.jpg"
+layout: post
+title: "Hello Blog"
+subtitle: "\"Welcome to Just Blog\""
+date:   2017-01-23  16:59:51
+author: "chenzhaojun"
+header-img:  "img/post-bg-2015.jpg"
 tags:
-    - Life
+    - 生活
 ---
 
 > A new start
