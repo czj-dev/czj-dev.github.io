@@ -4,7 +4,7 @@ title: "RxAndroid学习笔记"
 subtitle: "\"新的一天!\""
 date: 2017-01-24  10:42:00
 atuhor:  "chenzhaojun"
-header-img:  "img/reactivex_bg"
+header-img:  "img/reactivex_bg.jpg"
 tags:
     - Android
 ---
