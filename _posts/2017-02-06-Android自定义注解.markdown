@@ -1,0 +1,179 @@
+---
+layout: post
+title: "Android自定义注解"
+subitle: "\"day day up\""
+date: 2017-02-06 16:14:12
+atuhor: "chenzhaojun"
+header-img: "img/home-bg-o.jpg"
+tags:
+    - Android
+---
+
+
+
+[TOC]
+
+## 原注解
+
+原注解的作用就是负责注解其他注解，Java5.0提供了四种meta-annotation,用来提供annotation类型的说明。
+
+**java.lang.annotation**
+
+- @Target
+- @Retention
+- @Document
+- @inhrited
+
+### @Target
+
+作用 :  **用于描述注解的使用范围**
+
+**ElementType**取值 :  
+
+1. **CONSTRUCTOR** :  用于描述构造器
+2. **FIELD** : 用于描述域
+3. **LOCAL_VARIABLE**  :  用于描述局部变量
+4. **METHOD** :  用于描述方法
+5. **PACKAGE** :  用于描述包
+6. **PARAMETER** :  用于描述参数
+7. **TYPE** :  用于描述类、接口（包括注解类型）或enum类型声明
+
+像现在我们声明一个`Name`注解，声明的`Target`范围是`TYPE`，也就是说该注解只能在类、接口以及枚举中声明,当我们在其他场景如方法、变量中声明该注解,IDE就会报错。
+
+```java
+@Target(ElementType.TYPE)
+public @interface Name {
+    String value() default "";
+}
+```
+
+
+
+### @Retention
+
+作用 :  **用于描述注解的生命周期**
+
+表明该注解在程序哪一阶段还保留在代码中,**RetentionPoicy**的取值范围 :  
+
+- **SOURCE** :  在源文件中保留，即生成.class后该注解就已经没有在文件中了。
+- **CLASS** :  在Class文件中保留。
+- **RUNTIME** :  在编译阶段也保留。
+
+我们使用自定义注解时一般使用`RUNTIME`，这样在运行阶段注解处理器就可以通过反射拿到该注解的属性，从而做一些操作。
+
+### @Document
+
+作用 :  **用于给Javadoc工具标记**
+
+`@Documented` 注解表明这个注解应该被 javadoc工具记录. 默认情况下,`javadoc`是不包括注解的. 但如果声明注解时指定了 `@Documented`,则它会被 `javadoc` 之类的工具处理, 所以注解类型信息也会被包括在生成的文档中。
+
+
+
+### @Inherited
+
+作用 :  使用此注解声明出来的自定义注解，在使用此自定义注解时，如果注解在类上面时，子类会自动继承此注解，否则的话，子类不会继承此注解。这里一定要记住，使用Inherited声明出来的注解，只有在类上使用时才会有效，对方法，属性等其他无效。
+
+
+
+## 自定义注解
+
+### 使用规范
+
+- **成员参数** :  自定义注解的成员参数只能使用byte,short,char,int,long,float,double,boolean 八种基本数据类型 和 String,Enum,Class,annotations 等数据类型,以及这一些类型的数组。
+- **访问权限 **:  注解的成员变量只能使用`public`和默认的权限访问符来修饰。
+- **value** :  如果只有一个参数最好是将key的名称设置为`value`,这样我们使用注解时候`Annotation(key=Params)`和`Annotation(Params)`是等价的，而且后者更加的方便简介。
+- **注解元素的默认值** :  注解元素必须有确定的值，要么在定义注解的默认值中指定，要么在使用注解时指定，非基本类型的注解元素的值不可为null。因此, 使用空字符串或0作为默认值是一种常用的做法。这个约束使得处理器很难表现一个元素的存在或缺失的状态，因为每个注解的声明中，所有元素都存在，并且都具有相应的值，为了绕开这个约束，我们只能定义一些特殊的值，例如空字符串或者负数，一次表示某个元素不存在，在定义注解时，这已经成为一个习惯用法。
+
+
+
+### 注解处理类库(AnnotatedElement)
+
+我们定义了注解，并且在给定了属性。肯定要在合适的环境去获取注解的属性来做一些操作。不然就是注释而不是注解了。
+
+java提供了`java.lang.reflect.AnnotatedElement`来帮助我们获取注解的信息，需要注意的是当我们想要读取一个注解时只有设置它的`@Retention`为`RUNTIME`时候我们才可以拿到，因为只有当`Class`被虚拟机装载的时候才其中的`Annotation`才可以被虚拟机拿到，这是阶段已经属于`RUNTIME`。
+
+AnnotatedElement主要的实现类 :  
+
+- **Class：**类定义
+- **Constructor：**构造器定义
+- **Field：**累的成员变量定义
+- **Method：**类的方法定义
+- **Package：**类的包定义
+
+**AnnotatedElement **接口提供了四个方法来访问`Annotation`的信息
+
+1. `<T extends Annotation> T getAnnotation(Class<?> annotationClass) `  :  返回程序元素中存在的、指定类型的注解，如果该注解不存在则返回`null`。
+2. `Annotation getAnnotation()` :  返回程序元素中所有存在的注解。
+3. `boolean is AnnotationPresent(Class<? extends Annotation> annotationClass)` :  判断程序元素中是否包含该注解。
+4. `Annotation[] getDeclaredAnnotations()` :  返回直接存在于此元素上的所有注释。与此接口中的其他方法不同，该方法将忽略继承的注释。（如果没有注释直接存在于此元素上，则返回长度为零的一个数组。）该方法的调用者可以随意修改返回的数组；这不会对其他调用者返回的数组产生任何影响。
+
+### 实践
+
+我们通过一个小`demo`来实现注解的声明和使用。
+
+声明一个注解`@Name` :  
+
+```java
+@Target(ElementType.FIELD)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Name {
+    String value() default "name";
+}
+```
+
+定义一个加载名称的方法 :  
+
+```java
+    public static void loadName(Class<?> classz) {
+      //拿到类中的所有元素
+        Field[] fields = classz.getDeclaredFields();
+        for (Field field : fields) {
+          //判断是否有该注解
+            if (field.isAnnotationPresent(Name.class)) {
+              //获取该注解的属性
+                Name annotation = field.getAnnotation(Name.class);
+                System.err.println(annotation.value());
+            }
+        }
+    }
+```
+
+创建一个Human来测试 :  
+
+```java
+public class Human {
+
+    @Name("小明")
+    String FirstHuman;
+    @Name()
+    String SecondHuman;
+
+    public static void main(String[] args) {
+        Human.loadName(Human.class);
+    }
+
+    public static void loadName(Class<?> classz) {
+        Field[] fields = classz.getDeclaredFields();
+        for (Field field : fields) {
+            if (field.isAnnotationPresent(Name.class)) {
+                Name annotation = field.getAnnotation(Name.class);
+                System.err.println(annotation.value());
+            }
+        }
+    }
+}
+
+```
+
+输出结果 :  
+
+```java
+action
+name
+```
+
+可以看到和预期的一样，第二个元素没有指定vlue输出了default。这里我们就完成了简单的自定义注解，接下来我们来点深入的，使用注解处理器来手动的实现`ButterKnife`。
+
+
+
+## ButterKnife
