@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "策略模式(StrategyPattern)"
-subitle: "Head First学习笔记（一）"
+subtitle: "Head First学习笔记（一）"
 date: 2017-02-04 14:12:11
 atuhor: "chenzhaojun"
 header-img: "img/java.jpg"
