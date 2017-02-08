@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Android自定义注解"
-subitle: "\"day day up\""
+subtitle: "\"day day up\""
 date: 2017-02-06 16:14:12
 atuhor: "chenzhaojun"
 header-img: "img/home-bg-o.jpg"
