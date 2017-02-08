@@ -4,7 +4,7 @@ title: "装饰者模式(Decorator)"
 subtitle: "\"Head First学习笔记（三）\""
 data: 2017-02-08 11:31:10
 author: "chenzhaojun"
-header-img: "java.jpg"
+header-img: "img/java.jpg"
 tags:
     - 基础
 ---

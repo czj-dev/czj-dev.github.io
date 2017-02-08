@@ -4,7 +4,7 @@ title: "观察者模式(Observer)"
 subtitle: "\"Head First学习笔记（二）\""
 data: 2017-02-07 19:42:42
 author: "chenzhaojun"
-header-img: "java.jpg"
+header-img: "img/java.jpg"
 tags:
     - 基础
 ---
