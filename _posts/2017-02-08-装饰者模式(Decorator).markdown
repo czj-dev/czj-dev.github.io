@@ -5,6 +5,7 @@ subtitle: "\"Head First学习笔记（三）\""
 data: 2017-02-08 11:31:10
 author: "chenzhaojun"
 header-img: "img/java.jpg"
+catalog: true
 tags:
     - 基础
 ---
@@ -215,7 +216,7 @@ HouseBlend, Mocha,Soy,Whip: 2.88
 Espresso,Whip, Mocha, Mocha: 1.69
 ```
 
-同样完美的实现了星巴兹的功能，虽然看起里稍微复杂一些，但是当我们可以很轻松组合这些调料，增加和修改也不用促及底层的任何代码。这就是装饰者模式。
+同样完美的实现了星巴兹的功能，虽然看起来比刚才还稍微复杂一些，但是我们可以很轻松组合这些调料，增加和修改也不用促及底层的任何代码，收银员也不会向老板抱怨要炒我们鱿鱼——这就是装饰者模式。
 
 
 
