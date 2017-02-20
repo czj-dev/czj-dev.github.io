@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 工厂模式(factory Pettern)
-subtitle: "\"Head First 学习笔记(三)\""
+subtitle: "\"Head First 学习笔记(四)\""
 data: 2017-02-20 11:31:10
 author: "just"
 header-img: "img/java.jpg"
@@ -167,7 +167,7 @@ public class NYPizzaStore extends PizzaStore {
 }
 ```
 
-机器不是`Pizza`吗？那些不同种类的Pizz哪里的呢，嗯哼你问的很有道理，我正准备讲的(才没忘！)。Pizza可以制作各种披萨，为了方便店家创新我们设计为只要按照规范就可以制作自己的招牌Pizza。
+机器不是`Pizza`吗？那些不同种类的Pizza哪里的呢，嗯哼你问的很有道理，我正准备讲的(才没忘！)。Pizza可以制作各种披萨，为了方便店家创新我们设计为只要按照规范就可以制作自己的招牌Pizza。
 
 以ClamPizza来举例:
 
