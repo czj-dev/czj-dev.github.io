@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "观察者模式(Observer)"
+title: "观察者模式(Observer Pettern)"
 subtitle: "\"Head First学习笔记（二）\""
 data: 2017-02-07 19:42:42
 author: "chenzhaojun"

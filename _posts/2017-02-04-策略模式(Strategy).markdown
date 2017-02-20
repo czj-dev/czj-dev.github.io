@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "策略模式(StrategyPattern)"
+title: "策略模式(Strategy Pettern)"
 subtitle: "Head First学习笔记（一）"
 date: 2017-02-04 14:12:11
 atuhor: "chenzhaojun"
