@@ -1,14 +1,14 @@
 ---
 layout: post
 title: "Data Binding学习笔记"
-subtitle: "Github项目之旅(一)"
+subtitle: "从零开始的Booklet(一)"
 data: 2017-05-19 16:03:00
 author: "just"
-header-img: "img/java.jpg"
+header-img: "img/post-bg-alitrip.jpg"
 catalog: true
 tags:
     - Android
-    
+    - Booklet
 ---
 ## 前言
 
