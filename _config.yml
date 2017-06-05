@@ -50,7 +50,7 @@ kramdown:
 disqus_username: chenXblog
 
 # Netease setttings
-netease_comment: true
+netease_comment: false
 
 # Duoshuo settings
 duoshuo_username: Just
