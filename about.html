@@ -2,7 +2,7 @@
 layout: page
 title: "About"
 description: "Hey, this is Just."
-header-img: "img/about-bg.jpg"
+header-img: "img/post-bg-universe.jpg"
 ---
 
 <!-- Language Selector -->
@@ -29,10 +29,10 @@ header-img: "img/about-bg.jpg"
     var $zh = document.querySelector(".zh");
     var $en = document.querySelector(".en");
     var $select = document.querySelector("select");
-
+    
     // bind hashchange event
     window.addEventListener('hashchange', _render);
-
+    
     // handle render
     function _render(){
         var _hash = window.location.hash;
@@ -49,7 +49,7 @@ header-img: "img/about-bg.jpg"
             $en.style.display = "none";
         }
     }
-
+    
     // handle select change
     function onLanChange(index){
         if(index == 0){
@@ -58,7 +58,7 @@ header-img: "img/about-bg.jpg"
             window.location.hash = "#en"
         }
     }
-
+    
     // init
     _render();
 </script>
@@ -76,7 +76,7 @@ header-img: "img/about-bg.jpg"
     <!-- U can just use this key generated to index comments at page about -->
         data-thread-key="{{site.duoshuo_username}}/about"
     {% endif %}
-
+    
     data-title="{{page.title}}"
     data-url="{{site.url}}/about/"></div>
 </div>
@@ -86,7 +86,7 @@ header-img: "img/about-bg.jpg"
 <script type="text/javascript">
     // dynamic User hacking by Hux
     var _user = '{{site.duoshuo_username}}';
-
+    
     // duoshuo comment query.
     var duoshuoQuery = {short_name: _user };
     (function() {
@@ -117,7 +117,7 @@ header-img: "img/about-bg.jpg"
     var disqus_shortname = "{{site.disqus_username}}";
     var disqus_identifier = "{{site.disqus_username}}/{{page.url}}";
     var disqus_url = "{{site.url}}{{page.url}}";
-
+    
     (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
         dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
