@@ -12,17 +12,17 @@ tags:
 ---
 ## 前言
 
-Data Binding出来很久了，不过MVP都没有大规模被使用，别说写法用法更颠覆性的Datat Binding这样的了。但Data Binding这种MVVM的设计模式在前端的使用已经非常普遍了。所以还是有必要学习和了解。
+Data Binding出来很久了，不过现在连MVP都没有大规模被使用，别说写法用法更颠覆性的Datat Binding这样的了。但Data Binding这种面向MVVM的编程思想前端的使用已经非常普遍了，且确实给开发带来很大的便利。所以还是有必要学习和了解。
 
 ## 什么是Data Binding?
 
-简单的来说Data Binding是Google 在Android上的一种MVVM的实现，那么MVVM又是什么呢？MVVM是`Model-View-ViewModel`的简写，它的由来便是MVP(Model-View-Persenter)模式与WPF结合的应用方式发展演变过来的一种新型架构。而WPF主要带来的特性就是**数据绑定**，这也是Data Binding所实现的功能。
+简单的来说Data Binding是Google 在Android上的一种MVVM的实现。MVVM是`Model-View-ViewModel`的简写，它是MVP(Model-View-Persenter)模式与WPF结合的应用方式发展演变过来的一种新型架构。而WPF主要带来的特性就是**数据绑定**，这也是Data Binding所实现的功能。
 
 ![](http://www.cyxqd.com/wp-content/uploads/2014/10/nmwentill.jpg)
 
-## 数据绑定的具体表现
+## 数据绑定
 
-数据绑定分为**单项绑定**和**双向绑定**;单向绑定就是将视图上的控件的属性绑定到一个对象的某个属性的方法，当对象的属性发生变化时直接影响到控件上；双向绑定的话就是可以互相影响。例如我们将`User`类的`name`属性绑定到`TextView`的`setText`属性上，这样当我们修改name的值时setText值也发生相应的改变，无需我们自己去setText更新属性。Data Binding不仅可以帮我们在Android上实现这一机制，还为此附带了很多便利，减少了很多工具代码的编写。好处如下：
+数据绑定分为**单项绑定**和**双向绑定**;单向绑定就是将视图上的控件的属性绑定到一个对象的某个属性的方法，当对象的属性发生变化时直接影响到控件上；双向绑定的话就是可以互相影响——例如我们将`User`类的`name`属性绑定到`TextView`的`setText`属性上，这样当我们修改name的值时setText值也发生相应的改变，无需我们自己去setText更新属性。Data Binding不仅可以帮我们在Android上实现这一机制，还为此附带了很多便利，减少了很多工具代码的编写。
 
 - **项目更加解耦，各个组件的依赖性进一步降低，增加可复用性**
 
@@ -58,7 +58,7 @@ android{
 </layout>
 ```
 
-这样在编译时，修改后即可搜索到布局生成的对应的*Binding类。生成的规则默认是通过xml的文件名生成，例如`activity_main.xml`就会对应生成为`ActivityMainBinding.java`的文件。当然我们也可以指定自定生成的文件名称，需要在`layout`标签下加入`data`标签即可(生成LoginBinding.java)，除此之外`data`也是我们声明变量的地方，稍后再详细介绍。
+这样在编译时，修改后即可搜索到布局生成的对应的*Binding类。生成的规则默认是通过xml的文件名生成，例如`activity_main.xml`就会对应生成为`ActivityMainBinding.java`的文件。当然我们也可以指定自定生成的文件名称，需要在`layout`标签下加入`data `标签并指定`class`属性即可(生成LoginBinding.java)，除此之外`data`也是我们声明变量的地方，稍后再详细介绍。
 
 ```xml
 <data class="login">
@@ -68,7 +68,7 @@ android{
 
 我们来编写一个简单的登录界面:
 
-先使用`variable`绑定我们所需要的对象。`type`为该对象的地址,`name`则随意命名。这里我们声明了一个实体类`Action`用于绑定数据，`Presenter`则用来绑定一些事件和做逻辑处理。
+先使用`variable`绑定我们所需要的对象。`type`为该对象的地址,`name`则随意命名。这里我们声明了一个`Action`和`Presenter`,`Action`用于绑定数据，`Presenter`则用来绑定一些事件和做逻辑处理。
 
 ```xml
 <layout>   
@@ -86,7 +86,7 @@ android{
   </layout>
 ```
 
-声明好对象后，我们就开始将对象绑定到数据源上。在Data Binding中，我们绑定数据需要使用`@{code}`书写，x向插件声明这是一个表达式。这里我们将`name`属性绑定到`TextView`的`setText`上。
+声明好对象后，我们就开始将对象绑定到数据源上。在Data Binding中，我们绑定数据需要使用`@{code}`书写，向插件声明这是一个表达式。这里我们将`name`属性绑定到`TextView`的`setText`上。
 
 ```xml
 <TextView
@@ -116,44 +116,43 @@ mMainBind.setPersenter(persenter);
 
 运行后就可以发现`TextView`就直接被赋值啦。
 
-![](https://pic4.zhimg.com/3be7ef16dd72fcf4f2afeec12b497f3f_b.jpg)
+
+
+### 绑定的原理
 
 嗯....我们可以先观察一下目前的流程是怎么走下来的；
 
-1. 在`xml`文件中绑定控件，然后插件会根据`layout`生成对应的实体类。
+1. 在`xml`文件中绑定控件，然后插件会根据`layout`生成对应的实体类。通过DataBindingUtli来构建对应的Bind实例，查看DataBindingUtil的代码会发现的工作实现十分简单，将属性和view集合传递给我们的DataBinding:
 
-   - 查看DataBindingUtil的代码会发现的工作实现十分简单，将属性和view集合传递给我们的DataBinding:
+   ```java
+   //查找到布局ViewGruop  
+   public static <T extends ViewDataBinding> T setContentView(Activity activity, int layoutId,
+               DataBindingComponent bindingComponent) {
+           activity.setContentView(layoutId);
+           View decorView = activity.getWindow().getDecorView();
+           ViewGroup contentView = (ViewGroup) decorView.findViewById(android.R.id.content);
+           return bindToAddedViews(bindingComponent, contentView, 0, layoutId);
+   //遍历所有的View然后调用ViewDataBinding.Bind方法将数据传给我们的实体类`ActivityMainDataBinding`    
+   private static <T extends ViewDataBinding> T bindToAddedViews(DataBindingComponent 			component, ViewGroup parent, int startChildren, int layoutId) {
+       final int endChildren = parent.getChildCount();
+       final int childrenAdded = endChildren - startChildren;
+       if (childrenAdded == 1) {
+           final View childView = parent.getChildAt(endChildren - 1);
+           return bind(component, childView, layoutId);
+       } else {
+           final View[] children = new View[childrenAdded];
+           for (int i = 0; i < childrenAdded; i++) {
+               children[i] = parent.getChildAt(i + startChildren);
+           }
+           return bind(component, children, layoutId);
+       }
+   }
+   ```
 
-     ```java
-     //查找到布局ViewGruop  
-     public static <T extends ViewDataBinding> T setContentView(Activity activity, int layoutId,
-                 DataBindingComponent bindingComponent) {
-             activity.setContentView(layoutId);
-             View decorView = activity.getWindow().getDecorView();
-             ViewGroup contentView = (ViewGroup) decorView.findViewById(android.R.id.content);
-             return bindToAddedViews(bindingComponent, contentView, 0, layoutId);
-     //遍历所有的View然后调用ViewDataBinding.Bind方法将数据传给我们的实体类`ActivityMainDataBinding`    
-     private static <T extends ViewDataBinding> T bindToAddedViews(DataBindingComponent 			component, ViewGroup parent, int startChildren, int layoutId) {
-         final int endChildren = parent.getChildCount();
-         final int childrenAdded = endChildren - startChildren;
-         if (childrenAdded == 1) {
-             final View childView = parent.getChildAt(endChildren - 1);
-             return bind(component, childView, layoutId);
-         } else {
-             final View[] children = new View[childrenAdded];
-             for (int i = 0; i < childrenAdded; i++) {
-                 children[i] = parent.getChildAt(i + startChildren);
-             }
-             return bind(component, children, layoutId);
-         }
-     }
-     ```
+   ​
 
-     ​
+2. 通过Bind实例绑定数据源，关联控件发生改变。那么数据绑定与刷新又是如何发生的呢？在源码中我们可以发现最终应该是调用了`ActivityMainBinding`的`executeBindings()`方法来执行控件刷新的，源码并不复杂。
 
-2. 在`Activity`中通过创建ViewDataBinding实体类，绑定数据源关联控件发生改变。
-
-   - 那么数据绑定与刷新又是如何发生的呢？在源码中我们可以发现最终应该是调用了`ActivityMainBinding`的`executeBindings()`方法来执行控件刷新的，源码并不复杂。
 
 ```java
  protected void executeBindings() {
@@ -178,7 +177,7 @@ mMainBind.setPersenter(persenter);
  }
 ```
 
-可以见看出代码十分的简洁，主要实现都在适配器中进行，这样可以保证情况再复杂代码的可阅读性和适配性也不会层级递增。`TextViewBindingAdapter.setText`方法也就是让`mboundView2`调用`setText`方法显示`actionName`的值，至于Adapter的整体的具体实现等到自定义Adapter时候我们再解析。
+可以见看出代码十分的简洁，功能实现都在适配器中进行，这样可以保证情况再复杂代码的可阅读性和适配性也不会层级递增。`TextViewBindingAdapter.setText`方法也就是让`mboundView2`调用`setText`方法显示`actionName`的值，至于Adapter的整体的具体实现等到自定义Adapter时候我们再解析。
 
 ```java
   @BindingAdapter("android:text")
@@ -190,6 +189,10 @@ mMainBind.setPersenter(persenter);
         view.setText(text);
     }
 ```
+
+
+
+### 真正的单向绑定
 
 如果你也在写Example就会发现一个问题，当`Action`绑定后，后续`Action`的改变并不会让UI更新即Observable(观察者模式)并没有实现。这显然不是我们想要达到的目的。
 
@@ -232,11 +235,9 @@ public class Action {
 }
 ```
 
-这样的话，当我们运行时候控件和数据的联系就一直建立起来了，更新`name`的同事TextView的`text`也会同时发生变化:
+这样的话，当我们运行时候控件和数据的联系就建立起来了，更新`name`的同时TextView的`text`也会同时发生变化。
 
-
-
-数据源一定要写个实体类吗，那么不是成吨的bean ? 我们可以通过ObservableArrayMap和ObservableArrayList来创建观察者和需要观察的数据。
+数据源一定要写个实体类吗，那么不是需要成吨的bean ? 我们可以通过ObservableArrayMap和ObservableArrayList来创建观察者和需要观察的数据。
 
 ```java
 ObservableArrayMap<String,Object> action = new ObseravbleArryMap<>();
@@ -263,5 +264,80 @@ list.add("second")
           android:text="@{user[1]"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"/>
+```
+
+### 事件绑定
+
+我们除了可以绑定View各种属性外，我们也可以在xml中直接绑定事件，而不用通过View转发。
+
+我们在Presenter中创建一个监听文本的方法，然后在xml中设置`onTextChanged`属性，方法名必须和对应的listener对应.
+
+```xml
+<EditText
+  android:layout_width="wrap_content"
+  android:layout_height="wrap_content"
+  android:onTextChanged="@{presenter::onTextChanged}"
+  />
+   
+```
+
+将Presenter绑定在Activity上后，就可以接受到EditText的改变了
+
+```java
+public class Presenter{
+  public void onTextChanged(charSequence s,in start ,int before,int count){
+    mView.show(s.toString())
+  }
+}
+```
+
+
+
+### 表达式
+
+在xml中的dataBinding表达式支持Java中的大部分语法，具体如下：
+
+-   算数 +-*/%
+-   字符串合并 +
+-   逻辑运算 &&||
+-   二元&|^
+-   一元+-!~
+-   位移>> >>> >>
+-   比较 == > <> = <=
+-   instanceof操作符
+-   Grouping（）
+-   文字
+-   Cast 类型转换
+-   方法调用
+-   属性访问
+-   数组访问
+-   三目运算符？：
+
+尚不支持`super`、`this`、`new`、以及显示的泛型调用。
+
+除此java的这些语法支持外还有一些特殊的支持。
+
+-   空合并运算符——使用`??`来连接两个式子，如果左边的式子为空就取右边的。
+
+    ```xml
+    android:text="@{user.name??user.realName}"
+    ```
+
+-   直接访问资源文件——可以通过`@resource/name的形式访问资源文件来直接使用
+
+    ```xml
+    android:text="@{@String/name(name)}"
+
+    <string name="name">我的名字是%s</string>
+    ```
+
+
+
+### include
+
+在使用include布局时候需要将该布局使用的数据通过`bind:xxx=@{}`传递进去，并在布局中进行二次绑定。
+
+```xml
+<include layout="@layout/empty" bind:info="@{info}"/>
 ```
 
