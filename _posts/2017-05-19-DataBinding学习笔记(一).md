@@ -12,11 +12,11 @@ tags:
 ---
 ## 前言
 
-Data Binding出来很久了，不过现在连MVP都没有大规模被使用，别说写法用法更颠覆性的Datat Binding这样的了。但Data Binding这种面向MVVM的编程思想前端的使用已经非常普遍了，且确实给开发带来很大的便利。所以还是有必要学习和了解。
+DataBinding 出来很久了，不过现在连 MVP 都没有大规模被使用，别说写法用法更颠覆性的 DatatBinding 这样的了。但 DataBinding 这种面向 MVVM 的编程思想前端的使用已经非常普遍了，且确实给开发带来很大的便利。所以还是有必要学习和了解。
 
-## 什么是Data Binding?
+## 什么是DataBinding?
 
-简单的来说Data Binding是Google 在Android上的一种MVVM的实现。MVVM是`Model-View-ViewModel`的简写，它是MVP(Model-View-Persenter)模式与WPF结合的应用方式发展演变过来的一种新型架构。而WPF主要带来的特性就是**数据绑定**，这也是Data Binding所实现的功能。
+简单的来说 DataBinding 是 Google 在 Android 上的一种MVVM的实现。MVVM是`Model-View-ViewModel`的简写，它是 MVP(Model-View-Persenter) 模式与 WPF结合的应用方式发展演变过来的一种新型架构。而WPF主要带来的特性就是**数据绑定**，这也是Data Binding所实现的功能。
 
 ![](http://www.cyxqd.com/wp-content/uploads/2014/10/nmwentill.jpg)
 
@@ -297,13 +297,13 @@ public class Presenter{
 
 在xml中的dataBinding表达式支持Java中的大部分语法，具体如下：
 
--   算数 +-*/%
--   字符串合并 +
--   逻辑运算 &&||
--   二元&|^
--   一元+-!~
--   位移>> >>> >>
--   比较 == > <> = <=
+-   算数 `+-*/%`
+-   字符串合并` +`
+-   逻辑运算 `&&||`
+-   二元`&|^`
+-   一元`+-!~`
+-   位移`>> >>> >>`
+-   比较` == > <> = <=`
 -   instanceof操作符
 -   Grouping（）
 -   文字
@@ -311,9 +311,23 @@ public class Presenter{
 -   方法调用
 -   属性访问
 -   数组访问
--   三目运算符？：
+-   三目运算符`？：`
 
 尚不支持`super`、`this`、`new`、以及显示的泛型调用。
+
+同时由于在表达式在字符串中声明的，一些特殊字符的转义也是不可避免的。
+
+|  结果  |   转义字符    |
+| :--: | :-------: |
+|  空格  | `&nbsp;`  |
+|  <   |   `&t;`   |
+|  >   |  `&gt;`   |
+|  &   |  `&amp;`  |
+|  "   | `&quot;`  |
+|  `   | `&apos;`  |
+|  x   | `&divide` |
+
+
 
 除此java的这些语法支持外还有一些特殊的支持。
 
@@ -323,7 +337,7 @@ public class Presenter{
     android:text="@{user.name??user.realName}"
     ```
 
--   直接访问资源文件——可以通过`@resource/name的形式访问资源文件来直接使用
+- 直接访问资源文件——可以通过`@resource/name的形式访问资源文件来直接使用
 
     ```xml
     android:text="@{@String/name(name)}"
