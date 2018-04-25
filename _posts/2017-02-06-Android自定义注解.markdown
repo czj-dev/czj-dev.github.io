@@ -86,7 +86,7 @@ public @interface Name {
 
 
 
-### 注解处理类库(AnnotatedElement)
+### 注解处理类库(运行时注解)
 
 我们定义了注解，并且在给定了属性。肯定要在合适的环境去获取注解的属性来做一些操作。不然就是注释而不是注解了。
 
@@ -172,8 +172,263 @@ action
 name
 ```
 
-可以看到和预期的一样，第二个元素没有指定vlue输出了default。这里我们就完成了简单的自定义注解，接下来我们来点深入的，使用注解处理器来手动的实现`ButterKnife`。
+可以看到和预期的一样，第二个元素没有指定vlue输出了default。这里我们就完成了简单的自定义注解。
 
+## 编译时注解
 
+自定义注解很常用的一个方式就是通过编译时注解来生产一些工具代码，提升开发效率。有很多第三方框架都使用了编译时注解，例如：
 
-## ButterKnife
+- butterknife 自动生成View初始化和事件绑定的代码
+- EventBus3.0+ 方便实现通讯，通过注解自动把需要通讯的方法标识配置和注册
+- fragmenttargs 通过注解轻松的配置 Fragment
+
+除了第三方库之外，我们也可以自己通过编译时注解来帮助我们完成一些日常重复编码的工作。
+
+我们通过实现一个简单版本的 ButterKinfe 来学习和了解编译时注解。
+
+###定义自定义注解
+
+创建一个 java-library 来放置我们定义的自定义注解
+
+创建一个注解类 BindView ,声明它的生命周期：
+
+```java
+@Target(ElementType.FIELD) //修饰成员变量
+@Retention(RetentionPolicy.CLASS) //在编译时保留
+public @interface BindView {
+    @IdRes int value(); //通过annotation 库的 @IdRes 限定Value只能为资源ID
+}
+
+```
+
+这样一个自定义注解就完成了
+
+###处理注解
+
+####注解处理器环境搭建
+
+创建一个 java-library 来放置注解处理器。
+
+编译时注解需要用到注解处理器`processer`，使用它我们需要依赖`auto-service`这个类库
+
+```groovy
+api 'com.google.auto.service:auto-service:1.0-rc4'
+```
+
+其次我们需要通过注解处理生成中间类，来完成将 View 和成员变量绑定的操作。我们通过 `javapoet`这个库来方便完成，当然也可以通过手写代码的方式来完成。
+
+```groovy
+api 'com.squareup:javapoet:1.10.0'
+```
+
+创建一个类继承`AbstractProcessor`类并通过`@AutoService`声明实现的接口,之后我们需要实现具体的`process`方法，这里也是我们处理注解的核心部分，需要的注意的是这个方法可能会被多次调用，需要做好去重的准备。
+
+```java
+@AutoService(Processor.class)
+public class ViewAnnotationProcessor extends AbstractProcessor {
+       @Override
+    public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnvironment) {
+        
+    }
+}
+```
+
+在处理注解前还有一些小工作要做，我们需要配置声明这个注解处理器的所需要处理的注解和支持的源码版本。有两种方式实现：
+
+- 注解，可以通过注解`SupportAnnotationTypes`配置我们需要处理的注解，`SupportSourceVersion ` 配置需要处理的 Java 源版本：
+
+  ```java
+  @AutoService(Processor.class)
+  @SupportAnnotationTypes({"com.example.annotation_compiler.BindView"})
+  @SupportSourceVersion(SourceVersion.RELEASE_7)
+  public class ViewAnnotationProcessor extends AbstractProcessor {
+      ...
+  }
+  ```
+
+- 重写 `getSupportedAnnotationTypes()`和`getSupportedSourceVersion方法`：
+
+  ```java
+      @Override
+      public Set<String> getSupportedAnnotationTypes() {
+          /*
+            tips: getCanonicalName 和 Name 、SimpleName 的区别
+            SimpleName 只会返回该类的简称
+            getName和getCanonicalName在大多情况下没有区别 它们都都返回 Class 的全类名，
+            但在内部类和数组的时候 返回的 Name 形式则不同。
+           */
+          Set<String> set = new HashSet<>(1);
+          set.add(BindView.class.getCanonicalName());
+          return set;
+      }
+
+      @Override
+      public SourceVersion getSupportedSourceVersion() {
+          return SourceVersion.latestSupported();
+      }
+  ```
+
+最后我们重写 `init`  方法，它会在注解处理器被初始化的时候调用，它的参数 ProcessingEnvironment 提供了一系列的帮助类来帮助我们处理注解
+
+```java
+ /**
+     * 初始化注解类方法
+     *
+     * @param processingEnvironment environment 提供了一系列帮助类
+     *                              Filer 文件相关的辅助类
+     *                              Elements 元素相关的辅助类
+     *                              Message 日志相关的辅助类
+     */
+    @Override
+    public synchronized void init(ProcessingEnvironment processingEnvironment) {
+        super.init(processingEnvironment);
+        mFileUtils = processingEnvironment.getFiler();
+        mElementUtils = processingEnvironment.getElementUtils();
+        mMessager = processingEnvironment.getMessager();
+    }
+```
+
+####处理注解
+
+到此，我们的环境就搭建完成了。开始正式的处理注解，`prosser`方法大致分为两步骤：
+
+1. 收集信息，通过 element 获得我们注解的 value、class、variable 等信息存储起来
+2. 收集信息完毕后就可以开始我们的工作，这里我们就开始生成中间类。
+
+##### 收集信息
+
+这里先说明一下 Elment 。注解取得的元素都以 Element 等待处理，它的具体类型与我们通过@Targe 来标记的具有一定的联系，它有以下几个子类：
+
+- VariableElement 表示一个局部变量、枚举、方法或构造函数、
+- ExecutableElement 表示某个类或接口的方法、构造方法和注释类型元素
+- TypeElement 表示一个类或者接口
+- PackageElement 表示一个包元素
+
+可以通过 ElementKind.XXX 来判断元素的具体类型。
+
+通过一个 map 来存放收集到的信息，ProxyInfo 为存放信息的集合和处理 elment 的地方，稍后再讲解。
+
+```java
+private Map<String, ProxyInfo> mProxyMap = new HashMap<>();
+ public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnvironment) {
+        mProxyMap.clear();
+        //拿到注解的元素
+        Set<? extends Element> elements = roundEnvironment.getElementsAnnotatedWith(BindView.class);
+
+        for (Element element : elements) {
+            if (!checkAnnotationUseValid(element, BindView.class)) {
+                return false;
+            }
+            //代表被注解的元素成员变量
+            VariableElement variableElement = (VariableElement) element;
+            //代表被注解的元素所在的class
+            TypeElement typeElement = (TypeElement) variableElement.getEnclosingElement();
+            //拿到class的完整路径
+            String qualifiedName = typeElement.getQualifiedName().toString();
+            //装载信息
+            ProxyInfo info = mProxyMap.get(qualifiedName);
+            if (info == null) {
+                info = new ProxyInfo(mElementUtils, typeElement);
+                mProxyMap.put(qualifiedName, info);
+            }
+            int id = variableElement.getAnnotation(BindView.class).value();
+            info.injectVariables.put(id, variableElement);
+        }
+        ...
+        return true;
+    }
+```
+
+通过`getElementsAnnotatedWith`方法拿到注解的元素合集，然后循环遍历通过 element 获得相关的信息装载 ProxyInfo 。
+
+##### 生成代理类
+
+```java
+
+    private void writeToFile() {
+        for (String className : mProxyMap.keySet()) {
+            ProxyInfo proxyInfo = mProxyMap.get(className);
+            //生成成员变量的复制语句 view=findViewById(id)
+            MethodSpec.Builder elementStatement = proxyInfo.markElementStatement();
+            //构建 class
+            TypeSpec typeSpec = TypeSpec.classBuilder(proxyInfo.typeElement.getSimpleName() + "_ViewBinding")
+                    .addModifiers(Modifier.PUBLIC)
+                    .addMethod(elementStatement.build())
+                    .build();
+            //将 class 文件放置在目标class同一个包下，解决访问性的问题
+            String packageFullName = mElementUtils.getPackageOf(proxyInfo.typeElement).getQualifiedName().toString();
+            JavaFile javaFile = JavaFile.builder(packageFullName, typeSpec).build();
+            try {
+                javaFile.writeTo(mFileUtils);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+```
+
+这里我们主要通过 遍历所有的元素集来生成代理类。
+
+通过`proxyInfo.markElementStatement()` 方法来生成具体的赋值语句然后打包成一个方法。
+
+通过 `javapoet` 声明一个代理类，将方法放置在类中。
+
+最后通过将代理类生成在和目标文件同一个包下，到这里就完成了所有的操作。
+
+`markElementStatement()`的具体实现：
+
+```java
+public MethodSpec.Builder markElementStatement() {
+        ParameterSpec.Builder paramsBuilder = ParameterSpec.builder(TypeName.get(typeElement.asType()), "target");
+        MethodSpec.Builder methodBuilder = MethodSpec.constructorBuilder()
+                .addModifiers(Modifier.PUBLIC)
+                .addParameter(paramsBuilder.build());
+        for (Integer id : injectVariables.keySet()) {
+            VariableElement variableElement = injectVariables.get(id);
+            //变量名称
+            String variableName = variableElement.getSimpleName().toString();
+            //变量的完整名称
+            String canonicalName = variableElement.asType().toString();
+            //在构造方法中添加赋值语句
+            methodBuilder.addStatement("target.$L=($L) activity.findViewById($L)", variableName, canonicalName, id);
+        }
+        return methodBuilder;
+    }
+```
+
+####Api编写
+
+注解处理完后，我们就需要 api 来调用这个代理类，将 View 通过代理类赋值。就像 `ButterKinfe.bind(target)`这样。
+
+同样我们再声明一个 Android-module 来声明编写 api。api  的实现很简单，我们通过反射调用生成的代理类，将 Activity 当做参数传递进去即可。当然如果要实际应用肯定需要要考虑更多，例如缓存之类的，这里就只是简单的使用一下。
+
+```Java
+public class InjectHelper {
+
+    public static void inject(Activity target) {
+        String classFullName = target.getClass().getName() + "_ViewBinding";
+        try {
+            Class proxy = Class.forName(classFullName);
+            Constructor constructor = proxy.getConstructor(target.getClass());
+            constructor.newInstance(target);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}			
+```
+
+最后我们的 demo 依赖这三个库，通过使用@BindView 注解然后 biuld app.就可以在 build/gennerated/source/apt/debug/com.xxx/ 目录下看到我们生成的代理类了。
+
+```java
+public class MainActivity_ViewBinding {
+  public MainActivity_ViewBinding(MainActivity activity) {
+    activity.textView=(android.widget.TextView) activity.findViewById(2131165309);
+  }
+}
+```
+
+##总结
+
+通过这篇文章，整理的自定义注解和编译时注解框架所需要的常用知识点，它们都有广泛的应用场景，这里只是介绍最简单明了的，主要是为了了解基于编译时注解框架的原理和实现方式。如果有机会，自己根据场景设计使用编译时注解框架是最好不过的了。
