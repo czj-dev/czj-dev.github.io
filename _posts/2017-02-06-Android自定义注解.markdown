@@ -168,7 +168,7 @@ public class Human {
 输出结果 :  
 
 ```java
-action
+小明
 name
 ```
 
@@ -288,14 +288,14 @@ public class ViewAnnotationProcessor extends AbstractProcessor {
     }
 ```
 
-####处理注解
+#### 处理注解
 
 到此，我们的环境就搭建完成了。开始正式的处理注解，`prosser`方法大致分为两步骤：
 
 1. 收集信息，通过 element 获得我们注解的 value、class、variable 等信息存储起来
 2. 收集信息完毕后就可以开始我们的工作，这里我们就开始生成中间类。
 
-##### 收集信息
+#### 收集信息
 
 这里先说明一下 Elment 。注解取得的元素都以 Element 等待处理，它的具体类型与我们通过@Targe 来标记的具有一定的联系，它有以下几个子类：
 
@@ -341,7 +341,7 @@ private Map<String, ProxyInfo> mProxyMap = new HashMap<>();
 
 通过`getElementsAnnotatedWith`方法拿到注解的元素合集，然后循环遍历通过 element 获得相关的信息装载 ProxyInfo 。
 
-##### 生成代理类
+#### 生成代理类
 
 ```java
 
@@ -397,7 +397,7 @@ public MethodSpec.Builder markElementStatement() {
     }
 ```
 
-####Api编写
+#### Api编写
 
 注解处理完后，我们就需要 api 来调用这个代理类，将 View 通过代理类赋值。就像 `ButterKinfe.bind(target)`这样。
 
@@ -429,6 +429,6 @@ public class MainActivity_ViewBinding {
 }
 ```
 
-##总结
+## 总结
 
 通过这篇文章，整理的自定义注解和编译时注解框架所需要的常用知识点，它们都有广泛的应用场景，这里只是介绍最简单明了的，主要是为了了解基于编译时注解框架的原理和实现方式。如果有机会，自己根据场景设计使用编译时注解框架是最好不过的了。
