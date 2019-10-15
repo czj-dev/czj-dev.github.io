@@ -27,7 +27,7 @@ Retrofit、OkHttp、Okio 三者本身都是非常优秀的开源框架，它们�
 
 
 
-Retrofit 通过很多精妙的设计，方便开发者在编写网络请求时候方便快捷，将网络请求和响应包装的易使用易扩展，OkHttp 则是网络具体实现的核心，它负责网络的具体请求，连接池复用、网络拦截， Http1、http2 的兼容等，Okio 则处理所有的 IO 问题，磁盘缓存、网络 IO 等都可以看到它的身影，下面我们就来逐个介绍它们。
+Retrofit 通过很多精妙的设计，让开发者在编写网络请求时候方便快捷的操作网络的请求和响应，OkHttp 则是网络具体实现的核心，它负责网络的具体请求，连接池复用、网络拦截， Http1、http2 的兼容等，Okio 则处理所有的 IO 问题，磁盘缓存、网络 IO 等都可以看到它的身影，下面我们就来逐个介绍它们。
 
 
 
@@ -39,7 +39,7 @@ Retrofit 通过很多精妙的设计，方便开发者在编写网络请求时�
 
 ![create](https://s2.ax1x.com/2019/10/12/uOovh4.md.png)
 
-在解析入口之前，我们先回顾一下我们是如何使用 Retrofit 的，通常我们会先申请一个 ServiceInterface 
+在解析入口之前，我们先回顾一下我们是如何使用 Retrofit 的，通常我们会先声明一个 ServiceInterface 
 
 ![AccountApiService](https://s2.ax1x.com/2019/10/12/uO7DsI.png)
 
@@ -134,19 +134,15 @@ String run(String url) throws IOException {
 
 `newCall` 创建了 `RealCall`， 由`RealCall` 来负责实际的网络请求，它实现了 `Call` 的相关接口 `execute` 与 `enqueue` 来处理同步和异步请求。
 
-我们分别来看看两个请求的具体实现 :
-
-**execute()**
+我们先从同步请求的具体实现来看看 :
 
 ![execute()](https://s2.ax1x.com/2019/10/15/K9yJte.md.png)
 
-`execute()` 中先把当前的 `RealCall` 添加到了调度器 `Dispatcher` 中，等待结束 `Finally` 后再释放出来。具体的我们之后再单独讲解。其后就直接通过开始了获取了 `Resposne`。
-
-我们发现 `execute ()`用寥寥几行的代码就完成了网络请求拿到了 `Response` 很显然这里并不是真正处理的网络请求的地方，要解决心中的疑惑还是继续往下看`getResponseWithInterceptorChain()` 里究竟实现了什么
+`execute()` 中先把当前的 `RealCall` 添加到了调度器 `Dispatcher` 中，等待结束 `Finally` 后再被调度器移出。**Dispatcher** 的具体实现的我们之后再单独讲解。从图中我们发现 `execute ()`用寥寥几行的代码就拿到了网络请求的响应 `Response` 。很显然这里并不是真正处理的网络请求的地方，要解决心中的疑惑还是继续往下看`getResponseWithInterceptorChain()` 里究竟实现了什么
 
  ![getResponseWithInterceptorChain()](https://s2.ax1x.com/2019/10/14/KSKuxx.md.png)
 
-当方法最后构建的 `RealInterceptorChain` 调用 `proceed` 开始进行网络请求时候，它会逐层的触发拦截器，激活它们的 `intercept` 方法，将整个网络请求包装调用起来。
+`getResponseWithInterceptorChain` 显示添加了需要拦截器 `Interceptor` 然后在方法的最后构建了一个 `RealInterceptorChain` 调用 `proceed` 开始进行网络请求，它会逐层的触发拦截器，激活它们的 `intercept` 方法，将整个网络请求包装调用起来。
 
 #### Interceptor
 
@@ -154,47 +150,58 @@ String run(String url) throws IOException {
 
 从 `getResopnseWithInterceptorChain` 函数我们可以看到，`Interceptor.Chain` 的分部依次是：
 
-- 在 OkHttpClient 中配置的 `Interceptor`
-- 负责失败重试以及重定向的 `RetryAndFollowUpInterceptor`
-- 负责把用户的构造请求转换为发送到服务器的请求、把服务器的请求返回的响应转换为用户友好的响应 `BridgeInterceptor`
-- 负责读取缓存直接返回、更新缓存的 `CacheInterceptor`
-- 负责创建分配 HTTP 连接的 `ConnectInterceptor`
-- 配置 OkHttpClient 时设置的 `NetworkInterceptor`
-- 负责向服务器发送请求数据、从服务器读取响应数据的 `CallServerInterceptor`
+1. 在 OkHttpClient 中配置的 `Interceptor`
 
-它们的显示层级也对应了当一个 HTTP 请求发生的时候它们的调用顺序
+2. 负责失败重试以及重定向的 `RetryAndFollowUpInterceptor`
 
-责任链模式在 `Interceptor` 中得到了很好的实践
+3. 负责把用户的构造请求转换为发送到服务器的请求、把服务器的请求返回的响应转换为用户友好的响应 `BridgeInterceptor`
 
-> 在责任链模式里，很多对象由每一个对象对其下家的引用而连接起来形成一条链。请求在这个链上传递，直到链上的某一个对象决定处理此请求。发出这个请求的客户端并不知道链上的哪一个对象最终处理这个请求，这使得系统可以在不影响客户端的情况下动态地重新组织和分配责任。
+4. 负责读取缓存直接返回、更新缓存的 `CacheInterceptor`
+
+5. 负责创建分配 HTTP 连接的 `ConnectInterceptor`
+
+6. 配置 OkHttpClient 时设置的 `NetworkInterceptor`
+
+7. 负责向服务器发送请求数据、从服务器读取响应数据的 `CallServerInterceptor`
+
+它们的显示层级也对应了当一个 HTTP 请求发生的时候它们的调用顺序，我们逐个的去了解它们具体的工作职责与原理。
+
+
 
 ##### **RetryAndFollowUpInterceptor**
 
-RetryAndFolllowUpInterceptor 主要职责是如它的名字一样，将网络重试或者转发。具体情况就是遇到如 服务器返回 HTTP状态码  300、301、302 之类的自动重定向，遇到 401（需要认证） 调用 client.authenticator() (如果开发者有实现的话) 自动去认证，除此之外还有代理认证等等，因为逻辑代码较多就不贴出来了，感兴趣的可以自己去看看源码实现
+RetryAndFolllowUpInterceptor 主要职责是如它的名字一样，将网络重试或者转发。具体情况就是遇到如服务器返回 HTTP状态码  300、301、302 之类的自动重定向，遇到 401（需要认证） 调用 client.authenticator() (如果开发者有实现的话) 自动去认证，除此之外还有代理认证等等，因为逻辑代码较多就不贴出来了，感兴趣的可以自己去看看源码实现
 
 ##### **BridgeInterceptor**
 
-BridgeInterceptor 具体主要是处理请求和响应中的 header 部分，如果数据有压缩步骤，那么它还负责将数据解压缩完成，涉及 `Content-Type`、`Content-Length`、`Transfer-Encoding` 等`header` 的处理
+BridgeInterceptor 具体主要是处理请求和响应中的 header 部分，如果数据有压缩步骤，例如 `gzip` 等处理，那么它还负责将数据解压缩完成，涉及 `Content-Type`、`Content-Length`、`Transfer-Encoding` 等`header` 的处理
 
 ##### **CacheInterceptor**
 
-CacheInterceptor 会将符合要求的 `request`和与之对应的 `Response` 缓存起来，如果下次 `request` 没有超过缓存实效，这一步会直接返回 `Response` ，如果没有找到对应的 `response` 则会先向下获取网络响应然后尝试缓存。值得一提的是 CacheInterceptor 的缓存机制是非常严格的，必须符合 Http 对缓存制定的标准且是 GET 请求，如果业务上有别的需求建议自己仿造设计一个缓存拦截器。
+CacheInterceptor 会将符合要求的 `request`和与之对应的 `Response` 缓存起来，如果下次 `request` 没有超过缓存时效，这一步会拦截器会直接返回 `Response`，不会再触发之后的拦截器经行网络请求了 ；而如果没有找到对应的 `response` 则会先继续向下获取网络响应然后尝试缓存。值得一提的是 CacheInterceptor 的缓存机制是非常严格的，必须符合 Http 对缓存制定的标准且是 GET 请求。
 
 ##### **ConnectInterceptor**
 
-ConnectIntercetpor 则是负责 HTTP 连接池的复用，分配。算是我们需要了解的重难点了，~~敲黑板，记笔记~~。
+ConnectIntercetpor 则是负责 HTTP 连接创建、复用与分配。算是我们需要了解的重难点了，~~敲黑板，记笔记~~。
 
 ![connectIntercetpor](https://s2.ax1x.com/2019/10/14/KSfZuR.png)
 
-StreamAllocation 代表了 OkHttp 给这条请求分配的连接，它在 RetryAndFollowUpIntercetpor  中创建，在 `newStream` 中去申请分配一个 `RealConnection` ，`RealConnection` 代表的就是一个可用的 TCP/IP 连接。那么连接池是如何运作的，又是如何拿到一条可用的连接呢，我们从 `newStream` 去看:
+从图中我们了解几个关键的对象 `StreamAllocation`、`HttpCodec`、`RealConnection` 。
+
+StreamAllocation 是 `HttpCodec` 和 `RealConnection` 的载体，它在 RetryAndFollowUpIntercetpor  中创建，通过 `newStream` 方法中去申请分配一个 `RealConnection` ，`RealConnection` 代表的就是一个可用的 TCP/IP 连接。那么连接池是如何运作的，又是如何拿到一条可用的连接呢，我们从 `newStream` 去看:
 
 ![newStream](https://s2.ax1x.com/2019/10/14/KSqEFA.md.png)
 
-`newStream` 整个流程的实际代码还是挺长的，我们节选了部分并只关注高亮部分来讲解。`newStream` 通过`findHealthyConnection`从连接池内取出可用的连接，如果没取到就重复`findConnection` 的过程。`findHealthyConnection()` 负责确认取出的连接是可用的，而 `findConnection()` 用来从连接池中取出连接和创建连接。先尝试 44 行的 `Internal.instance.get(connectionPool,address,this,null)` 取出连接， `Internal.instance` 的实例是在 OkHttpClient 创建的匿名类对象，`get()` 方法只是调用 `ConnectionPool` 的`get` 方法。`ConnectionPool  ` 顾名思义就是我们的连接池的实现了，这个稍后再细讲。如果连接池里没有可用的连接。那么就会重新创建一个 `RealConnection` 并去执行TCP 握手，然后将它加入到 `connectionPool` 中。至此一个寻找可用的 `conncetion` 的步骤就完成了。
+`newStream` 整个流程的实际代码还是挺长的，我们节选了部分并只关注高亮部分来讲解。
 
-接下来通过 streamAllocation 创建一个 `HttpCode` 实例， `HttpCode`是对 HTTP 协议操作的抽象，有两个实现：`Http1Codec` 和 `Http2Codec`，顾名思义，它们分别对应 HTTP/1.1 和 HTTP/2 版本的实现。 
+- `newStream` 通过`findHealthyConnection`从连接池内取出可用的连接，如果没取到就重复`findConnection` 的过程。
+- `findHealthyConnection()` 负责确认取出的连接是可用的，而 `findConnection()` 用来从连接池中取出连接和创建连接。
+- `findConnection()` 先尝试 44 行的 `Internal.instance.get(connectionPool,address,this,null)` 取出连接， `Internal.instance` 的实例是在 OkHttpClient 创建的匿名类对象，`get()` 方法只是调用 `ConnectionPool` 的`get` 方法。`ConnectionPool  ` 顾名思义就是我们的连接池的实现了，这个稍后再细讲。
+- 如果连接池里没有可用的连接。那么就会重新创建一个 `RealConnection` 并去执行TCP 握手，然后将它加入到 `connectionPool` 中。至此一个寻找可用的 `conncetion` 的步骤就完成了。
 
-`ConnectInterceptor` 的职责到现在也完成了。我们先回过头来看看 Connection 的核心 `ConnectionPool` ，对外它只暴露的简单的 `get`、`put` 方法，但内里的实现机制又是如何的呢
+找到可用的连接后，接下来通过`newCodec` 创建一个 `HttpCode` 实例， `HttpCode`是对 HTTP 协议操作的抽象，有两个实现：`Http1Codec` 和 `Http2Codec`，顾名思义，它们分别对应 HTTP/1.1 和 HTTP/2 版本的实现。
+
+管道连接、协议实现这些都准备完毕后，`ConnectInterceptor` 的职责也就完成了。下面先回过头来看看 Connection 的核心 `ConnectionPool` ，它负责了对连接池的复用维护管理。对外它只暴露的简单的 `get`、`put` 方法，内里的实现机制又是如何的呢
 
 **ConnectionPool**
 
@@ -202,14 +209,14 @@ StreamAllocation 代表了 OkHttp 给这条请求分配的连接，它在 RetryA
 
 从代码中我们可以看出 
 
-- ConnectionPool 维护了一个线程池`Executor` 用于执行清理控线连接的任务
+- ConnectionPool 维护了一个线程池`Executor` 用于执行清理空闲、超时以及超过数量的 `Connection` 连接
 - connections 是一个双向队列（Deque），用来管理 `RealConnection` 连接，最大的保持数量是 `5` 最长的`keepAlive` 持续时间为 `5 minutes`。`RealConnection` 是 `socket` 物理连接的包装
 - routerDatabase 用来记录连接失败的线路名单
 - 向连接池添加新的连接时会触发清理空闲连接的任务。`excutor.execute(clearRunnable);`
 
 ##### **CallServerInterceptor**
 
-接下来就到流程的最后一个拦截器——`CallServerIntercaptor`，前边的拦截器已经将我们的请求给包装准备好， 网络请求所需要的 connection、httpCode 也都已经初始化完毕，这里就开始正式的网络通讯：
+接下来就到流程的最后一个拦截器——`CallServerIntercaptor`，前边的拦截器已经将我们的请求给包装准备好， 网络请求所需要的 connection、httpCodec 也都已经初始化完毕，这里就开始正式的网络通讯：
 
 ![callServerInterceptor](https://s2.ax1x.com/2019/10/15/K9wjnU.md.png)
 
