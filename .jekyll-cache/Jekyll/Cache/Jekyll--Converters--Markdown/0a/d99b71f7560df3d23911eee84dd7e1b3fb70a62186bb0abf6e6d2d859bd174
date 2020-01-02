@@ -1,0 +1,318 @@
+I"�P<blockquote>
+  <p>your internal mediocrity is the moment when you lost the faith of being excellent</p>
+</blockquote>
+
+<h2 id="前言">前言</h2>
+
+<p>又到了学习 Head First 的时间了，今天大名鼎鼎的星巴兹咖啡找到我们，让我们帮忙更新他们的订单系统,他们现在的订单系统是这样的：<img src="http://my.csdn.net/uploads/201205/06/1336303779_2807.jpg" alt="system" /></p>
+
+<p>看起来还好不是吗，简单清晰。所有的饮料都继承<code class="highlighter-rouge">Beverage</code>，具体的饮料用<code class="highlighter-rouge">cost()</code>来计算价格<code class="highlighter-rouge">description</code>来描述。但是他们遇到了一个问题，购买咖啡时候，也可以要求在其中加入各种调料，例如 : <code class="highlighter-rouge">milk(牛奶)</code>、<code class="highlighter-rouge">Soy(豆浆)</code>、<code class="highlighter-rouge">Mocha(摩卡)</code>等等。最后会更具加入的不同调料收取费用。所以订单系统必须考虑的到这些调料。所以他们尝试这样搭建一个系统 :</p>
+
+<p><img src="http://my.csdn.net/uploads/201205/06/1336303992_9751.jpg" alt="system1" /></p>
+
+<p>是不是看起来很酷，但收银员可不这么想，这对他来说如一个噩梦。而且当修改或增加饮料时候，那么维护起来也非常的恐怖。于是我们的小明又要接手新的活了。</p>
+
+<h2 id="正文">正文</h2>
+
+<p>作为一个出色的 OO 程序员，小明也很快完成了他的第一版设计 :</p>
+
+<p><img src="http://my.csdn.net/uploads/201205/07/1336354047_2530.jpg" alt="system2" /></p>
+
+<p>具体的实现 :</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+</pre></td><td class="rouge-code"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Beverage</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">double</span> <span class="n">milkSort</span> <span class="o">=</span> <span class="mf">0.1</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">double</span> <span class="n">soySort</span> <span class="o">=</span> <span class="mf">0.3</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">double</span> <span class="n">mochaSort</span> <span class="o">=</span> <span class="mf">0.4</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">double</span> <span class="n">whipSort</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="nc">String</span> <span class="n">description</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">milk</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">soy</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">mocha</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">whip</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nc">String</span> <span class="nf">getDescription</span><span class="o">()</span> <span class="o">{</span> <span class="k">return</span> <span class="n">description</span><span class="o">;}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setDescription</span><span class="o">(</span><span class="nc">String</span> <span class="n">description</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">description</span> <span class="o">=</span> <span class="n">description</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isMilk</span><span class="o">()</span> <span class="o">{</span> <span class="k">return</span> <span class="n">milk</span><span class="o">;}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setMilk</span><span class="o">(</span><span class="kt">boolean</span> <span class="n">milk</span><span class="o">)</span> <span class="o">{</span><span class="k">this</span><span class="o">.</span><span class="na">milk</span> <span class="o">=</span> <span class="n">milk</span><span class="o">;}</span>
+
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isSoy</span><span class="o">()</span> <span class="o">{</span><span class="k">return</span> <span class="n">soy</span><span class="o">;</span> <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setSoy</span><span class="o">(</span><span class="kt">boolean</span> <span class="n">soy</span><span class="o">)</span> <span class="o">{</span><span class="k">this</span><span class="o">.</span><span class="na">soy</span> <span class="o">=</span> <span class="n">soy</span><span class="o">;}</span>
+
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isMocha</span><span class="o">()</span> <span class="o">{</span><span class="k">return</span> <span class="n">mocha</span><span class="o">;}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setMocha</span><span class="o">(</span><span class="kt">boolean</span> <span class="n">mocha</span><span class="o">)</span> <span class="o">{</span><span class="k">this</span><span class="o">.</span><span class="na">mocha</span> <span class="o">=</span> <span class="n">mocha</span><span class="o">;}</span>
+
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isWhip</span><span class="o">()</span> <span class="o">{</span><span class="k">return</span> <span class="n">whip</span><span class="o">;</span> <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setWhip</span><span class="o">(</span><span class="kt">boolean</span> <span class="n">whip</span><span class="o">)</span> <span class="o">{</span><span class="k">this</span><span class="o">.</span><span class="na">whip</span> <span class="o">=</span> <span class="n">whip</span><span class="o">;}</span>
+
+    <span class="kd">public</span> <span class="kt">double</span> <span class="nf">cost</span><span class="o">()</span> <span class="o">{</span>
+        <span class="kt">double</span> <span class="n">cost</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">isMilk</span><span class="o">())</span> <span class="o">{</span>
+            <span class="n">cost</span> <span class="o">+=</span> <span class="n">milkSort</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">isSoy</span><span class="o">())</span> <span class="o">{</span>
+            <span class="n">cost</span> <span class="o">+=</span> <span class="n">soySort</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">isMocha</span><span class="o">())</span> <span class="o">{</span>
+            <span class="n">cost</span> <span class="o">+=</span> <span class="n">mochaSort</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">isWhip</span><span class="o">())</span> <span class="o">{</span>
+            <span class="n">cost</span> <span class="o">+=</span> <span class="n">whipSort</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">cost</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>当我们要创建饮料时 :</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+</pre></td><td class="rouge-code"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">DarkRoast</span> <span class="kd">extends</span> <span class="nc">Beverage</span><span class="o">{</span>
+  <span class="kd">public</span> <span class="nf">DarkRoast</span><span class="o">(){</span>
+    <span class="n">description</span> <span class="o">=</span> <span class="s">"Most Excellent Dark Roast"</span><span class="o">;</span>
+  <span class="o">}</span>
+  <span class="kd">public</span> <span class="kt">double</span> <span class="n">cost</span><span class="o">{</span>
+    <span class="k">return</span> <span class="mf">1.99</span><span class="o">+</span><span class="kd">super</span><span class="o">.</span><span class="na">cost</span><span class="o">();</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>目前看来没有什么问题，但哪些因素会影响这个设计?</p>
+
+<ul>
+  <li>调整价钱的改变会使得我们更改现有代码。</li>
+  <li>一旦出现新的饮料，我们就需要加上新的方法，并且要修改超类中<code class="highlighter-rouge">cost()</code>方法。</li>
+  <li>以后可能会开发出新饮料。对这些饮料而言，某些调料可能并不合适，但是在这个设计方式中，子类仍将继承那些不合适的方法。</li>
+  <li>万一顾客想要双倍摩卡的咖啡怎么办？</li>
+  <li>当我们要设计新的功能，例如不同价格的同一调料，那将是巨大的改动。</li>
+  <li>轮到你了</li>
+</ul>
+
+<h3 id="什么是装饰者模式">什么是装饰者模式</h3>
+
+<blockquote>
+  <p>类应该对扩展开放，对修改关闭</p>
+</blockquote>
+
+<p>小明去求教了禅雅塔大师，大师告诉他可以用装饰者模式来解决这个问题并给了他一张图 :</p>
+
+<p><img src="http://my.csdn.net/uploads/201205/08/1336484138_5451.jpg" alt="decorator" /></p>
+
+<p>装饰者模式就是 : <strong>装饰者模式动态的将责任附加到对象上，若要扩展功能，装饰者提供了比继承更具有弹性的替代方案。</strong></p>
+
+<p>于是小明奖星巴兹的系统也设计成了装饰者模式 :</p>
+
+<p><img src="http://my.csdn.net/uploads/201205/08/1336484312_7020.jpg" alt="decorator_xbz" /></p>
+
+<p>程序实现 :</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+</pre></td><td class="rouge-code"><pre><span class="c1">//基类</span>
+<span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">Beverage</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="nc">String</span> <span class="n">description</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nc">String</span> <span class="nf">getDescription</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">description</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setDescription</span><span class="o">(</span><span class="nc">String</span> <span class="n">description</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">description</span> <span class="o">=</span> <span class="n">description</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">abstract</span> <span class="kt">double</span> <span class="nf">cost</span><span class="o">();</span>
+<span class="o">}</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>装饰者类,将<code class="highlighter-rouge">getDescription()</code>抽象化，子类必须实现它 :</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="rouge-code"><pre><span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">CondimentDecorator</span> <span class="kd">extends</span> <span class="nc">Beverage</span><span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">abstract</span> <span class="nc">String</span> <span class="nf">getDescription</span><span class="o">();</span>
+<span class="o">}</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>接下来实现具体的饮料和调料类，只各列举个一个列子 :</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+</pre></td><td class="rouge-code"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">HouseBlend</span> <span class="kd">extends</span> <span class="nc">Beverage</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="nf">HouseBlend</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">setDescription</span><span class="o">(</span><span class="s">"HouseBlend"</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">double</span> <span class="nf">cost</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="mf">1.88</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Mocha</span> <span class="kd">extends</span> <span class="nc">CondimentDecorator</span><span class="o">{</span>
+    <span class="nc">Beverage</span> <span class="n">beverage</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="nf">Mocha</span><span class="o">(</span><span class="nc">Beverage</span> <span class="n">beverage</span><span class="o">)</span>
+    <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">beverage</span><span class="o">=</span><span class="n">beverage</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="kd">public</span> <span class="nc">String</span> <span class="nf">getDescription</span><span class="o">()</span>
+    <span class="o">{</span>
+        <span class="k">return</span> <span class="n">beverage</span><span class="o">.</span><span class="na">getDescription</span><span class="o">()+</span><span class="s">", Mocha"</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="kd">public</span> <span class="kt">double</span> <span class="nf">cost</span><span class="o">()</span>
+    <span class="o">{</span>
+        <span class="k">return</span> <span class="mf">0.20</span><span class="o">+</span><span class="n">beverage</span><span class="o">.</span><span class="na">cost</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>测试 :</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+</pre></td><td class="rouge-code"><pre>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="nc">String</span><span class="o">[]</span> <span class="n">arg</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">Beverage</span> <span class="n">espresso</span><span class="o">=</span><span class="k">new</span> <span class="nc">HouseBlend</span><span class="o">();</span>
+        <span class="n">espresso</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Mocha</span><span class="o">(</span><span class="n">espresso</span><span class="o">);</span>
+        <span class="n">espresso</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Soy</span><span class="o">(</span><span class="n">espresso</span><span class="o">);</span>
+        <span class="n">espresso</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Whip</span><span class="o">(</span><span class="n">espresso</span><span class="o">);</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">err</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">espresso</span><span class="o">.</span><span class="na">getDescription</span><span class="o">()+</span><span class="s">": "</span><span class="o">+</span><span class="n">espresso</span><span class="o">.</span><span class="na">cost</span><span class="o">());</span>
+
+        <span class="nc">Beverage</span> <span class="n">houseBlend</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Espresso</span><span class="o">();</span>
+        <span class="n">houseBlend</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Mocha</span><span class="o">(</span><span class="k">new</span> <span class="nc">Mocha</span><span class="o">(</span><span class="k">new</span> <span class="nc">Whip</span><span class="o">(</span><span class="n">houseBlend</span><span class="o">)));</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">err</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">houseBlend</span><span class="o">.</span><span class="na">getDescription</span><span class="o">()+</span><span class="s">": "</span><span class="o">+</span><span class="n">houseBlend</span><span class="o">.</span><span class="na">cost</span><span class="o">());</span>
+    <span class="o">}</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>输出为 :</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="rouge-code"><pre>HouseBlend, Mocha,Soy,Whip: 2.88
+Espresso,Whip, Mocha, Mocha: 1.69
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>同样完美的实现了星巴兹的功能，虽然看起来比刚才还稍微复杂一些，但是我们可以很轻松组合这些调料，增加和修改也不用促及底层的任何代码，收银员也不会向老板抱怨要炒我们鱿鱼——这就是装饰者模式。</p>
+
+<h2 id="要点">要点</h2>
+
+<ul>
+  <li>继承属于扩展形式之一，但不见得是达到弹性设计的最佳方式。</li>
+  <li>在我们的设计中，应该允许在运行时动态地加上新的行为。</li>
+  <li>除了继承，装饰者模式也可以让我们扩展行为。</li>
+  <li>装饰者类反应出被装饰的组件类型（事实上，他们具有相同的类型，都经过接口或继承实现）。</li>
+  <li>装饰者可以在被装饰者的行为前面/或后面加上自己的行为，甚至将装饰者的整个行为取代掉，从而达到特定的目的。</li>
+  <li>你可以用无数个装饰者包装一个组件。</li>
+  <li>装饰者一般对组件的客户是透明的，除非客户程序依赖与组件的具体类型。</li>
+  <li>装饰者会导致设计中出现许多小对象，如果过度使用，会让程序变得复杂。</li>
+</ul>
+:ET
