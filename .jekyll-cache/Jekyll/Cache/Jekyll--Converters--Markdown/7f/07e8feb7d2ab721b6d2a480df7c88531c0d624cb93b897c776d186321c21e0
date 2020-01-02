@@ -1,0 +1,506 @@
+I"̔<h2 id="前言">前言</h2>
+
+<p>DataBinding 出来很久了，不过现在连 MVP 都没有大规模被使用，别说写法用法更颠覆性的 DatatBinding 这样的了。但 DataBinding 这种面向 MVVM 的编程思想前端的使用已经非常普遍了，且确实给开发带来很大的便利。所以还是有必要学习和了解。</p>
+
+<h2 id="什么是-databinding">什么是 DataBinding?</h2>
+
+<p>简单的来说 DataBinding 是 Google 在 Android 上的一种 MVVM 的实现。MVVM 是<code class="highlighter-rouge">Model-View-ViewModel</code>的简写，它是 MVP(Model-View-Persenter) 模式与 WPF 结合的应用方式发展演变过来的一种新型架构。而 WPF 主要带来的特性就是<strong>数据绑定</strong>，这也是 Data Binding 所实现的功能。</p>
+
+<p><img src="http://www.cyxqd.com/wp-content/uploads/2014/10/nmwentill.jpg" alt="" /></p>
+
+<h2 id="数据绑定">数据绑定</h2>
+
+<p>数据绑定分为<strong>单项绑定</strong>和<strong>双向绑定</strong>;单向绑定就是将视图上的控件的属性绑定到一个对象的某个属性的方法，当对象的属性发生变化时直接影响到控件上；双向绑定的话就是可以互相影响——例如我们将<code class="highlighter-rouge">User</code>类的<code class="highlighter-rouge">name</code>属性绑定到<code class="highlighter-rouge">TextView</code>的<code class="highlighter-rouge">setText</code>属性上，这样当我们修改 name 的值时 setText 值也发生相应的改变，无需我们自己去 setText 更新属性。Data Binding 不仅可以帮我们在 Android 上实现这一机制，还为此附带了很多便利，减少了很多工具代码的编写。</p>
+
+<ul>
+  <li>
+    <p><strong>项目更加解耦，各个组件的依赖性进一步降低，增加可复用性</strong></p>
+  </li>
+  <li><strong>去掉 Activities&amp;Fragment 内的大部分 UI 代码</strong>，例如<code class="highlighter-rouge">onClickListener</code>、<code class="highlighter-rouge">setText</code>、<code class="highlighter-rouge">findViewById</code>等</li>
+  <li><strong>xml 的功能增强</strong>。xml 不再只是声明 UI 的界面，还起到数据的绑定，赋值，逻辑判断等功能。</li>
+  <li><strong>性能提高，减少 view id 的定义</strong>。由于数据绑定直接在 xml 产生，所以不用绞尽脑汁的其大量的名称且在绑定的时候就一次性的通过 gruop 将 view 全部获取，比单个<code class="highlighter-rouge">findViewById</code>更加的迅速。</li>
+</ul>
+
+<h2 id="搭建环境">搭建环境</h2>
+
+<p>Data Binding 在 Android Studio 1.3 版本&amp;Gradle1.5 后就内置在 IDE 中了，我们只需要在<code class="highlighter-rouge">gradle.project</code>中<code class="highlighter-rouge">Android</code>模块下声明开启 Data Binding 即可</p>
+
+<div class="language-groovy highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre></td><td class="rouge-code"><pre><span class="n">android</span><span class="o">{</span>
+  <span class="o">...</span>
+    <span class="n">dataBinding</span><span class="o">{</span>
+      <span class="n">enabled</span><span class="o">=</span><span class="kc">true</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h2 id="基础使用">基础使用</h2>
+
+<h3 id="编写-view">编写 View</h3>
+
+<p>数据绑定需要在 xml 中声明各种关系，也可以写一些简单的运算。声明一个 data Binding Layout 只需要在原来的 layout xml 文件基础加一个标签即可:</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="rouge-code"><pre><span class="nt">&lt;layout&gt;</span>
+//...rootView
+<span class="nt">&lt;/layout&gt;</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>这样在编译时，修改后即可搜索到布局生成的对应的*Binding 类。生成的规则默认是通过 xml 的文件名生成，例如<code class="highlighter-rouge">activity_main.xml</code>就会对应生成为<code class="highlighter-rouge">ActivityMainBinding.java</code>的文件。当然我们也可以指定自定生成的文件名称，需要在<code class="highlighter-rouge">layout</code>标签下加入<code class="highlighter-rouge">data</code>标签并指定<code class="highlighter-rouge">class</code>属性即可(生成 LoginBinding.java)，除此之外<code class="highlighter-rouge">data</code>也是我们声明变量的地方，稍后再详细介绍。</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="rouge-code"><pre><span class="nt">&lt;data</span> <span class="na">class=</span><span class="s">"login"</span><span class="nt">&gt;</span>
+....
+<span class="nt">&lt;/data&gt;</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>我们来编写一个简单的登录界面:</p>
+
+<p>先使用<code class="highlighter-rouge">variable</code>绑定我们所需要的对象。<code class="highlighter-rouge">type</code>为该对象的地址,<code class="highlighter-rouge">name</code>则随意命名。这里我们声明了一个<code class="highlighter-rouge">Action</code>和<code class="highlighter-rouge">Presenter</code>,<code class="highlighter-rouge">Action</code>用于绑定数据，<code class="highlighter-rouge">Presenter</code>则用来绑定一些事件和做逻辑处理。</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+</pre></td><td class="rouge-code"><pre><span class="nt">&lt;layout&gt;</span>
+<span class="nt">&lt;data&gt;</span>
+        <span class="nt">&lt;variable</span>
+            <span class="na">name=</span><span class="s">"presenter"</span>
+            <span class="na">type=</span><span class="s">"com.example.qhfax.databindingexample.presenter.MainPresenter"</span> <span class="nt">/&gt;</span>
+
+        <span class="nt">&lt;variable</span>
+            <span class="na">name=</span><span class="s">"action"</span>
+            <span class="na">type=</span><span class="s">"com.example.qhfax.databindingexample.bean.Action"</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;/data&gt;</span>
+
+  //...rootView
+  <span class="nt">&lt;/layout&gt;</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>声明好对象后，我们就开始将对象绑定到数据源上。在 Data Binding 中，我们绑定数据需要使用<code class="highlighter-rouge">@{code}</code>书写，向插件声明这是一个表达式。这里我们将<code class="highlighter-rouge">name</code>属性绑定到<code class="highlighter-rouge">TextView</code>的<code class="highlighter-rouge">setText</code>上。</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+</pre></td><td class="rouge-code"><pre><span class="nt">&lt;TextView</span>
+            <span class="na">android:layout_width=</span><span class="s">"63dp"</span>
+            <span class="na">android:layout_height=</span><span class="s">"wrap_content"</span>
+            <span class="na">android:layout_marginLeft=</span><span class="s">"8dp"</span>
+            <span class="na">android:layout_marginRight=</span><span class="s">"8dp"</span>
+            <span class="na">android:layout_marginTop=</span><span class="s">"60dp"</span>
+            <span class="na">android:gravity=</span><span class="s">"center"</span>
+            <span class="na">android:text=</span><span class="s">"@{action.name}"</span> <span class="nt">/&gt;</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>之后在 Activity 中我们需要使用<code class="highlighter-rouge">DataBindingUtil</code>获取<code class="highlighter-rouge">ActivityMainDataBinding</code>的实例</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre><span class="nc">ActivityMainDataBinding</span> <span class="n">mMainBind</span><span class="o">=</span><span class="nc">DataBindingUtil</span><span class="o">.</span><span class="na">setContentView</span><span class="o">(</span><span class="k">this</span><span class="o">,</span><span class="no">R</span><span class="o">.</span><span class="na">layout</span><span class="o">.</span><span class="na">activity_main</span><span class="o">);</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>然后去绑定对象</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="rouge-code"><pre><span class="nc">Action</span> <span class="n">action</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Action</span><span class="o">();</span>
+<span class="n">action</span><span class="o">.</span><span class="na">setName</span><span class="o">(</span><span class="s">"用户名："</span><span class="o">);</span>
+<span class="n">mMainBind</span><span class="o">.</span><span class="na">setAction</span><span class="o">(</span><span class="n">action</span><span class="o">)</span>
+<span class="n">mMainBind</span><span class="o">.</span><span class="na">setPersenter</span><span class="o">(</span><span class="n">persenter</span><span class="o">);</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>运行后就可以发现<code class="highlighter-rouge">TextView</code>就直接被赋值啦。</p>
+
+<h3 id="绑定的原理">绑定的原理</h3>
+
+<p>嗯….我们可以先观察一下目前的流程是怎么走下来的；</p>
+
+<ol>
+  <li>
+    <p>在<code class="highlighter-rouge">xml</code>文件中绑定控件，然后插件会根据<code class="highlighter-rouge">layout</code>生成对应的实体类。通过 DataBindingUtli 来构建对应的 Bind 实例，查看 DataBindingUtil 的代码会发现的工作实现十分简单，将属性和 view 集合传递给我们的 DataBinding:</p>
+
+    <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+</pre></td><td class="rouge-code"><pre><span class="c1">//查找到布局ViewGruop</span>
+<span class="kd">public</span> <span class="kd">static</span> <span class="o">&lt;</span><span class="no">T</span> <span class="kd">extends</span> <span class="nc">ViewDataBinding</span><span class="o">&gt;</span> <span class="no">T</span> <span class="nf">setContentView</span><span class="o">(</span><span class="nc">Activity</span> <span class="n">activity</span><span class="o">,</span> <span class="kt">int</span> <span class="n">layoutId</span><span class="o">,</span>
+            <span class="nc">DataBindingComponent</span> <span class="n">bindingComponent</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">activity</span><span class="o">.</span><span class="na">setContentView</span><span class="o">(</span><span class="n">layoutId</span><span class="o">);</span>
+        <span class="nc">View</span> <span class="n">decorView</span> <span class="o">=</span> <span class="n">activity</span><span class="o">.</span><span class="na">getWindow</span><span class="o">().</span><span class="na">getDecorView</span><span class="o">();</span>
+        <span class="nc">ViewGroup</span> <span class="n">contentView</span> <span class="o">=</span> <span class="o">(</span><span class="nc">ViewGroup</span><span class="o">)</span> <span class="n">decorView</span><span class="o">.</span><span class="na">findViewById</span><span class="o">(</span><span class="n">android</span><span class="o">.</span><span class="na">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">content</span><span class="o">);</span>
+        <span class="k">return</span> <span class="nf">bindToAddedViews</span><span class="o">(</span><span class="n">bindingComponent</span><span class="o">,</span> <span class="n">contentView</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">layoutId</span><span class="o">);</span>
+<span class="c1">//遍历所有的View然后调用ViewDataBinding.Bind方法将数据传给我们的实体类`ActivityMainDataBinding`</span>
+<span class="kd">private</span> <span class="kd">static</span> <span class="o">&lt;</span><span class="no">T</span> <span class="kd">extends</span> <span class="nc">ViewDataBinding</span><span class="o">&gt;</span> <span class="no">T</span> <span class="nf">bindToAddedViews</span><span class="o">(</span><span class="nc">DataBindingComponent</span> 			<span class="n">component</span><span class="o">,</span> <span class="nc">ViewGroup</span> <span class="n">parent</span><span class="o">,</span> <span class="kt">int</span> <span class="n">startChildren</span><span class="o">,</span> <span class="kt">int</span> <span class="n">layoutId</span><span class="o">)</span> <span class="o">{</span>
+    <span class="kd">final</span> <span class="kt">int</span> <span class="n">endChildren</span> <span class="o">=</span> <span class="n">parent</span><span class="o">.</span><span class="na">getChildCount</span><span class="o">();</span>
+    <span class="kd">final</span> <span class="kt">int</span> <span class="n">childrenAdded</span> <span class="o">=</span> <span class="n">endChildren</span> <span class="o">-</span> <span class="n">startChildren</span><span class="o">;</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">childrenAdded</span> <span class="o">==</span> <span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">final</span> <span class="nc">View</span> <span class="n">childView</span> <span class="o">=</span> <span class="n">parent</span><span class="o">.</span><span class="na">getChildAt</span><span class="o">(</span><span class="n">endChildren</span> <span class="o">-</span> <span class="mi">1</span><span class="o">);</span>
+        <span class="k">return</span> <span class="nf">bind</span><span class="o">(</span><span class="n">component</span><span class="o">,</span> <span class="n">childView</span><span class="o">,</span> <span class="n">layoutId</span><span class="o">);</span>
+    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+        <span class="kd">final</span> <span class="nc">View</span><span class="o">[]</span> <span class="n">children</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">View</span><span class="o">[</span><span class="n">childrenAdded</span><span class="o">];</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">childrenAdded</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="n">children</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">parent</span><span class="o">.</span><span class="na">getChildAt</span><span class="o">(</span><span class="n">i</span> <span class="o">+</span> <span class="n">startChildren</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="nf">bind</span><span class="o">(</span><span class="n">component</span><span class="o">,</span> <span class="n">children</span><span class="o">,</span> <span class="n">layoutId</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></td></tr></tbody></table></code></pre></div>    </div>
+
+    <p>​</p>
+  </li>
+  <li>
+    <p>通过 Bind 实例绑定数据源，关联控件发生改变。那么数据绑定与刷新又是如何发生的呢？在源码中我们可以发现最终应该是调用了<code class="highlighter-rouge">ActivityMainBinding</code>的<code class="highlighter-rouge">executeBindings()</code>方法来执行控件刷新的，源码并不复杂。</p>
+  </li>
+</ol>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+</pre></td><td class="rouge-code"><pre> <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">executeBindings</span><span class="o">()</span> <span class="o">{</span>
+   <span class="c1">//dirtyFlags的作用主要是通过位运算来判断控件的数据源对象是否被绑定，这里我们就不关心具体实现。</span>
+        <span class="kt">long</span> <span class="n">dirtyFlags</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="kd">synchronized</span><span class="o">(</span><span class="k">this</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">dirtyFlags</span> <span class="o">=</span> <span class="n">mDirtyFlags</span><span class="o">;</span>
+            <span class="n">mDirtyFlags</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="o">}</span>
+   		<span class="n">com</span><span class="o">.</span><span class="na">example</span><span class="o">.</span><span class="na">qhfax</span><span class="o">.</span><span class="na">databindingexample</span><span class="o">.</span><span class="na">bean</span><span class="o">.</span><span class="na">Action</span> <span class="n">action</span> <span class="o">=</span> <span class="n">mAction</span><span class="o">;</span>
+   		<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">String</span> <span class="n">actionName</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+  		 <span class="k">if</span> <span class="o">((</span><span class="n">dirtyFlags</span> <span class="o">&amp;</span> <span class="mh">0x6</span><span class="no">L</span><span class="o">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+                <span class="k">if</span> <span class="o">(</span><span class="n">action</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="c1">// read action.name</span>
+                    <span class="n">actionName</span> <span class="o">=</span> <span class="n">action</span><span class="o">.</span><span class="na">getName</span><span class="o">();</span>
+                <span class="o">}</span>
+      	  <span class="o">}</span>
+    <span class="k">if</span> <span class="o">((</span><span class="n">dirtyFlags</span> <span class="o">&amp;</span> <span class="mh">0x6</span><span class="no">L</span><span class="o">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+      <span class="c1">// 将我们的textView传递到bindAdapter中进行赋值，由于我们没有给TextView声明ID所有名称是由插件自己生成的名称。</span>
+     <span class="n">android</span><span class="o">.</span><span class="na">databinding</span><span class="o">.</span><span class="na">adapters</span><span class="o">.</span><span class="na">TextViewBindingAdapter</span><span class="o">.</span><span class="na">setText</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">mboundView2</span><span class="o">,</span> <span class="n">actionName</span><span class="o">);</span>
+      <span class="o">}</span>
+ <span class="o">}</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>可以见看出代码十分的简洁，功能实现都在适配器中进行，这样可以保证情况再复杂代码的可阅读性和适配性也不会层级递增。<code class="highlighter-rouge">TextViewBindingAdapter.setText</code>方法也就是让<code class="highlighter-rouge">mboundView2</code>调用<code class="highlighter-rouge">setText</code>方法显示<code class="highlighter-rouge">actionName</code>的值，至于 Adapter 的整体的具体实现等到自定义 Adapter 时候我们再解析。</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+</pre></td><td class="rouge-code"><pre>  <span class="nd">@BindingAdapter</span><span class="o">(</span><span class="s">"android:text"</span><span class="o">)</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">setText</span><span class="o">(</span><span class="nc">TextView</span> <span class="n">view</span><span class="o">,</span> <span class="nc">CharSequence</span> <span class="n">text</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">final</span> <span class="nc">CharSequence</span> <span class="n">oldText</span> <span class="o">=</span> <span class="n">view</span><span class="o">.</span><span class="na">getText</span><span class="o">();</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">text</span> <span class="o">==</span> <span class="n">oldText</span> <span class="o">||</span> <span class="o">(</span><span class="n">text</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">oldText</span><span class="o">.</span><span class="na">length</span><span class="o">()</span> <span class="o">==</span> <span class="mi">0</span><span class="o">))</span> <span class="o">{</span>
+        <span class="c1">//....各种约束判断</span>
+        <span class="o">}</span>
+        <span class="n">view</span><span class="o">.</span><span class="na">setText</span><span class="o">(</span><span class="n">text</span><span class="o">);</span>
+    <span class="o">}</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h3 id="真正的单向绑定">真正的单向绑定</h3>
+
+<p>如果你也在写 Example 就会发现一个问题，当<code class="highlighter-rouge">Action</code>绑定后，后续<code class="highlighter-rouge">Action</code>的改变并不会让 UI 更新即 Observable(观察者模式)并没有实现。这显然不是我们想要达到的目的。</p>
+
+<p><img src="https://pic3.zhimg.com/079482e5b8748e2e566e9e4eba82e456_b.png" alt="" /></p>
+
+<p>在 Data Binding 想要一个 View Model 被控件订阅就需要它继承<code class="highlighter-rouge">BaseObservable</code>，这样当<code class="highlighter-rouge">Action</code>每次改变的时候我们就通知控件数据被改变了，然后控件自己调用相关属性的方法去更新数据。</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+</pre></td><td class="rouge-code"><pre>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Action</span> <span class="kd">extends</span> <span class="nc">BaseObservable</span><span class="o">{</span>
+    <span class="kd">private</span> <span class="nc">String</span> <span class="n">name</span><span class="o">;</span>
+  <span class="c1">//通过在get方法上Bindable注解让BR生成对应的flag，确定如何刷新name值</span>
+    <span class="nd">@Bindable</span>
+    <span class="kd">public</span> <span class="nc">String</span> <span class="nf">getName</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">name</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setName</span><span class="o">(</span><span class="nc">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
+      <span class="c1">//当我们改变值刷新UI，notifyChange()是通知所有订阅者，即使用了actino类中任意绑定了属性都会受到刷新的命令；notifyPropertyChanged()就很明显是通过flag进行单独刷新。</span>
+       <span class="c1">//notifyChange();</span>
+        <span class="n">notifyPropertyChanged</span><span class="o">(</span><span class="no">BR</span><span class="o">.</span><span class="na">name</span><span class="o">);</span>
+    <span class="o">}</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>如果 View Model 已经有继承父类我们也可以通过对绑定的属性单独的声明 Observable。DataBinding 提供了除了基础类型外还有 ObservableParcalable 与 ObservableField 来解决大多数场景遇到的对象属性。</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+</pre></td><td class="rouge-code"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Action</span> <span class="o">{</span>
+  <span class="kd">private</span> <span class="nc">ObservableField</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span> <span class="n">name</span> <span class="o">=</span><span class="k">new</span> <span class="nc">ObservableField</span><span class="o">&lt;&gt;();</span>
+  <span class="kd">private</span> <span class="nc">ObservableInt</span> <span class="n">age</span> <span class="o">=</span><span class="k">new</span> <span class="nc">ObservableInt</span><span class="o">();</span>
+
+  <span class="c1">//这样做的弊端是我们无法直接访问到属性值，需要通过Observable的get/set方法</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setName</span><span class="o">(</span><span class="nc">String</span> <span class="n">name</span><span class="o">){</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">name</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="n">name</span><span class="o">);</span>
+  <span class="o">}</span>
+  <span class="kd">public</span> <span class="nc">String</span> <span class="nf">getName</span><span class="o">(){</span>
+    <span class="k">return</span> <span class="k">this</span><span class="o">.</span><span class="na">name</span><span class="o">.</span><span class="na">get</span><span class="o">();</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>这样的话，当我们运行时候控件和数据的联系就建立起来了，更新<code class="highlighter-rouge">name</code>的同时 TextView 的<code class="highlighter-rouge">text</code>也会同时发生变化。</p>
+
+<p>数据源一定要写个实体类吗，那么不是需要成吨的 bean ? 我们可以通过 ObservableArrayMap 和 ObservableArrayList 来创建观察者和需要观察的数据。</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre></td><td class="rouge-code"><pre><span class="nc">ObservableArrayMap</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span><span class="nc">Object</span><span class="o">&gt;</span> <span class="n">action</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ObseravbleArryMap</span><span class="o">&lt;&gt;();</span>
+<span class="n">action</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"name"</span><span class="o">,</span><span class="s">"just"</span><span class="o">);</span>
+<span class="n">action</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"password"</span><span class="o">,</span><span class="s">"gbk"</span><span class="o">)</span>
+<span class="nc">ObservableArryList</span> <span class="n">list</span> <span class="o">=</span><span class="k">new</span> <span class="nc">ObservableArryList</span><span class="o">&lt;&gt;();</span>
+<span class="n">list</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="s">"first"</span><span class="o">);</span>
+<span class="n">list</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="s">"second"</span><span class="o">)</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>在 xml 中我们通过 key 和 index 访问他们</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+</pre></td><td class="rouge-code"><pre><span class="nt">&lt;variable</span> <span class="na">name=</span><span class="s">"action"</span>
+          <span class="na">type=</span><span class="s">"android.databinding.ObserableMap"</span><span class="nt">&gt;&lt;/variable&gt;</span>
+<span class="nt">&lt;ariable</span> <span class="na">name=</span><span class="s">"user"</span>
+         <span class="na">type=</span><span class="s">"android.databing.ObservableList"</span><span class="nt">&gt;&lt;/ariable&gt;</span>
+
+<span class="nt">&lt;TextView</span>
+          <span class="na">android:text=</span><span class="s">"@{action["</span><span class="err">name"]"</span>
+          <span class="na">android:layout_width=</span><span class="s">"wrap_content"</span>
+          <span class="na">android:layout_height=</span><span class="s">"wrap_content"</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;TextView</span>
+          <span class="na">android:text=</span><span class="s">"@{user[1]"</span>
+          <span class="na">android:layout_width=</span><span class="s">"wrap_content"</span>
+          <span class="na">android:layout_height=</span><span class="s">"wrap_content"</span><span class="nt">/&gt;</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h3 id="事件绑定">事件绑定</h3>
+
+<p>我们除了可以绑定 View 各种属性外，我们也可以在 xml 中直接绑定事件，而不用通过 View 转发。</p>
+
+<p>我们在 Presenter 中创建一个监听文本的方法，然后在 xml 中设置<code class="highlighter-rouge">onTextChanged</code>属性，方法名必须和对应的 listener 对应.</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre></td><td class="rouge-code"><pre><span class="nt">&lt;EditText</span>
+  <span class="na">android:layout_width=</span><span class="s">"wrap_content"</span>
+  <span class="na">android:layout_height=</span><span class="s">"wrap_content"</span>
+  <span class="na">android:onTextChanged=</span><span class="s">"@{presenter::onTextChanged}"</span>
+  <span class="nt">/&gt;</span>
+
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>将 Presenter 绑定在 Activity 上后，就可以接受到 EditText 的改变了</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre></td><td class="rouge-code"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Presenter</span><span class="o">{</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onTextChanged</span><span class="o">(</span><span class="n">charSequence</span> <span class="n">s</span><span class="o">,</span><span class="n">in</span> <span class="n">start</span> <span class="o">,</span><span class="kt">int</span> <span class="n">before</span><span class="o">,</span><span class="kt">int</span> <span class="n">count</span><span class="o">){</span>
+    <span class="n">mView</span><span class="o">.</span><span class="na">show</span><span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="na">toString</span><span class="o">())</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h3 id="表达式">表达式</h3>
+
+<p>在 xml 中的 dataBinding 表达式支持 Java 中的大部分语法，具体如下：</p>
+
+<ul>
+  <li>算数 <code class="highlighter-rouge">+-*/%</code></li>
+  <li>字符串合并<code class="highlighter-rouge">+</code></li>
+  <li>逻辑运算 <code class="highlighter-rouge">&amp;&amp;||</code></li>
+  <li>二元<code class="highlighter-rouge">&amp;|^</code></li>
+  <li>一元<code class="highlighter-rouge">+-!~</code></li>
+  <li>位移<code class="highlighter-rouge">&gt;&gt; &gt;&gt;&gt; &gt;&gt;</code></li>
+  <li>比较<code class="highlighter-rouge">== &gt; &lt;&gt; = &lt;=</code></li>
+  <li>instanceof 操作符</li>
+  <li>Grouping（）</li>
+  <li>文字</li>
+  <li>Cast 类型转换</li>
+  <li>方法调用</li>
+  <li>属性访问</li>
+  <li>数组访问</li>
+  <li>三目运算符<code class="highlighter-rouge">？：</code></li>
+</ul>
+
+<p>尚不支持<code class="highlighter-rouge">super</code>、<code class="highlighter-rouge">this</code>、<code class="highlighter-rouge">new</code>、以及显示的泛型调用。</p>
+
+<p>同时由于在表达式在字符串中声明的，一些特殊字符的转义也是不可避免的。</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">结果</th>
+      <th style="text-align: center">转义字符</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">空格</td>
+      <td style="text-align: center"><code class="highlighter-rouge">&amp;nbsp;</code></td>
+    </tr>
+    <tr>
+      <td style="text-align: center">&lt;</td>
+      <td style="text-align: center"><code class="highlighter-rouge">&amp;t;</code></td>
+    </tr>
+    <tr>
+      <td style="text-align: center">&gt;</td>
+      <td style="text-align: center"><code class="highlighter-rouge">&amp;gt;</code></td>
+    </tr>
+    <tr>
+      <td style="text-align: center">&amp;</td>
+      <td style="text-align: center"><code class="highlighter-rouge">&amp;amp;</code></td>
+    </tr>
+    <tr>
+      <td style="text-align: center">”</td>
+      <td style="text-align: center"><code class="highlighter-rouge">&amp;quot;</code></td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="highlighter-rouge">|</code>'`</td>
+      <td style="text-align: center"> </td>
+    </tr>
+    <tr>
+      <td style="text-align: center">x</td>
+      <td style="text-align: center"><code class="highlighter-rouge">&amp;divide</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>除此 java 的这些语法支持外还有一些特殊的支持。</p>
+
+<ul>
+  <li>
+    <p>空合并运算符——使用<code class="highlighter-rouge">??</code>来连接两个式子，如果左边的式子为空就取右边的。</p>
+
+    <div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>android:text="@{user.name??user.realName}"
+</pre></td></tr></tbody></table></code></pre></div>    </div>
+  </li>
+  <li>
+    <p>直接访问资源文件——可以通过`@resource/name 的形式访问资源文件来直接使用</p>
+
+    <div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="rouge-code"><pre>android:text="@{@String/name(name)}"
+
+<span class="nt">&lt;string</span> <span class="na">name=</span><span class="s">"name"</span><span class="nt">&gt;</span>我的名字是%s<span class="nt">&lt;/string&gt;</span>
+</pre></td></tr></tbody></table></code></pre></div>    </div>
+  </li>
+</ul>
+
+<h3 id="include">include</h3>
+
+<p>在使用 include 布局时候需要将该布局使用的数据通过<code class="highlighter-rouge">bind:xxx=@{}</code>传递进去，并在布局中进行二次绑定。</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre><span class="nt">&lt;include</span> <span class="na">layout=</span><span class="s">"@layout/empty"</span> <span class="na">bind:info=</span><span class="s">"@{info}"</span><span class="nt">/&gt;</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+:ET
