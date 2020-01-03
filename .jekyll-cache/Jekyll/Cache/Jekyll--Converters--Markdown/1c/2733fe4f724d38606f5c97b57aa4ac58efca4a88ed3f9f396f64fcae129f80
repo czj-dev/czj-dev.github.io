@@ -1,12 +1,12 @@
-I"v<h3 id="android-网络框架解析">Android 网络框架解析</h3>
+I"�u<h3 id="android-网络框架解析">Android 网络框架解析</h3>
 
-<p>从 2016 Retrofit 开源以来，Retrofit 以它优雅的设计，方便的使用迅速征服了很多开发者，Retrofit+OkHttp 成了 Android 网络开发开源解决方案的佼佼者。不过虽然 Retrofit 已经在实际项目使用很久了，也对 Retorfit 和 OkHttp 实现原理有一定的了解，但却一直没有书面的记录，网上已经有很多相关的优秀文章，但本着思前想后千万遍,<em>不如动笔</em>写下来的道理，还是打算写一整篇 Retrofit、OkHttp 以及 Okio 的解析，整理和完善相关的知识，总结和归纳比阅读更重要。</p>
+<p>从 2016 Retrofit 开源以来，Retrofit 以它优雅的设计，方便的使用迅速征服了很多开发者，Retrofit+OkHttp 成了 Android 网络开发开源解决方案的佼佼者。 Retrofit 已经在实际项目使用很久了，也对 Retorfit 和 OkHttp 实现原理有一定的了解，但却一直没有书面的记录，网上已经有很多相关的优秀文章，但本着思前想后千万遍,<em>不如动笔</em>写下来的道理，还是打算写一整篇 Retrofit、OkHttp 以及 Okio 的解析，整理和完善相关的知识，总结和归纳比阅读更重要。</p>
 
 <p>Retrofit、OkHttp、Okio 三者本身都是非常优秀的开源框架，它们组合在一起汇聚成了一套在 Android 完善的网络解决框架，它们的网络 IO 流程如下：</p>
 
 <p><img src="https://blog.piasy.com/img/201608/okio_okhttp_retrofit.png" alt="网络数据传输流程" style="zoom:38%;" /></p>
 
-<p>Retrofit 通过很多精妙的设计，让开发者在编写网络请求时候方便快捷的操作网络的请求和响应，OkHttp 则是网络具体实现的核心，它负责网络的具体请求，连接池复用、网络拦截， Http1、http2 的兼容等，Okio 则处理所有的 IO 问题，磁盘缓存、网络 IO 等都可以看到它的身影，下面我们就来逐个介绍它们。</p>
+<p>Retrofit 通过很多精妙的设计，可以让开发者在方便快捷的实现网络操作的请求和响应，而 OkHttp 则是网络具体实现的核心，它负责网络的具体请求，连接池复用、网络拦截， Http1、http2 的兼容等，Okio 则处理所有的 IO 问题，磁盘缓存、网络 IO 等都可以看到它的身影，下面我们就来逐个介绍它们。</p>
 
 <h3 id="retrofit">Retrofit</h3>
 
@@ -117,7 +117,7 @@
 
 <h4 id="interceptor">Interceptor</h4>
 
-<p>初看可能觉得莫名其妙，这里为什么会添加一大堆的的拦截器。其实结合 OkHttp 架构图和流程图你就不难发现，<code class="highlighter-rouge">Interceptor</code> 是 OkHttp 最核心的一个东西，不要误以为它只负责拦截请求一些进行额外的处理（例如 Auth、NetworkListener），实际上它贯穿了整个 OkHttp ，把实际的网络请求，缓存，透明压缩等功能都统一了起来，每一个功能只是一个 <code class="highlighter-rouge">Interceptor</code> ,它们再连接成一个 <code class="highlighter-rouge">Interceptor.Chain</code> ，环环相扣，最终圆满完成了一次网络请求</p>
+<p>初看可能觉得莫名其妙，这里为什么会添加一大堆的的拦截器。其实结合 OkHttp 架构图和流程图你就不难发现，<code class="highlighter-rouge">Interceptor</code> 是 OkHttp 最核心的一个东西，不要误以为它只负责拦截请求一些进行额外的处理（例如 Auth、NetworkListener），实际上它贯穿了整个 OkHttp ，把实际的网络请求，缓存，压缩等功能都统一了起来，每一个功能只是一个 <code class="highlighter-rouge">Interceptor</code> ,它们再连接成一个 <code class="highlighter-rouge">Interceptor.Chain</code> ，环环相扣，最终圆满完成了一次网络请求</p>
 
 <p>从 <code class="highlighter-rouge">getResopnseWithInterceptorChain</code> 函数我们可以看到，<code class="highlighter-rouge">Interceptor.Chain</code> 的分部依次是：</p>
 
@@ -153,7 +153,7 @@
 
 <h5 id="bridgeinterceptor"><strong>BridgeInterceptor</strong></h5>
 
-<p>BridgeInterceptor 具体主要是处理请求和响应中的 header 部分，如果数据有压缩步骤，例如 <code class="highlighter-rouge">gzip</code> 等处理，那么它还负责将数据解压缩完成，涉及 <code class="highlighter-rouge">Content-Type</code>、<code class="highlighter-rouge">Content-Length</code>、<code class="highlighter-rouge">Transfer-Encoding</code> 等<code class="highlighter-rouge">header</code> 的处理</p>
+<p>BridgeInterceptor 具体主要是处理请求和响应中的 <code class="highlighter-rouge">header </code>部分，如果数据有压缩步骤，例如 <code class="highlighter-rouge">gzip</code> 等处理，那么它还负责将数据解压缩完成，涉及 <code class="highlighter-rouge">Content-Type</code>、<code class="highlighter-rouge">Content-Length</code>、<code class="highlighter-rouge">Transfer-Encoding</code> 等<code class="highlighter-rouge">header</code> 的处理</p>
 
 <h5 id="cacheinterceptor"><strong>CacheInterceptor</strong></h5>
 
@@ -165,7 +165,7 @@
 
 <p><img src="https://s2.ax1x.com/2019/10/14/KSfZuR.png" alt="connectIntercetpor" /></p>
 
-<p>从图中我们了解几个关键的对象 <code class="highlighter-rouge">StreamAllocation</code>、<code class="highlighter-rouge">HttpCodec</code>、<code class="highlighter-rouge">RealConnection</code> 。</p>
+<p>从上图中我们得知几个关键的对象 <code class="highlighter-rouge">StreamAllocation</code>、<code class="highlighter-rouge">HttpCodec</code>、<code class="highlighter-rouge">RealConnection</code> 。</p>
 
 <p>StreamAllocation 是 <code class="highlighter-rouge">HttpCodec</code> 和 <code class="highlighter-rouge">RealConnection</code> 的载体，它在 RetryAndFollowUpIntercetpor 中创建，通过 <code class="highlighter-rouge">newStream</code> 方法中去申请分配一个 <code class="highlighter-rouge">RealConnection</code> ，<code class="highlighter-rouge">RealConnection</code> 代表的就是一个可用的 TCP/IP 连接。那么连接池是如何运作的，又是如何拿到一条可用的连接呢，我们从 <code class="highlighter-rouge">newStream</code> 去看:</p>
 
@@ -197,9 +197,11 @@
   <li>向连接池添加新的连接时会触发清理空闲连接的任务。<code class="highlighter-rouge">excutor.execute(clearRunnable);</code></li>
 </ul>
 
+<p><code class="highlighter-rouge">ConnectionPool</code> 的职责很清晰，它负责维护真实的 socket 连接复用，并清理空闲的连接。</p>
+
 <h5 id="callserverinterceptor"><strong>CallServerInterceptor</strong></h5>
 
-<p>接下来就到流程的最后一个拦截器——<code class="highlighter-rouge">CallServerIntercaptor</code>，前边的拦截器已经将我们的请求给包装准备好， 网络请求所需要的 connection、httpCodec 也都已经初始化完毕，这里就开始正式的网络通讯：</p>
+<p>接下来就到流程的最后一个拦截器——<code class="highlighter-rouge">CallServerIntercaptor</code>，前边的拦截器已经将我们的请求给包装好， 网络请求所需要的 connection、httpCodec 也都已经初始化完毕，这里就开始正式的网络通讯：</p>
 
 <p><img src="https://s2.ax1x.com/2019/10/15/K9wjnU.md.png" alt="callServerInterceptor" /></p>
 
@@ -222,13 +224,16 @@
 
 <p><img src="https://s2.ax1x.com/2019/10/15/K9cHyR.md.png" alt="execute 和 enqueue" /></p>
 
-<p>我们可以看到两者在使用调度器上有些许差别。 <code class="highlighter-rouge">execute()</code> 在调用<code class="highlighter-rouge">Dispatcher</code> 时使用的是 <code class="highlighter-rouge">Dispatcher .executed()</code> 来执行然后在 <code class="highlighter-rouge">finally</code> 后调用<code class="highlighter-rouge">finished</code> 结束流程。而 <code class="highlighter-rouge">enqueue()</code> 则调用了 <code class="highlighter-rouge">enqueue</code> 将自己添加进入调度器，且包装了一个 <code class="highlighter-rouge">AsyncCall</code> ，<code class="highlighter-rouge">AsyncCall</code> 继承了 <code class="highlighter-rouge">NamedRunnable</code> 它是一个<code class="highlighter-rouge">Runnable</code> 在<code class="highlighter-rouge">run()</code> 方法被执行后会触发 <code class="highlighter-rouge">execute()</code> 方法，而另一个主要方法 <code class="highlighter-rouge">executeOn</code> 则是将自己添加到传入的线程池执行，两者环环相扣。<code class="highlighter-rouge">AsyncCall</code> 中 <code class="highlighter-rouge">execute()</code> 的方法操作与同步请求 <code class="highlighter-rouge">execute()</code>内的代码逻辑大同小异。具体原因我们去看看 <code class="highlighter-rouge">Dispatcher</code> 的具体实现 ：</p>
+<p>我们可以看到两者在使用调度器上有些许差别。</p>
+
+<ul>
+  <li><code class="highlighter-rouge">execute()</code> 在调用<code class="highlighter-rouge">Dispatcher</code> 时使用的是 <code class="highlighter-rouge">Dispatcher .executed()</code> 来执行然后在 <code class="highlighter-rouge">finally</code> 后调用<code class="highlighter-rouge">finished</code> 结束流程。</li>
+  <li>而 <code class="highlighter-rouge">enqueue()</code> 则调用了 <code class="highlighter-rouge">enqueue</code> 将自己添加进入调度器，且包装了一个 <code class="highlighter-rouge">AsyncCall</code> ，<code class="highlighter-rouge">AsyncCall</code> 继承了 <code class="highlighter-rouge">NamedRunnable</code> 它是一个<code class="highlighter-rouge">Runnable</code> 在<code class="highlighter-rouge">run()</code> 方法被执行后会触发 <code class="highlighter-rouge">execute()</code> 方法，而另一个主要方法 <code class="highlighter-rouge">executeOn</code> 则是将自己添加到传入的线程池执行，两者环环相扣。<code class="highlighter-rouge">AsyncCall</code> 中 <code class="highlighter-rouge">execute()</code> 的方法操作与同步请求 <code class="highlighter-rouge">execute()</code>内的代码逻辑大同小异。具体原因我们去看看 <code class="highlighter-rouge">Dispatcher</code> 的具体实现 ：</li>
+</ul>
 
 <p><img src="https://s2.ax1x.com/2019/10/15/K9202Q.md.png" alt="Dispatcher" /></p>
 
-<p>可以看到 <code class="highlighter-rouge">Dispatcher</code></p>
-
-<p>维护着三个双向队列</p>
+<p>可以看到 <code class="highlighter-rouge">Dispatcher</code>维护着三个双向队列</p>
 
 <ol>
   <li>预备异步队列 <code class="highlighter-rouge">readyAsyncCalls</code> 一些还没有被放入线程池执行的任务会先放到之类</li>
@@ -236,15 +241,16 @@
   <li>运行同步队列 <code class="highlighter-rouge">runningSyncCalls</code> 已经执行的同步网络任务在这里管理</li>
 </ol>
 
-<p>维护了一个懒加载的线程池 <code class="highlighter-rouge">executorService</code>，线程池没有核心线程，非核心线程最大数量很大，比较适合执行大量的耗时较少的任务。最大的并发请求数量限制为了 61。每个主机的最大请求数量限制为 5。所有的异步任务都是在这个线程池中执行的。</p>
+<p><strong>Dispatcher维护了一个懒加载的线程池 <code class="highlighter-rouge">executorService</code>，线程池没有核心线程，非核心线程最大数量很大，比较适合执行大量的耗时较少的任务。最大的并发请求数量限制为了 60。每个主机的最大请求数量限制为 5。所有的异步任务都是在这个线程池中执行的.</strong></p>
 
 <p>同步请求 <code class="highlighter-rouge">execute</code> 的入口也是 <code class="highlighter-rouge">excute</code> 方法，出口则是 <code class="highlighter-rouge">finished</code>。我们观察它仅仅只是运行的收扔进队列，结束后被 remove 移出，起到管理作用。没有放入线程池总，也就是说 <strong><code class="highlighter-rouge">execute</code> 的执行环境为发起同步请求的线程，这也是为什么我们在 UI 线程中调用同步请求会触发 <code class="highlighter-rouge">NetworkOnMainThread</code> 的根本原因</strong></p>
 
 <p>异步请求 <code class="highlighter-rouge">enqueue</code> 会将方法放入 <code class="highlighter-rouge">readyAsyncCalls</code> 然后执行 <code class="highlighter-rouge">PromoteAndExcute</code> 方法，它会将<code class="highlighter-rouge">readyAsyncCalls</code> 中的任务放到 <code class="highlighter-rouge">runningAsyncCalls</code> 中，然后调用每个任务的 <code class="highlighter-rouge">executeOn</code> 将线程池 <code class="highlighter-rouge">excutorServier</code> 传递给他们调用。线程池会执行开始执行任务而后又触发每个 <code class="highlighter-rouge">AsyncCall</code> 的 <code class="highlighter-rouge">execute</code> 方法执行网络请求，这时网络请求运行的环境就位于线程池内了，之后结果会通过<code class="highlighter-rouge">enqueue</code> 传递的 <code class="highlighter-rouge">responseCallback</code> 回调到发起线程。</p>
 
-<p>到这里整个 OkHttp 的请求流程我们就解析完毕了。其中一些例如缓存策略并没有细致的展开，还有 HttpCode 的具体实现，它是如何对 TCP/IP 网络请求的抽象的。但已经对 OkHttp 建立了一个大致的脉络，由 0 跨越到了 1 ，对整个请求流程有了一定了解。再次不由得再次佩服框架的开发者，设计了如此精美强大的网络请求开源方案。最后我觉得也无须总结了，前面的 OkHttp 的流程图已经很好的诠释了整个解析过程。</p>
+<p>到这里整个 OkHttp 的请求流程我们就解析完毕了。其中一些例如缓存策略并没有细致的展开，还有 HttpCode 的具体实现，它是如何对 TCP/IP 网络请求的抽象的。但已经对 OkHttp 建立了一个大致的脉络，由 0 跨越到了 1 ，对整个请求流程有了一定了解。再次不由得再次佩服框架的开发者，设计了如此精美强大的网络请求开源方案。</p>
 
 <h3 id="总结">总结</h3>
 
-<p>从 Retorfit 分析到 OkHttp ，我们了解我们调用的 Api 是如何循序渐进的从一两行的代码变为一整个完整 HTTP 请求，之后又是怎么将响应便捷的转换为我们使用的对象。本来还打算将 <code class="highlighter-rouge">Okio</code> 也分析一下的，但是 <code class="highlighter-rouge">Okio</code> 的性质更接近于 Java I/O 工具集，怎么从根源剖析感觉暂时对 Java I/O 的理解程度没有到这个地步，挖个坑以后再填吧 ：）</p>
+<p>从 Retorfit 分析到 OkHttp ，我们了解调用的 Api 是如何循序渐进的从一两行的代码变为一整个完整 HTTP 请求，之后又是怎么将网络响应便捷的转换为我们需要结果。体验了程序设计之美。也希望以后的开发过程中可以学以致用，将这些知识真正的纳为己用。</p>
+
 :ET
