@@ -16,7 +16,7 @@ tags:
 
 下面就是半个月的成果——[gank-flutter](https://github.com/Mr9527/GankClient-Flutter)：
 
-![演示图](https://github.com/Mr9527/GankClient-Flutter/blob/master/doc/file/welcome.gif)
+![演示图](https://s1.ax1x.com/2020/04/27/Jfooa8.gif)
 
 
 
