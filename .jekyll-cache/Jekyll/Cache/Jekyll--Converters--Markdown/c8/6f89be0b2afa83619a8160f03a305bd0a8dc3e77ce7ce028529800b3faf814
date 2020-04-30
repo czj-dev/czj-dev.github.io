@@ -1,4 +1,4 @@
-I"�<blockquote>
+I"N�<blockquote>
   <p>在对象之间定义一对多的依赖，这样一来，当一个对象改变状态，依赖它的对象都会收到通知，并自动更新</p>
 </blockquote>
 
@@ -430,12 +430,12 @@
 4
 5
 6
-</pre></td><td class="rouge-code"><pre><span class="nl">log:</span> <span class="err">数据发生了改变</span>
-<span class="nl">log:</span> <span class="err">数据发生了改变</span>
-<span class="err">酷热指数</span> <span class="o">:</span>  <span class="mf">84.45697418607358</span>
-<span class="err">温度</span><span class="mf">15.0</span> <span class="err">湿度</span><span class="mf">16.0</span> <span class="err">气压</span><span class="mf">16.0</span>
+</pre></td><td class="rouge-code"><pre><span class="nl">log:</span> <span class="n">数据发生了改变</span>
+<span class="nl">log:</span> <span class="n">数据发生了改变</span>
+<span class="n">酷热指数</span> <span class="o">:</span>  <span class="mf">84.45697418607358</span>
+<span class="n">温度15</span><span class="o">.</span><span class="mi">0</span> <span class="n">湿度16</span><span class="o">.</span><span class="mi">0</span> <span class="n">气压16</span><span class="o">.</span><span class="mi">0</span>
 <span class="nl">Forecast:</span> <span class="nc">Watch</span> <span class="n">out</span> <span class="k">for</span> <span class="n">cooler</span><span class="o">,</span> <span class="n">rainy</span> <span class="n">weather</span>
-<span class="nl">log:</span> <span class="err">数据发生了改变</span>
+<span class="nl">log:</span> <span class="n">数据发生了改变</span>
 </pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>是不是和你预期的一样呢,观察者模式在这里就介绍完了。</p>
