@@ -110,6 +110,7 @@ Map 与现代语言的 map 类型，key-value 形式存储数据。
 ``` dart
 var defaultMap={};
 Map<String,int> levelMap=  new Map();
+// 如果你使用 Map 构造函数创建一个 map ,默认情况下会创建一个 LinkedHashMap 实例
 levelMap["a"]=0;
 levelMap["b"]=2;
 
@@ -117,6 +118,8 @@ levelMap.forEach((key,value)=>{
     print("key:$key value:$value");
 })
 ```
+
+除此之外，Dart 的 `collection` 包中还有很多我们耳熟能详的集合实现，例如 `Queue` 、`LinkedLIst`、`LinkedHashMap`、`SplayTreeMap ` 等等，这里就不一一介绍了。
 
 
 
