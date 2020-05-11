@@ -2,7 +2,7 @@
 layout: post
 title: "Flutter 深入探索"
 subtitle: "了解 flutter 的渲染和更新机制"
-date: 2020-04-29 15:39:00
+date: 2020-05-11 17:56:00
 author: "rank"
 header-img: "img/post-bg-flutter.jpg"
 catalog: true
