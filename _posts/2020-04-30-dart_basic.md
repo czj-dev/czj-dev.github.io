@@ -20,7 +20,7 @@ tags:
 
 #### **布尔类型（bool）**
 
-布尔类型与 C 语言一样，使用 `bool` 俩声明一个布尔类型的对象，拥有 `true` 和 `false` 两个值
+布尔类型与 C 语言一样，使用 `bool` 声明一个布尔类型的对象，拥有 `true` 和 `false` 两个值
 
 ``` dart
 bool isOpened=true;

@@ -17,7 +17,7 @@ tags:
 
 在深入代码之前，我们先了解一下 Flutter 框架结构：
 
-1. 底层的 Engine 库，负责语言的解释（Dart）、视图的渲染（Skia、Text）.它们都是使用C、C++ 编写的，具有极高的新能。
+1. 底层的 Engine 库，负责语言的解释（Dart）、视图的渲染（Skia、Text）.它们都是使用C、C++ 编写的，具有极高的性能。
 2. Framework 中将编写 UI 所需要的动画、绘制、手势等独立实现，然后组合起来交由 rendering 层级来产生强大的效果，组件的层次是扁平化的，最大化可能的组合数量。
 3.  Flutter 自带了两套较为完善的 Widgets 套件，Android 平台风格的 `Material` 与 iOS 平台风格的 `Cupertino`
 
@@ -140,7 +140,7 @@ void runApp(Widget app) {
 2. 构建 widget 树所对应的 element 树和 render 树
 3. 开始做绘制的准备工作。
 
-WidgetsFlutterBinding 得到内部实现代码虽然只有寥寥几行，但是它实际是通过 dart 的 mixins 特性，像架构图那样，想所有的功能聚合，实现则分开。当 widgetsFlutterBinding 实例化的时候，他所继承的所有类也都一一实例加载了。
+WidgetsFlutterBinding 内部实现代码虽然只有寥寥几行，但是它实际是通过 dart 的 mixins 特性，像架构图那样，将所有的功能聚合，具体实现则分开。当 widgetsFlutterBinding 实例化的时候，他所继承的所有类也都一一实例加载了。
 
 ```dart
 class WidgetsFlutterBinding extends BindingBase with GestureBinding, ServicesBinding, SchedulerBinding, PaintingBinding, SemanticsBinding, RendererBinding, WidgetsBinding {
@@ -255,7 +255,7 @@ void buildScope(Element context, [ VoidCallback callback ]) {
   }
 ```
 
-从代码和注释可以看出来,`buildScope` 是将所有被 `scheduleBuildFor`  标记为脏元素的 element 在此重新执行 rebuild 方法。而 `buildScope` 中并没有看到 `scheduleBuildFor` 的方法调用，那么很显然 在 `callback ` 里了。在 `callback` 中我们执行 element 的  `mount` 方法。
+从代码和注释可以看出来,`buildScope` 是将所有被 `scheduleBuildFor`  标记为脏元素的 element 在此重新执行 rebuild 方法。而 `buildScope` 中并没有看到 `scheduleBuildFor` 的方法调用，那么很显然 在 `callback ` 里了。在 `callback` 中我们看到 element 的  `mount` 方法被执行。
 
 ``` dart
 @override
@@ -387,7 +387,7 @@ void buildScope(Element context, [ VoidCallback callback ]) {
 
 ![](https://i.loli.net/2020/05/11/TKrnEPou51qDM39.png)
 
-本次我们主要关系 build 与 layout 部分，之前的 build 过程已经分析完了，接下来就是 layout ,paint。这里就不做详细分析了，我们可以看到 drawFrame 被调用后它们也都分别完成了各自的工作，然后将数量打包交给引擎最后渲染到窗口。
+本次我们主要关心 build 与 layout 部分，之前的 build 过程已经分析完了，接下来就是 layout ,paint。这里就不做详细分析了，我们可以看到 drawFrame 被调用后它们也都分别完成了各自的工作，然后将数量打包交给引擎最后渲染到窗口。
 
 ```dart
  // 当需要刷新视图的时候，flutter 注册的 frameCallback 都会被调用
@@ -459,7 +459,7 @@ void buildScope(Element context, [ VoidCallback callback ]) {
     }());
     _element.markNeedsBuild();
   }
-// 还记得开篇的 attachToRenderTree 中的 element 如果不等于空的处理方式吗，这里同样如此。将 elemen 标记从新需要构建
+// 还记得开篇的 attachToRenderTree 中的 element 如果不等于空的处理方式吗，这里同样如此。将 element 标记需要构建
 
  void markNeedsBuild() {
     if (!_active)
