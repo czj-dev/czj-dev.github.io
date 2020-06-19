@@ -1,4 +1,4 @@
-I"C<blockquote>
+I"M<blockquote>
   <p>如果你浪费了自己的年龄，那是挺可悲的。因为你的青春只能持续一点儿时间——很短的一点儿时间。 —— 王尔德</p>
 </blockquote>
 
@@ -10,11 +10,11 @@
 
 <h2 id="适配器模式adapter">适配器模式（adapter）</h2>
 
-<p><strong>适配器模式(Adapter)</strong>在 Android 中真是不能再常见了，因为我们所用到的很多控件都需要编写适配器给控件提供数据源，例如: <code class="highlighter-rouge">ListView</code>、<code class="highlighter-rouge">RecyclerView</code>、<code class="highlighter-rouge">spinner</code>等待呢个，至于为什么这些控件要使用适配器模式却一直不求甚解，今天就来好好思考一下。</p>
+<p><strong>适配器模式(Adapter)</strong>在 Android 中真是不能再常见了，因为我们所用到的很多控件都需要编写适配器给控件提供数据源，例如: <code class="language-plaintext highlighter-rouge">ListView</code>、<code class="language-plaintext highlighter-rouge">RecyclerView</code>、<code class="language-plaintext highlighter-rouge">spinner</code>等待呢个，至于为什么这些控件要使用适配器模式却一直不求甚解，今天就来好好思考一下。</p>
 
-<p>还记得第一节课的<code class="highlighter-rouge">Duck</code>吗，我们可以通过适配器模式将它变成<code class="highlighter-rouge">Turkey</code>！</p>
+<p>还记得第一节课的<code class="language-plaintext highlighter-rouge">Duck</code>吗，我们可以通过适配器模式将它变成<code class="language-plaintext highlighter-rouge">Turkey</code>！</p>
 
-<p><code class="highlighter-rouge">Duck</code></p>
+<p><code class="language-plaintext highlighter-rouge">Duck</code></p>
 
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
@@ -28,7 +28,7 @@
 <span class="o">}</span>
 </pre></td></tr></tbody></table></code></pre></div></div>
 
-<p><code class="highlighter-rouge">Turkey</code></p>
+<p><code class="language-plaintext highlighter-rouge">Turkey</code></p>
 
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
@@ -80,11 +80,11 @@
 <span class="o">}</span>
 </pre></td></tr></tbody></table></code></pre></div></div>
 
-<p>这样一个非常简单的适配器就完成了，我们可以<code class="highlighter-rouge">TurkeyAdapter</code>的<code class="highlighter-rouge">crow</code>以此来调用<code class="highlighter-rouge">duck</code>的<code class="highlighter-rouge">quack</code>方法来达到叫喊的功能且不需要修改它们。当然，实际代码中可能更为复杂，</p>
+<p>这样一个非常简单的适配器就完成了，我们可以<code class="language-plaintext highlighter-rouge">TurkeyAdapter</code>的<code class="language-plaintext highlighter-rouge">crow</code>以此来调用<code class="language-plaintext highlighter-rouge">duck</code>的<code class="language-plaintext highlighter-rouge">quack</code>方法来达到叫喊的功能且不需要修改它们。当然，实际代码中可能更为复杂，</p>
 
 <p>适配器也很贴近生活，我们在生活中经常用到适配器，电源适配器使我们不同电压的电器都能在统一电压的插口中使用。而编程中适配器的作用也是如此。它可以让不同的数据转换后适应现有的系统。而 Android 中也是这样，通过适配器这些控件只需要关心自己逻辑上的各种处理，将具体的显示视图和数据交给适配器来进行转换成控件可使用的。</p>
 
-<p>上面介绍的这一种是“”对象“”适配器，除此之外还有一种“类”适配器，不过需要多重继承才能实现它，这在 java 中是不可能的。它让适配器类同时继承了<code class="highlighter-rouge">duck</code>和<code class="highlighter-rouge">Turkey</code>以此来实现适配器的功能。“对象”适配器比“类”适配器更加有弹性，只不过没有”类”适配器的轻便。</p>
+<p>上面介绍的这一种是“”对象“”适配器，除此之外还有一种“类”适配器，不过需要多重继承才能实现它，这在 java 中是不可能的。它让适配器类同时继承了<code class="language-plaintext highlighter-rouge">duck</code>和<code class="language-plaintext highlighter-rouge">Turkey</code>以此来实现适配器的功能。“对象”适配器比“类”适配器更加有弹性，只不过没有”类”适配器的轻便。</p>
 
 <p>那么<strong>之前学习到的装饰者模式和适配器模式它们有什么区别？</strong>，装饰主要的工作是扩展被包装的对象的行为或者责任。而适配器模式更主要的是将转换对象的行为为现在可用的。</p>
 
@@ -98,7 +98,7 @@
   <p><strong>外观模式</strong>提供了一个统一的接口，用来访问子系统中的一群接口。外观定义了一个高层接口，让子系统更容易使用</p>
 </blockquote>
 
-<p>外观模式的功能也是转换，不过它并不是为了修改而是为了简化，使功能更加“聪明”。例如我们在使用<code class="highlighter-rouge">HttpUrlConnection</code>的时候要按步骤来执行非常多的方法，而为此是封装它就是为了简化那些固定流程，留给使用者更加简单易懂方便的操作。请求数据 👉 接受数据即可。</p>
+<p>外观模式的功能也是转换，不过它并不是为了修改而是为了简化，使功能更加“聪明”。例如我们在使用<code class="language-plaintext highlighter-rouge">HttpUrlConnection</code>的时候要按步骤来执行非常多的方法，而为此是封装它就是为了简化那些固定流程，留给使用者更加简单易懂方便的操作。请求数据 👉 接受数据即可。</p>
 
 <p>TODO</p>
 

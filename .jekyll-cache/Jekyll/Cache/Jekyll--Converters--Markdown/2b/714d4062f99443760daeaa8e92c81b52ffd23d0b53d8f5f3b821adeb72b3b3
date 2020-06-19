@@ -1,10 +1,10 @@
-I"<p>####基于 Linux 内存管理</p>
+I"O<p>####基于 Linux 内存管理</p>
 
 <p>Android 系统虽然是基于 Linux 2.6 内核开发的开源操作系统，但是 Android 系统对 Linux 的内存管理系统进行了优化，Linux 系统会在进程活动停止后就结束该进程，而 Android 系统则将这些进程都保留在内存中（即使你是退出该程序而不是 Home 键，任然会保留空置进程），这些保留在内存里的进程通常不会影响整体系统的运行，并且当用户再次激活这些进程时，提升了进程的启动速度和保留了状态。</p>
 
 <h4 id="内存分配">内存分配</h4>
 
-<p>Android 系统会对每个进程的 Dalvik 设置了严格的 Heap 使用限制，如果应用达到内存限制容量后仍然继续申请内存就会触发内存溢出错误。你可以通过 <code class="highlighter-rouge">getMemoryClass()</code> 查询可以使用的 Heap 大小，它会以 M 为单位返回。在非常特殊的场景你可以通过设置 <code class="highlighter-rouge">largetHeap</code>属性为 <code class="highlighter-rouge">true</code> 到 Application 标签来申请大尺寸内存。但是系统不一定会调整分配。这种情况你更应该去解决内存使用过大的问题而不是依赖它</p>
+<p>Android 系统会对每个进程的 Dalvik 设置了严格的 Heap 使用限制，如果应用达到内存限制容量后仍然继续申请内存就会触发内存溢出错误。你可以通过 <code class="language-plaintext highlighter-rouge">getMemoryClass()</code> 查询可以使用的 Heap 大小，它会以 M 为单位返回。在非常特殊的场景你可以通过设置 <code class="language-plaintext highlighter-rouge">largetHeap</code>属性为 <code class="language-plaintext highlighter-rouge">true</code> 到 Application 标签来申请大尺寸内存。但是系统不一定会调整分配。这种情况你更应该去解决内存使用过大的问题而不是依赖它</p>
 
 <blockquote>
   <p>// 1、通过 ActivityManager 获取
@@ -30,7 +30,7 @@ rt.getTotalMemroy();</p>
 最好合理的使用 service，当任务的工作周期明确的时候应当使用 IntentService。</li>
   <li><strong>在界面被隐藏时释放内存资源</strong>。当用户对此界面不可见的时候，开发人员应当主动释放该界面的大块内存资源。此时释放资源可以显著的提升系统的进程缓存容量，从而直接影响用户体验。</li>
   <li><strong>合理的使用多进程</strong>。通过把应用的组件划分到多个进程可以帮助你增加应用的内存占用。但是多进程在大多数情况下都是弊大于利的，进程之间无法共享内存，静态成员和单例模式失效等等。</li>
-  <li><strong>使用 zipalign 优化</strong>。在应用的 build.gradle 文件中 将 <code class="highlighter-rouge">zipalignEnable</code> 属性设置为 true
+  <li><strong>使用 zipalign 优化</strong>。在应用的 build.gradle 文件中 将 <code class="language-plaintext highlighter-rouge">zipalignEnable</code> 属性设置为 true
 系统会对应用进行优化，既对应用的资源、代码进行偏移 4 的整倍数达到 DSA 标准。减少应用的内存资源占用和加快整体执行效率。</li>
 </ol>
 

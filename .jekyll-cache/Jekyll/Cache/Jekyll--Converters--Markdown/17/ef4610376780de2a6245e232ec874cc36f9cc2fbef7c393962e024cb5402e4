@@ -1,4 +1,4 @@
-I"�H<p>这篇文章主要是复习 Android 开发艺术探索的第 10 章和 第 11 章，整理了 Android 中关于线程的知识点。</p>
+I"9I<p>这篇文章主要是复习 Android 开发艺术探索的第 10 章和 第 11 章，整理了 Android 中关于线程的知识点。</p>
 
 <h2 id="threadloacal">ThreadLoacal</h2>
 
@@ -16,7 +16,7 @@
 
 <p>###AsyncTask 的工作原理</p>
 
-<p>从 <code class="highlighter-rouge">execute</code> 方法分析可以得出，在 AsyncTask 在执行的 <code class="highlighter-rouge">execute</code> 方法时，系统会把 Params 参数封装成一个 FutureTask 对象，FutureTask 是一个并发类，这里它充当了 Runnable 的作用。然后将 FutureTask 交给 SerialExecutor 的 excute 方法执行，它会将 FutureTask 放入 mTask 这个队列中，如果这个时候没有活动的 AsyncTask 任务，那么它就直接调用 scheduleNext() 方法把这个任务放入 threadPoolExecutor 这个线程池执行任务，任务执行完成后又会继续调用 scheduleNext 方法来执行下一个任务，直至所有的任务都执行完毕，所以 AsyncTask 默认是一个串行执行的（3.0 及以上），如果想要 3.0 以上执行，那么可以采用 AyncTask 的 excuteOnExecutor 方法，它接受一个线程池并将任务直接放入线程池中执行，可以跳过 excute 方法的排队步骤。</p>
+<p>从 <code class="language-plaintext highlighter-rouge">execute</code> 方法分析可以得出，在 AsyncTask 在执行的 <code class="language-plaintext highlighter-rouge">execute</code> 方法时，系统会把 Params 参数封装成一个 FutureTask 对象，FutureTask 是一个并发类，这里它充当了 Runnable 的作用。然后将 FutureTask 交给 SerialExecutor 的 excute 方法执行，它会将 FutureTask 放入 mTask 这个队列中，如果这个时候没有活动的 AsyncTask 任务，那么它就直接调用 scheduleNext() 方法把这个任务放入 threadPoolExecutor 这个线程池执行任务，任务执行完成后又会继续调用 scheduleNext 方法来执行下一个任务，直至所有的任务都执行完毕，所以 AsyncTask 默认是一个串行执行的（3.0 及以上），如果想要 3.0 以上执行，那么可以采用 AyncTask 的 excuteOnExecutor 方法，它接受一个线程池并将任务直接放入线程池中执行，可以跳过 excute 方法的排队步骤。</p>
 
 <p>当 任务执行完成后会调用 postResult 通过 InternalHandler 发送一个消息，将结果发送回主线程并回调 onPostEvexute 方法。这里的 Handle 是静态的，这也就意味着 AsyncTask 的实例 必须在主线程中创建。</p>
 
@@ -58,7 +58,7 @@
     <span class="o">}</span>
 </pre></td></tr></tbody></table></code></pre></div></div>
 
-<p>提供了<code class="highlighter-rouge">quit</code> 和<code class="highlighter-rouge">quitSafely</code> 在任务执行的时候结束当前线程的执行，养成良好的编程习惯。 HandlerThread 的具体实践就是 IntentService 这个接下来讲。</p>
+<p>提供了<code class="language-plaintext highlighter-rouge">quit</code> 和<code class="language-plaintext highlighter-rouge">quitSafely</code> 在任务执行的时候结束当前线程的执行，养成良好的编程习惯。 HandlerThread 的具体实践就是 IntentService 这个接下来讲。</p>
 
 <h2 id="intentservice">IntentService</h2>
 

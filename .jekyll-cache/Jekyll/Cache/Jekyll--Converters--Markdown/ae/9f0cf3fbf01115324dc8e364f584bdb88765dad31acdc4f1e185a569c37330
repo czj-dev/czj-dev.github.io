@@ -1,4 +1,4 @@
-I"��<h3 id="uri">URI</h3>
+I"��<h3 id="uri">URI</h3>
 
 <p><strong>URI 是一种更通用的资源标识符，URL 实际是它的子集。URI 是一个通用的概念，由两个主要的子集 URL 和 URN 构成 ，URL 是通过描述资源的位置来标识自愿的，而 URN 则是通过名称来识别资源，与它们所处的位置无关</strong></p>
 
@@ -6,7 +6,7 @@
 
 <p><strong>URL 格式</strong></p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 </pre></td><td class="rouge-code"><pre>&lt;scheme&gt;://&lt;user&gt;:&lt;password&gt;@&lt;host&gt;&lt;port&gt;&lt;path&gt;;&lt;params&gt;?&lt;query&gt;#&lt;frag&gt;
 </pre></td></tr></tbody></table></code></pre></div></div>
 
@@ -16,7 +16,7 @@
   <li>
     <p><strong>http</strong> 超文本传输协议，除了没有用户名和密码之外，与通用的 URL 格式相同，如果没有指定端口，那么它的<strong>默认端口为 80</strong></p>
 
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
 3
 4
@@ -39,14 +39,14 @@ flag: 9835
   <li>
     <p><strong>https</strong> 方案与 http 的唯一区别在于 https 方案使用了网景的 SSL，为 http 提供了端到端的加密机制。<strong>默认端口 443</strong></p>
 
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 </pre></td><td class="rouge-code"><pre>格式：http://&lt;host&gt;:&lt;port&gt;/&lt;path&gt;?&lt;query&gt;#&lt;frag&gt;
 </pre></td></tr></tbody></table></code></pre></div>    </div>
   </li>
   <li>
     <p><strong>ftp</strong> 文件传输协议 URL 可以用来从 FTP 服务器上下载或其上载文件，并获取 FTP 服务器上的目录结构内容的列表。</p>
 
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
 3
 4
@@ -69,9 +69,9 @@ path: pub/gnu/
 </pre></td></tr></tbody></table></code></pre></div>    </div>
   </li>
   <li>
-    <p><strong>rtsp,rtspu</strong> 是可以通过实时流传输协议解析的音视频媒体资源的标识符。方案中的 <code class="highlighter-rouge">u</code> 表示它是用来使用 UDP 协议获取资源的。</p>
+    <p><strong>rtsp,rtspu</strong> 是可以通过实时流传输协议解析的音视频媒体资源的标识符。方案中的 <code class="language-plaintext highlighter-rouge">u</code> 表示它是用来使用 UDP 协议获取资源的。</p>
 
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
 3
 4
@@ -84,7 +84,7 @@ path: pub/gnu/
   <li>
     <p><strong>file</strong> 方案 file 表示一台指定主机上可以直接访问的文件。各字段都遵循通用格式。如果省略了主机名，就默认为正在使用的基本格式。</p>
 
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
 </pre></td><td class="rouge-code"><pre>格式: file://&lt;host&gt;/&lt;path&gt;
 范例: file://OFFICE-FS/policies/casual-firdays.doc
@@ -96,7 +96,7 @@ path: pub/gnu/
 
 <p>报文的请求格式 :</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
 3
 </pre></td><td class="rouge-code"><pre>&lt;method&gt; &lt;request-RUL&gt; &lt;version&gt;
@@ -106,7 +106,7 @@ path: pub/gnu/
 
 <p>报文的响应格式 :</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
 3
 </pre></td><td class="rouge-code"><pre>&lt;version&gt;&lt;status&gt;&lt;reason_phrase&gt;
@@ -176,7 +176,7 @@ path: pub/gnu/
     <p><strong>版本（version）</strong>
 报文所使用的 HTTP 版本 ，格式规定是这样的:</p>
 
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 </pre></td><td class="rouge-code"><pre>HTTP/&lt;major&gt;.&lt;minor&gt;
 </pre></td></tr></tbody></table></code></pre></div>    </div>
 
@@ -229,7 +229,7 @@ path: pub/gnu/
   </li>
   <li>
     <p><strong>首部（header）</strong>
-可以有零个或多个首部，每个首部都包含一个名字，后面跟着一个冒号<code class="highlighter-rouge">:</code>然后是一个可选的空格，接着是一个值，最后是一个 CRLF。</p>
+可以有零个或多个首部，每个首部都包含一个名字，后面跟着一个冒号<code class="language-plaintext highlighter-rouge">:</code>然后是一个可选的空格，接着是一个值，最后是一个 CRLF。</p>
   </li>
   <li>
     <p><strong>实体的主体部分（entity-body）</strong>
@@ -455,29 +455,29 @@ path: pub/gnu/
 
 <p>浏览器内部的 cookie 罐中可以有成百上千个 cookie，但浏览器不会将每个 cookie 都发送给所有的站点。产生 cookie 的服务器可以想 Set-Cookie 响应首部添加一个 Domain 属性来控制哪些站点可以看到那个 cookie。比如。例如：</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 </pre></td><td class="rouge-code"><pre>Set-Cooke:user="mary";domian="airtravelbargains.com"
 </pre></td></tr></tbody></table></code></pre></div></div>
 
-<p>之后如果用户访问的是 .airtravelbargains.com 结尾的站点，那么 <code class="highlighter-rouge">user="mary"</code> 的这个 cookie 信息都会被发布出去</p>
+<p>之后如果用户访问的是 .airtravelbargains.com 结尾的站点，那么 <code class="language-plaintext highlighter-rouge">user="mary"</code> 的这个 cookie 信息都会被发布出去</p>
 
-<p>同时 cookie 规范甚至允许用户将 cookie 与部分 web 站点关联起来。可以通过 <code class="highlighter-rouge">path</code> 属性来实现这一功能，在这个属性下列出的 URL 路径前缀下的 cookie 都是有效的</p>
+<p>同时 cookie 规范甚至允许用户将 cookie 与部分 web 站点关联起来。可以通过 <code class="language-plaintext highlighter-rouge">path</code> 属性来实现这一功能，在这个属性下列出的 URL 路径前缀下的 cookie 都是有效的</p>
 
 <p>例如，某个 web 服务器可能是由两个组织共享的，每个组织都有独立的 cookie。站点 www.airtravelbargains.com 可能会将部分的 web 站点用于汽车租凭——比如 http://www.airtravelbargains.om/autos/ 用一个独立的 cookie 来记录用户喜欢的汽车样式。可能会生成一个特俗汽车租凭 cookie：</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 </pre></td><td class="rouge-code"><pre>Set-cookie:pref=compact;domian="airtravelbargains.com";path="/autos/"
 </pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>如果用户访问 http://www.airtravelbargains.om/specials.html 它就只会获得这个 cookie :</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 </pre></td><td class="rouge-code"><pre>Cookie:user=“mary”
 </pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>但如果访问 http://www.airtravelbargains.om/autos/index.html 则就会获得两个 cookie：</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
 </pre></td><td class="rouge-code"><pre>Cookie:user="mary"
 Cookie:pref="compact"
@@ -681,7 +681,7 @@ Cookie:pref="compact"
 
 <p>在安全 HTTPS 协议中，URL 的方案前缀为 HTTPS 如下所示：</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 </pre></td><td class="rouge-code"><pre>https://www.baidu.com/
 </pre></td></tr></tbody></table></code></pre></div></div>
 
@@ -743,7 +743,7 @@ Cookie:pref="compact"
 
 <h4 id="实体结构">实体结构</h4>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
 3
 4
@@ -768,11 +768,11 @@ Data:Sun,17 sep 2000 00:01:05 GMT
 <p>回车符（CR）和换行符（LF） 是文本文件用于标记换行的控制字符或字节码。</p>
 
 <ul>
-  <li>CR = Carriage Return，回车符号（<code class="highlighter-rouge">\r</code>，十六进制 ascii 码为 <code class="highlighter-rouge">0x0D</code> ，十进制 ascii 码为 <code class="highlighter-rouge">13</code>）,用于将鼠标移动至行首，并不前前进至下一行。</li>
-  <li>LF = Line Feed, 换行符号（<code class="highlighter-rouge">\n</code>,十六进制 ascii 码为 <code class="highlighter-rouge">0X0A</code>,十六进制码为 <code class="highlighter-rouge">10</code>)。</li>
+  <li>CR = Carriage Return，回车符号（<code class="language-plaintext highlighter-rouge">\r</code>，十六进制 ascii 码为 <code class="language-plaintext highlighter-rouge">0x0D</code> ，十进制 ascii 码为 <code class="language-plaintext highlighter-rouge">13</code>）,用于将鼠标移动至行首，并不前前进至下一行。</li>
+  <li>LF = Line Feed, 换行符号（<code class="language-plaintext highlighter-rouge">\n</code>,十六进制 ascii 码为 <code class="language-plaintext highlighter-rouge">0X0A</code>,十六进制码为 <code class="language-plaintext highlighter-rouge">10</code>)。</li>
 </ul>
 
-<p>紧邻的 CR 和 LF （组成 CRLF ，<code class="highlighter-rouge">\r\n</code>，或十六进制 <code class="highlighter-rouge">0X0D0A</code>）将鼠标移动到下一行行首。（Windows 操作系统默认的文本换行符为 CRLF ；Linux 以及 macOS 系统默认使用 LF）</p>
+<p>紧邻的 CR 和 LF （组成 CRLF ，<code class="language-plaintext highlighter-rouge">\r\n</code>，或十六进制 <code class="language-plaintext highlighter-rouge">0X0D0A</code>）将鼠标移动到下一行行首。（Windows 操作系统默认的文本换行符为 CRLF ；Linux 以及 macOS 系统默认使用 LF）</p>
 
 <h4 id="content-length">Content-Length</h4>
 
@@ -853,7 +853,7 @@ Data:Sun,17 sep 2000 00:01:05 GMT
 
 <p>HTTP 使用 Content-Type ：multipart/from-data 或 Content-Type：multipart/mixed 这样的首部以及多部分主体来发送这种请求，举例如下：</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 </pre></td><td class="rouge-code"><pre>Content-Type：multipart/from-data ;boundary=AaB03x
 </pre></td></tr></tbody></table></code></pre></div></div>
 
@@ -887,7 +887,7 @@ Data:Sun,17 sep 2000 00:01:05 GMT
 
 <p>我们在文本中输入 “Joke” 并选择了一个文本文件“essayfile.txt” ，那么它的主体构造可能是这个样子</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
 3
 4
@@ -911,7 +911,7 @@ COntent-Type:text/plain
 
 <p>如果我们还选了了另一个图像文件 “imagefile.gif”，那么构造的主体可能就这个样子了</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
 3
 4
