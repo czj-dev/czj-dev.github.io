@@ -1,4 +1,4 @@
-I"�P<blockquote>
+I"RQ<blockquote>
   <p>your internal mediocrity is the moment when you lost the faith of being excellent</p>
 </blockquote>
 
@@ -6,7 +6,7 @@
 
 <p>又到了学习 Head First 的时间了，今天大名鼎鼎的星巴兹咖啡找到我们，让我们帮忙更新他们的订单系统,他们现在的订单系统是这样的：<img src="http://my.csdn.net/uploads/201205/06/1336303779_2807.jpg" alt="system" /></p>
 
-<p>看起来还好不是吗，简单清晰。所有的饮料都继承<code class="highlighter-rouge">Beverage</code>，具体的饮料用<code class="highlighter-rouge">cost()</code>来计算价格<code class="highlighter-rouge">description</code>来描述。但是他们遇到了一个问题，购买咖啡时候，也可以要求在其中加入各种调料，例如 : <code class="highlighter-rouge">milk(牛奶)</code>、<code class="highlighter-rouge">Soy(豆浆)</code>、<code class="highlighter-rouge">Mocha(摩卡)</code>等等。最后会更具加入的不同调料收取费用。所以订单系统必须考虑的到这些调料。所以他们尝试这样搭建一个系统 :</p>
+<p>看起来还好不是吗，简单清晰。所有的饮料都继承<code class="language-plaintext highlighter-rouge">Beverage</code>，具体的饮料用<code class="language-plaintext highlighter-rouge">cost()</code>来计算价格<code class="language-plaintext highlighter-rouge">description</code>来描述。但是他们遇到了一个问题，购买咖啡时候，也可以要求在其中加入各种调料，例如 : <code class="language-plaintext highlighter-rouge">milk(牛奶)</code>、<code class="language-plaintext highlighter-rouge">Soy(豆浆)</code>、<code class="language-plaintext highlighter-rouge">Mocha(摩卡)</code>等等。最后会更具加入的不同调料收取费用。所以订单系统必须考虑的到这些调料。所以他们尝试这样搭建一个系统 :</p>
 
 <p><img src="http://my.csdn.net/uploads/201205/06/1336303992_9751.jpg" alt="system1" /></p>
 
@@ -146,7 +146,7 @@
 
 <ul>
   <li>调整价钱的改变会使得我们更改现有代码。</li>
-  <li>一旦出现新的饮料，我们就需要加上新的方法，并且要修改超类中<code class="highlighter-rouge">cost()</code>方法。</li>
+  <li>一旦出现新的饮料，我们就需要加上新的方法，并且要修改超类中<code class="language-plaintext highlighter-rouge">cost()</code>方法。</li>
   <li>以后可能会开发出新饮料。对这些饮料而言，某些调料可能并不合适，但是在这个设计方式中，子类仍将继承那些不合适的方法。</li>
   <li>万一顾客想要双倍摩卡的咖啡怎么办？</li>
   <li>当我们要设计新的功能，例如不同价格的同一调料，那将是巨大的改动。</li>
@@ -201,7 +201,7 @@
 <span class="o">}</span>
 </pre></td></tr></tbody></table></code></pre></div></div>
 
-<p>装饰者类,将<code class="highlighter-rouge">getDescription()</code>抽象化，子类必须实现它 :</p>
+<p>装饰者类,将<code class="language-plaintext highlighter-rouge">getDescription()</code>抽象化，子类必须实现它 :</p>
 
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
@@ -295,7 +295,7 @@
 
 <p>输出为 :</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
 </pre></td><td class="rouge-code"><pre>HouseBlend, Mocha,Soy,Whip: 2.88
 Espresso,Whip, Mocha, Mocha: 1.69

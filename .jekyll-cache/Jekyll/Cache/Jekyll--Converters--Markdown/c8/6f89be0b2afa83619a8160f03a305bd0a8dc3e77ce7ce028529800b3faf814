@@ -1,10 +1,10 @@
-I"N�<blockquote>
+I"<�<blockquote>
   <p>在对象之间定义一对多的依赖，这样一来，当一个对象改变状态，依赖它的对象都会收到通知，并自动更新</p>
 </blockquote>
 
 <h2 id="代码实现">代码实现</h2>
 
-<p>观察者模式应该是<code class="highlighter-rouge">Java</code>和<code class="highlighter-rouge">Android</code>中用到的非常多的一个设计模式了，<code class="highlighter-rouge">Java</code>还提供了<code class="highlighter-rouge">Observer</code>相关的实现类，它们在<code class="highlighter-rouge">java.util.*</code>下，但它的<code class="highlighter-rouge">Observable</code>是个实现类，我们使用时需要继承它,这样并不方便我们的使用， 今天我们就参照书籍和相关类自己实现一个传统的<code class="highlighter-rouge">观察者模式</code>。</p>
+<p>观察者模式应该是<code class="language-plaintext highlighter-rouge">Java</code>和<code class="language-plaintext highlighter-rouge">Android</code>中用到的非常多的一个设计模式了，<code class="language-plaintext highlighter-rouge">Java</code>还提供了<code class="language-plaintext highlighter-rouge">Observer</code>相关的实现类，它们在<code class="language-plaintext highlighter-rouge">java.util.*</code>下，但它的<code class="language-plaintext highlighter-rouge">Observable</code>是个实现类，我们使用时需要继承它,这样并不方便我们的使用， 今天我们就参照书籍和相关类自己实现一个传统的<code class="language-plaintext highlighter-rouge">观察者模式</code>。</p>
 
 <p>上一次我们公司通过<a href="https://mr9527.github.io/2017/02/04/%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F(StrategyPattern)/"><strong>策略模式(StrategyPattern)</strong></a>来实现了一个暂时完美的产品“Bird”。公司已经步入了正轨，名气也逐渐大了起来，气象站的老板<strong>Just</strong>找到我们想让我们帮它做一款气象站的应用。</p>
 
@@ -12,11 +12,11 @@
 
 <h3 id="设计程序">设计程序</h3>
 
-<p>观察者模式有两个主要的角色 :可观察的对象<code class="highlighter-rouge">observable</code>或者也叫做<code class="highlighter-rouge">Subject</code>，订阅者<code class="highlighter-rouge">observer</code>。当<code class="highlighter-rouge">observable</code>发生改变的时候(这里对应的就是天气发生了变化),它会通知所有的<code class="highlighter-rouge">observer</code>(布告板),让它们根据情况去做自己的事情(更新显示的数据)。</p>
+<p>观察者模式有两个主要的角色 :可观察的对象<code class="language-plaintext highlighter-rouge">observable</code>或者也叫做<code class="language-plaintext highlighter-rouge">Subject</code>，订阅者<code class="language-plaintext highlighter-rouge">observer</code>。当<code class="language-plaintext highlighter-rouge">observable</code>发生改变的时候(这里对应的就是天气发生了变化),它会通知所有的<code class="language-plaintext highlighter-rouge">observer</code>(布告板),让它们根据情况去做自己的事情(更新显示的数据)。</p>
 
-<p>气象站的功能和观察者模式非常吻合,小明决定直接参照<code class="highlighter-rouge">Java</code>中的<code class="highlighter-rouge">Observer</code>来实现:</p>
+<p>气象站的功能和观察者模式非常吻合,小明决定直接参照<code class="language-plaintext highlighter-rouge">Java</code>中的<code class="language-plaintext highlighter-rouge">Observer</code>来实现:</p>
 
-<p>记得上一次提起的设计原则——<strong>针对接口编程,而不是针对实现编程</strong>.我们将<code class="highlighter-rouge">observer</code>和<code class="highlighter-rouge">observable</code>的功能都用接口来声明:</p>
+<p>记得上一次提起的设计原则——<strong>针对接口编程,而不是针对实现编程</strong>.我们将<code class="language-plaintext highlighter-rouge">observer</code>和<code class="language-plaintext highlighter-rouge">observable</code>的功能都用接口来声明:</p>
 
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
@@ -48,9 +48,9 @@
 <span class="o">}</span>
 </pre></td></tr></tbody></table></code></pre></div></div>
 
-<p>这样我们就将<code class="highlighter-rouge">observable</code>的注册、注销、和推送与<code class="highlighter-rouge">Observer</code>的更新都给抽离出来了减少了耦合增加了扩展性。</p>
+<p>这样我们就将<code class="language-plaintext highlighter-rouge">observable</code>的注册、注销、和推送与<code class="language-plaintext highlighter-rouge">Observer</code>的更新都给抽离出来了减少了耦合增加了扩展性。</p>
 
-<p>还有一点需要注意的就是我们的<code class="highlighter-rouge">observer</code>都一个通用的功能——投影到公告板，这一点在设计原则中也提到了——<strong>找出应用中可能需要变化之处，把它们独立出来，不要和那些不需要变化的代码混在一起。</strong>我们也将这个功能抽离出来。</p>
+<p>还有一点需要注意的就是我们的<code class="language-plaintext highlighter-rouge">observer</code>都一个通用的功能——投影到公告板，这一点在设计原则中也提到了——<strong>找出应用中可能需要变化之处，把它们独立出来，不要和那些不需要变化的代码混在一起。</strong>我们也将这个功能抽离出来。</p>
 
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
@@ -200,7 +200,7 @@
 <span class="o">}</span>
 </pre></td></tr></tbody></table></code></pre></div></div>
 
-<p>我们在气象站通过一个<code class="highlighter-rouge">List</code>来管理订阅者们，当数据发生改变时候去通知它们，可以看到完全是面向对象的方式实现的，<code class="highlighter-rouge">observable</code>并不知道也不需要知道它的<code class="highlighter-rouge">observer</code>有哪些功能。至于为什么加一个开关<code class="highlighter-rouge">changed</code>，是因为这样我们可以更好的控制布告板的显示，我们不能每次发生一点改动就去更新它，那样用户的设备会爆炸的(当然没那么严重),有了这个”开关”我们就可以控制它的频率，比如每隔一段时间发送一次，或者变动较大发送一次。</p>
+<p>我们在气象站通过一个<code class="language-plaintext highlighter-rouge">List</code>来管理订阅者们，当数据发生改变时候去通知它们，可以看到完全是面向对象的方式实现的，<code class="language-plaintext highlighter-rouge">observable</code>并不知道也不需要知道它的<code class="language-plaintext highlighter-rouge">observer</code>有哪些功能。至于为什么加一个开关<code class="language-plaintext highlighter-rouge">changed</code>，是因为这样我们可以更好的控制布告板的显示，我们不能每次发生一点改动就去更新它，那样用户的设备会爆炸的(当然没那么严重),有了这个”开关”我们就可以控制它的频率，比如每隔一段时间发送一次，或者变动较大发送一次。</p>
 
 <h3 id="天气数据布告板">天气数据布告板</h3>
 
@@ -250,7 +250,7 @@
 <span class="o">}</span>
 </pre></td></tr></tbody></table></code></pre></div></div>
 
-<p>我们通过多态来获得<code class="highlighter-rouge">observable</code>的信息，然后调用<code class="highlighter-rouge">dispaly()</code>来显示布告板。</p>
+<p>我们通过多态来获得<code class="language-plaintext highlighter-rouge">observable</code>的信息，然后调用<code class="language-plaintext highlighter-rouge">dispaly()</code>来显示布告板。</p>
 
 <h3 id="天气预报布告板">天气预报布告板</h3>
 
@@ -452,7 +452,7 @@
   <li>观察者和观察者之间用松耦合方式结合，可观察者不知道观察者的细节，只知道观察者实现了观察者接口。</li>
   <li>使用此模式时，你可以从被观察者处推(pus)或拉(pull)数据(推的方式被认为更”正确”)。</li>
   <li>有多个观察者时，不可以依赖特定的通知次序。</li>
-  <li>Java 有多种观察者模式的实现，包括了通用的<code class="highlighter-rouge">java.util.Obseravble</code>。</li>
+  <li>Java 有多种观察者模式的实现，包括了通用的<code class="language-plaintext highlighter-rouge">java.util.Obseravble</code>。</li>
 </ul>
 
 <p>day day up</p>
