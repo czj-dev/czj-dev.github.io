@@ -1,4 +1,4 @@
-I"D<h2 id="前言">前言</h2>
+I"oE<h2 id="前言">前言</h2>
 
 <p>今年的读书计划正式开张了，其实过年的时候就把书单中的《了不起的盖茨比》给阅读完了，但是看完如猪八戒吃人参果——不知啥滋味。只知道大概的故事情节，书中华丽的词藻、作品的艺术和主题并不能完全体会，更别说写一些阅读后的观感了。抽空肯定是要重新阅读几遍的，所以就不把它当作已读书籍了。</p>
 
@@ -22,9 +22,9 @@
 
 <h3 id="实现策略模式">实现策略模式</h3>
 
-<p>我们通过<code class="highlighter-rouge">java</code>代码来实现策略模式。</p>
+<p>我们通过<code class="language-plaintext highlighter-rouge">java</code>代码来实现策略模式。</p>
 
-<p>现在公司有一种产品——<code class="highlighter-rouge">Bird</code>(是的，你没看错，我们的产品就是鸟！),这只鸟目前的功能是<code class="highlighter-rouge">walk()</code>和<code class="highlighter-rouge">display</code>。我们还开设了两个子产品乌鸦和麻雀,如图:</p>
+<p>现在公司有一种产品——<code class="language-plaintext highlighter-rouge">Bird</code>(是的，你没看错，我们的产品就是鸟！),这只鸟目前的功能是<code class="language-plaintext highlighter-rouge">walk()</code>和<code class="language-plaintext highlighter-rouge">display</code>。我们还开设了两个子产品乌鸦和麻雀,如图:</p>
 
 <pre><code class="language-mermaid">graph TB;
 Bird["Bird&lt;br&gt; &lt;br&gt; &lt;br&gt;display()&lt;br&gt; &lt;br&gt;walk()"]
@@ -36,7 +36,7 @@ style Bird fill:#FFFACD;
 
 <p>今年，公司的竞争压力加剧，公司主管认为是该创新的时候了，他们需要在下一次股东会议上展示一些”真正”让人印象深刻的东西来振奋人心了，于是我们决定让鸟能飞!</p>
 
-<p>小明拍胸脯保证一周就可以完成,他想他只要在<strong><code class="highlighter-rouge">Bird</code>类中加上<code class="highlighter-rouge">fly()</code>方法，这样所有鸟类就都会飞了</strong>:</p>
+<p>小明拍胸脯保证一周就可以完成,他想他只要在<strong><code class="language-plaintext highlighter-rouge">Bird</code>类中加上<code class="language-plaintext highlighter-rouge">fly()</code>方法，这样所有鸟类就都会飞了</strong>:</p>
 
 <pre><code class="language-mermaid">graph TB;
 Bird["Bird&lt;br&gt; &lt;br&gt; &lt;br&gt;display()&lt;br&gt; &lt;br&gt;walk() &lt;br&gt; &lt;br&gt; fly() //👈小明加上的"]
@@ -47,9 +47,9 @@ style Bird fill:#FFFACD;
 
 <p>小明觉得天衣无缝，但是在股东会议上的展示上主管发现有很多橡胶鸟也在飞，主管让小明尽快的解决问题，不然就准备去逛前程无忧吧。</p>
 
-<p><strong>小明觉得可以把橡胶鸟类中的<code class="highlighter-rouge">fly()</code>方法覆盖掉，但是以后如果加入别的鸟类又会如何?再给鸟增加一个shout的功能呢?</strong></p>
+<p><strong>小明觉得可以把橡胶鸟类中的<code class="language-plaintext highlighter-rouge">fly()</code>方法覆盖掉，但是以后如果加入别的鸟类又会如何?再给鸟增加一个shout的功能呢?</strong></p>
 
-<p>利用继承来提供<code class="highlighter-rouge">Bird</code>的行为，会导致:</p>
+<p>利用继承来提供<code class="language-plaintext highlighter-rouge">Bird</code>的行为，会导致:</p>
 
 <ul>
   <li><strong>代码在多个子类中重复。</strong></li>
@@ -63,12 +63,12 @@ style Bird fill:#FFFACD;
 <p>这时候策略模式就上场了，策略模式的定义 :</p>
 
 <blockquote>
-  <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+  <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 </pre></td><td class="rouge-code"><pre>策略模式定义了算法族，分别封装起来，让它们之间可以互相替换，此模式让算法的变化独立与使用算法的客户。
 </pre></td></tr></tbody></table></code></pre></div>  </div>
 </blockquote>
 
-<p>我们将<code class="highlighter-rouge">fly()</code>和<code class="highlighter-rouge">shout()</code>在<code class="highlighter-rouge">Bird</code>中声明出来，并提供两个接口<code class="highlighter-rouge">FlyBehavior</code>和<code class="highlighter-rouge">ShoutBehavior</code>来实现这两个方法</p>
+<p>我们将<code class="language-plaintext highlighter-rouge">fly()</code>和<code class="language-plaintext highlighter-rouge">shout()</code>在<code class="language-plaintext highlighter-rouge">Bird</code>中声明出来，并提供两个接口<code class="language-plaintext highlighter-rouge">FlyBehavior</code>和<code class="language-plaintext highlighter-rouge">ShoutBehavior</code>来实现这两个方法</p>
 
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
@@ -175,7 +175,7 @@ Bird --&gt; FlyNoWay["FlyNoWay&lt;br&gt; &lt;br&gt;fly(){&lt;br&gt; &lt;br&gt;  
 style Bird fill:#FFFACD;
 </code></pre>
 
-<p><code class="highlighter-rouge">FlyBehavior</code>和<code class="highlighter-rouge">ShoutBehavior</code>的实现类我们很简单我们就只列举一个:</p>
+<p><code class="language-plaintext highlighter-rouge">FlyBehavior</code>和<code class="language-plaintext highlighter-rouge">ShoutBehavior</code>的实现类我们很简单我们就只列举一个:</p>
 
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
@@ -225,7 +225,7 @@ style Bird fill:#FFFACD;
 
 </pre></td></tr></tbody></table></code></pre></div></div>
 
-<p>我们指定了Margpie的<code class="highlighter-rouge">fly()</code>和<code class="highlighter-rouge">Shout</code>的实现类，然后我们让它飞起来:</p>
+<p>我们指定了Margpie的<code class="language-plaintext highlighter-rouge">fly()</code>和<code class="language-plaintext highlighter-rouge">Shout</code>的实现类，然后我们让它飞起来:</p>
 
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
@@ -257,7 +257,7 @@ style Bird fill:#FFFACD;
 <span class="no">G</span> <span class="no">G</span> <span class="no">G</span><span class="o">...</span>
 </pre></td></tr></tbody></table></code></pre></div></div>
 
-<p>我们也可以调用<code class="highlighter-rouge">seter</code>方法来动态改变鸟的行为。</p>
+<p>我们也可以调用<code class="language-plaintext highlighter-rouge">seter</code>方法来动态改变鸟的行为。</p>
 
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
