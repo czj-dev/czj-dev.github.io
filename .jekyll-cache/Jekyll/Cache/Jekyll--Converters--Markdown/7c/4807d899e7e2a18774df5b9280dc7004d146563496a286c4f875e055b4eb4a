@@ -1,4 +1,4 @@
-I"�<p>[TOC]</p>
+I"2�<p>[TOC]</p>
 
 <h2 id="原注解">原注解</h2>
 
@@ -29,7 +29,7 @@
   <li><strong>TYPE</strong> :  用于描述类、接口（包括注解类型）或enum类型声明</li>
 </ol>
 
-<p>像现在我们声明一个<code class="highlighter-rouge">Name</code>注解，声明的<code class="highlighter-rouge">Target</code>范围是<code class="highlighter-rouge">TYPE</code>，也就是说该注解只能在类、接口以及枚举中声明,当我们在其他场景如方法、变量中声明该注解,IDE就会报错。</p>
+<p>像现在我们声明一个<code class="language-plaintext highlighter-rouge">Name</code>注解，声明的<code class="language-plaintext highlighter-rouge">Target</code>范围是<code class="language-plaintext highlighter-rouge">TYPE</code>，也就是说该注解只能在类、接口以及枚举中声明,当我们在其他场景如方法、变量中声明该注解,IDE就会报错。</p>
 
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
@@ -53,13 +53,13 @@
   <li><strong>RUNTIME</strong> :  在编译阶段也保留。</li>
 </ul>
 
-<p>我们使用自定义注解时一般使用<code class="highlighter-rouge">RUNTIME</code>，这样在运行阶段注解处理器就可以通过反射拿到该注解的属性，从而做一些操作。</p>
+<p>我们使用自定义注解时一般使用<code class="language-plaintext highlighter-rouge">RUNTIME</code>，这样在运行阶段注解处理器就可以通过反射拿到该注解的属性，从而做一些操作。</p>
 
 <h3 id="document">@Document</h3>
 
 <p>作用 :  <strong>用于给Javadoc工具标记</strong></p>
 
-<p><code class="highlighter-rouge">@Documented</code> 注解表明这个注解应该被 javadoc工具记录. 默认情况下,<code class="highlighter-rouge">javadoc</code>是不包括注解的. 但如果声明注解时指定了 <code class="highlighter-rouge">@Documented</code>,则它会被 <code class="highlighter-rouge">javadoc</code> 之类的工具处理, 所以注解类型信息也会被包括在生成的文档中。</p>
+<p><code class="language-plaintext highlighter-rouge">@Documented</code> 注解表明这个注解应该被 javadoc工具记录. 默认情况下,<code class="language-plaintext highlighter-rouge">javadoc</code>是不包括注解的. 但如果声明注解时指定了 <code class="language-plaintext highlighter-rouge">@Documented</code>,则它会被 <code class="language-plaintext highlighter-rouge">javadoc</code> 之类的工具处理, 所以注解类型信息也会被包括在生成的文档中。</p>
 
 <h3 id="inherited">@Inherited</h3>
 
@@ -71,8 +71,8 @@
 
 <ul>
   <li><strong>成员参数</strong> :  自定义注解的成员参数只能使用byte,short,char,int,long,float,double,boolean 八种基本数据类型 和 String,Enum,Class,annotations 等数据类型,以及这一些类型的数组。</li>
-  <li>**访问权限 **:  注解的成员变量只能使用<code class="highlighter-rouge">public</code>和默认的权限访问符来修饰。</li>
-  <li><strong>value</strong> :  如果只有一个参数最好是将key的名称设置为<code class="highlighter-rouge">value</code>,这样我们使用注解时候<code class="highlighter-rouge">Annotation(key=Params)</code>和<code class="highlighter-rouge">Annotation(Params)</code>是等价的，而且后者更加的方便简介。</li>
+  <li>**访问权限 **:  注解的成员变量只能使用<code class="language-plaintext highlighter-rouge">public</code>和默认的权限访问符来修饰。</li>
+  <li><strong>value</strong> :  如果只有一个参数最好是将key的名称设置为<code class="language-plaintext highlighter-rouge">value</code>,这样我们使用注解时候<code class="language-plaintext highlighter-rouge">Annotation(key=Params)</code>和<code class="language-plaintext highlighter-rouge">Annotation(Params)</code>是等价的，而且后者更加的方便简介。</li>
   <li><strong>注解元素的默认值</strong> :  注解元素必须有确定的值，要么在定义注解的默认值中指定，要么在使用注解时指定，非基本类型的注解元素的值不可为null。因此, 使用空字符串或0作为默认值是一种常用的做法。这个约束使得处理器很难表现一个元素的存在或缺失的状态，因为每个注解的声明中，所有元素都存在，并且都具有相应的值，为了绕开这个约束，我们只能定义一些特殊的值，例如空字符串或者负数，一次表示某个元素不存在，在定义注解时，这已经成为一个习惯用法。</li>
 </ul>
 
@@ -80,7 +80,7 @@
 
 <p>我们定义了注解，并且在给定了属性。肯定要在合适的环境去获取注解的属性来做一些操作。不然就是注释而不是注解了。</p>
 
-<p>java提供了<code class="highlighter-rouge">java.lang.reflect.AnnotatedElement</code>来帮助我们获取注解的信息，需要注意的是当我们想要读取一个注解时只有设置它的<code class="highlighter-rouge">@Retention</code>为<code class="highlighter-rouge">RUNTIME</code>时候我们才可以拿到，因为只有当<code class="highlighter-rouge">Class</code>被虚拟机装载的时候才其中的<code class="highlighter-rouge">Annotation</code>才可以被虚拟机拿到，这是阶段已经属于<code class="highlighter-rouge">RUNTIME</code>。</p>
+<p>java提供了<code class="language-plaintext highlighter-rouge">java.lang.reflect.AnnotatedElement</code>来帮助我们获取注解的信息，需要注意的是当我们想要读取一个注解时只有设置它的<code class="language-plaintext highlighter-rouge">@Retention</code>为<code class="language-plaintext highlighter-rouge">RUNTIME</code>时候我们才可以拿到，因为只有当<code class="language-plaintext highlighter-rouge">Class</code>被虚拟机装载的时候才其中的<code class="language-plaintext highlighter-rouge">Annotation</code>才可以被虚拟机拿到，这是阶段已经属于<code class="language-plaintext highlighter-rouge">RUNTIME</code>。</p>
 
 <p>AnnotatedElement主要的实现类 :</p>
 
@@ -92,20 +92,20 @@
   <li><strong>Package：</strong>类的包定义</li>
 </ul>
 
-<p><strong>AnnotatedElement </strong>接口提供了四个方法来访问<code class="highlighter-rouge">Annotation</code>的信息</p>
+<p><strong>AnnotatedElement </strong>接口提供了四个方法来访问<code class="language-plaintext highlighter-rouge">Annotation</code>的信息</p>
 
 <ol>
-  <li><code class="highlighter-rouge">&lt;T extends Annotation&gt; T getAnnotation(Class&lt;?&gt; annotationClass) </code>  :  返回程序元素中存在的、指定类型的注解，如果该注解不存在则返回<code class="highlighter-rouge">null</code>。</li>
-  <li><code class="highlighter-rouge">Annotation getAnnotation()</code> :  返回程序元素中所有存在的注解。</li>
-  <li><code class="highlighter-rouge">boolean is AnnotationPresent(Class&lt;? extends Annotation&gt; annotationClass)</code> :  判断程序元素中是否包含该注解。</li>
-  <li><code class="highlighter-rouge">Annotation[] getDeclaredAnnotations()</code> :  返回直接存在于此元素上的所有注释。与此接口中的其他方法不同，该方法将忽略继承的注释。（如果没有注释直接存在于此元素上，则返回长度为零的一个数组。）该方法的调用者可以随意修改返回的数组；这不会对其他调用者返回的数组产生任何影响。</li>
+  <li><code class="language-plaintext highlighter-rouge">&lt;T extends Annotation&gt; T getAnnotation(Class&lt;?&gt; annotationClass) </code>  :  返回程序元素中存在的、指定类型的注解，如果该注解不存在则返回<code class="language-plaintext highlighter-rouge">null</code>。</li>
+  <li><code class="language-plaintext highlighter-rouge">Annotation getAnnotation()</code> :  返回程序元素中所有存在的注解。</li>
+  <li><code class="language-plaintext highlighter-rouge">boolean is AnnotationPresent(Class&lt;? extends Annotation&gt; annotationClass)</code> :  判断程序元素中是否包含该注解。</li>
+  <li><code class="language-plaintext highlighter-rouge">Annotation[] getDeclaredAnnotations()</code> :  返回直接存在于此元素上的所有注释。与此接口中的其他方法不同，该方法将忽略继承的注释。（如果没有注释直接存在于此元素上，则返回长度为零的一个数组。）该方法的调用者可以随意修改返回的数组；这不会对其他调用者返回的数组产生任何影响。</li>
 </ol>
 
 <h3 id="实践">实践</h3>
 
-<p>我们通过一个小<code class="highlighter-rouge">demo</code>来实现注解的声明和使用。</p>
+<p>我们通过一个小<code class="language-plaintext highlighter-rouge">demo</code>来实现注解的声明和使用。</p>
 
-<p>声明一个注解<code class="highlighter-rouge">@Name</code> :</p>
+<p>声明一个注解<code class="language-plaintext highlighter-rouge">@Name</code> :</p>
 
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
@@ -247,19 +247,19 @@
 
 <p>创建一个 java-library 来放置注解处理器。</p>
 
-<p>编译时注解需要用到注解处理器<code class="highlighter-rouge">processer</code>，使用它我们需要依赖<code class="highlighter-rouge">auto-service</code>这个类库</p>
+<p>编译时注解需要用到注解处理器<code class="language-plaintext highlighter-rouge">processer</code>，使用它我们需要依赖<code class="language-plaintext highlighter-rouge">auto-service</code>这个类库</p>
 
 <div class="language-groovy highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 </pre></td><td class="rouge-code"><pre><span class="n">api</span> <span class="s1">'com.google.auto.service:auto-service:1.0-rc4'</span>
 </pre></td></tr></tbody></table></code></pre></div></div>
 
-<p>其次我们需要通过注解处理生成中间类，来完成将 View 和成员变量绑定的操作。我们通过 <code class="highlighter-rouge">javapoet</code>这个库来方便完成，当然也可以通过手写代码的方式来完成。</p>
+<p>其次我们需要通过注解处理生成中间类，来完成将 View 和成员变量绑定的操作。我们通过 <code class="language-plaintext highlighter-rouge">javapoet</code>这个库来方便完成，当然也可以通过手写代码的方式来完成。</p>
 
 <div class="language-groovy highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 </pre></td><td class="rouge-code"><pre><span class="n">api</span> <span class="s1">'com.squareup:javapoet:1.10.0'</span>
 </pre></td></tr></tbody></table></code></pre></div></div>
 
-<p>创建一个类继承<code class="highlighter-rouge">AbstractProcessor</code>类并通过<code class="highlighter-rouge">@AutoService</code>声明实现的接口,之后我们需要实现具体的<code class="highlighter-rouge">process</code>方法，这里也是我们处理注解的核心部分，需要的注意的是这个方法可能会被多次调用，需要做好去重的准备。</p>
+<p>创建一个类继承<code class="language-plaintext highlighter-rouge">AbstractProcessor</code>类并通过<code class="language-plaintext highlighter-rouge">@AutoService</code>声明实现的接口,之后我们需要实现具体的<code class="language-plaintext highlighter-rouge">process</code>方法，这里也是我们处理注解的核心部分，需要的注意的是这个方法可能会被多次调用，需要做好去重的准备。</p>
 
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
@@ -281,7 +281,7 @@
 
 <ul>
   <li>
-    <p>注解，可以通过注解<code class="highlighter-rouge">SupportAnnotationTypes</code>配置我们需要处理的注解，<code class="highlighter-rouge">SupportSourceVersion </code> 配置需要处理的 Java 源版本：</p>
+    <p>注解，可以通过注解<code class="language-plaintext highlighter-rouge">SupportAnnotationTypes</code>配置我们需要处理的注解，<code class="language-plaintext highlighter-rouge">SupportSourceVersion </code> 配置需要处理的 Java 源版本：</p>
 
     <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
@@ -298,7 +298,7 @@
 </pre></td></tr></tbody></table></code></pre></div>    </div>
   </li>
   <li>
-    <p>重写 <code class="highlighter-rouge">getSupportedAnnotationTypes()</code>和<code class="highlighter-rouge">getSupportedSourceVersion方法</code>：</p>
+    <p>重写 <code class="language-plaintext highlighter-rouge">getSupportedAnnotationTypes()</code>和<code class="language-plaintext highlighter-rouge">getSupportedSourceVersion方法</code>：</p>
 
     <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
@@ -338,7 +338,7 @@
   </li>
 </ul>
 
-<p>最后我们重写 <code class="highlighter-rouge">init</code>  方法，它会在注解处理器被初始化的时候调用，它的参数 ProcessingEnvironment 提供了一系列的帮助类来帮助我们处理注解</p>
+<p>最后我们重写 <code class="language-plaintext highlighter-rouge">init</code>  方法，它会在注解处理器被初始化的时候调用，它的参数 ProcessingEnvironment 提供了一系列的帮助类来帮助我们处理注解</p>
 
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
@@ -374,7 +374,7 @@
 
 <h4 id="处理注解">处理注解</h4>
 
-<p>到此，我们的环境就搭建完成了。开始正式的处理注解，<code class="highlighter-rouge">prosser</code>方法大致分为两步骤：</p>
+<p>到此，我们的环境就搭建完成了。开始正式的处理注解，<code class="language-plaintext highlighter-rouge">prosser</code>方法大致分为两步骤：</p>
 
 <ol>
   <li>收集信息，通过 element 获得我们注解的 value、class、variable 等信息存储起来</li>
@@ -454,7 +454,7 @@
     <span class="o">}</span>
 </pre></td></tr></tbody></table></code></pre></div></div>
 
-<p>通过<code class="highlighter-rouge">getElementsAnnotatedWith</code>方法拿到注解的元素合集，然后循环遍历通过 element 获得相关的信息装载 ProxyInfo 。</p>
+<p>通过<code class="language-plaintext highlighter-rouge">getElementsAnnotatedWith</code>方法拿到注解的元素合集，然后循环遍历通过 element 获得相关的信息装载 ProxyInfo 。</p>
 
 <h4 id="生成代理类">生成代理类</h4>
 
@@ -506,13 +506,13 @@
 
 <p>这里我们主要通过 遍历所有的元素集来生成代理类。</p>
 
-<p>通过<code class="highlighter-rouge">proxyInfo.markElementStatement()</code> 方法来生成具体的赋值语句然后打包成一个方法。</p>
+<p>通过<code class="language-plaintext highlighter-rouge">proxyInfo.markElementStatement()</code> 方法来生成具体的赋值语句然后打包成一个方法。</p>
 
-<p>通过 <code class="highlighter-rouge">javapoet</code> 声明一个代理类，将方法放置在类中。</p>
+<p>通过 <code class="language-plaintext highlighter-rouge">javapoet</code> 声明一个代理类，将方法放置在类中。</p>
 
 <p>最后通过将代理类生成在和目标文件同一个包下，到这里就完成了所有的操作。</p>
 
-<p><code class="highlighter-rouge">markElementStatement()</code>的具体实现：</p>
+<p><code class="language-plaintext highlighter-rouge">markElementStatement()</code>的具体实现：</p>
 
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
@@ -550,7 +550,7 @@
 
 <h4 id="api编写">Api编写</h4>
 
-<p>注解处理完后，我们就需要 api 来调用这个代理类，将 View 通过代理类赋值。就像 <code class="highlighter-rouge">ButterKinfe.bind(target)</code>这样。</p>
+<p>注解处理完后，我们就需要 api 来调用这个代理类，将 View 通过代理类赋值。就像 <code class="language-plaintext highlighter-rouge">ButterKinfe.bind(target)</code>这样。</p>
 
 <p>同样我们再声明一个 Android-module 来声明编写 api。api  的实现很简单，我们通过反射调用生成的代理类，将 Activity 当做参数传递进去即可。当然如果要实际应用肯定需要要考虑更多，例如缓存之类的，这里就只是简单的使用一下。</p>
 

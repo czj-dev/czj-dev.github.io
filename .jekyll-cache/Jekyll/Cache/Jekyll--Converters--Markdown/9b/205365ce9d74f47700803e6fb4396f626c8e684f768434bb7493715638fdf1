@@ -1,16 +1,16 @@
-I"�D<blockquote>
+I"�J<blockquote>
   <p>万物始于微而后成,始于无而后生</p>
 </blockquote>
 
 <h2 id="前言">前言</h2>
 
-<p><code class="highlighter-rouge">RxJava</code>在项目中早就开始使用了，但是一直都是结合<code class="highlighter-rouge">Retrofit</code>来做一些简单的数据处理，和异步操作。用到操作符并不不多且对RxJava没有很清晰的概念，所以想写一篇文章将学习和用到的东西总结一下。本文并不是<code class="highlighter-rouge">RxJava</code>的理解与教学，网上这类优秀的文章已经很多了。更多的是介绍开发中需要注意的细节，和<code class="highlighter-rouge">RxJava2.X</code>的迭代。</p>
+<p><code class="language-plaintext highlighter-rouge">RxJava</code>在项目中早就开始使用了，但是一直都是结合<code class="language-plaintext highlighter-rouge">Retrofit</code>来做一些简单的数据处理，和异步操作。用到操作符并不不多且对RxJava没有很清晰的概念，所以想写一篇文章将学习和用到的东西总结一下。本文并不是<code class="language-plaintext highlighter-rouge">RxJava</code>的理解与教学，网上这类优秀的文章已经很多了。更多的是介绍开发中需要注意的细节，和<code class="language-plaintext highlighter-rouge">RxJava2.X</code>的迭代。</p>
 
 <h2 id="正文">正文</h2>
 
 <h3 id="使用rxjava">使用RxJava</h3>
 
-<p><code class="highlighter-rouge">RxAndorid</code>是<code class="highlighter-rouge">RxJava</code>在Android上的一个扩展，它让我们更方便的在UI和子线程中切换。所以在日常开发中，我们一般两个库都要依赖。</p>
+<p><code class="language-plaintext highlighter-rouge">RxAndorid</code>是<code class="language-plaintext highlighter-rouge">RxJava</code>在Android上的一个扩展，它让我们更方便的在UI和子线程中切换。所以在日常开发中，我们一般两个库都要依赖。</p>
 
 <div class="language-groovy highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
@@ -22,11 +22,11 @@
 
 <h4 id="异步操作">异步操作</h4>
 
-<p>正常情况下RxJava是在默认线程中，且上游和下游都在同一个线程，在Android中也就是默认在主线程中执行，当我们需要执行异步操作时就需要我们通过<code class="highlighter-rouge">subscribeOn</code>和<code class="highlighter-rouge">observeOn</code>来手动的切换执行事件的线程。</p>
+<p>正常情况下RxJava是在默认线程中，且上游和下游都在同一个线程，在Android中也就是默认在主线程中执行，当我们需要执行异步操作时就需要我们通过<code class="language-plaintext highlighter-rouge">subscribeOn</code>和<code class="language-plaintext highlighter-rouge">observeOn</code>来手动的切换执行事件的线程。</p>
 
-<p><code class="highlighter-rouge">suscribeOn</code>一般在调用链中应该只被调用一次。如果并非如此的话，那会以第一次调用的线程为准。<code class="highlighter-rouge">suscribeOn</code>通俗的讲就是指定上游发送事件的线程。</p>
+<p><code class="language-plaintext highlighter-rouge">suscribeOn</code>一般在调用链中应该只被调用一次。如果并非如此的话，那会以第一次调用的线程为准。<code class="language-plaintext highlighter-rouge">suscribeOn</code>通俗的讲就是指定上游发送事件的线程。</p>
 
-<p>而另一方面，<code class="highlighter-rouge">observeOn</code>在调用链中执行多少次都是可以的。<code class="highlighter-rouge">observeOn</code>指定了调用链中下一个操作符执行的线程，例如：</p>
+<p>而另一方面，<code class="language-plaintext highlighter-rouge">observeOn</code>在调用链中执行多少次都是可以的。<code class="language-plaintext highlighter-rouge">observeOn</code>指定了调用链中下一个操作符执行的线程，例如：</p>
 
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
@@ -47,25 +47,25 @@
 <p>常用的调度器有如几种：</p>
 
 <ul>
-  <li><code class="highlighter-rouge">Schedulers.io()</code>  :  <strong>适合在I/O线程执行的工作，例如网络请求和磁盘操作，内部有一个线程池可以重复使用</strong></li>
-  <li><code class="highlighter-rouge">Scheduler.computation()</code> : <strong>计算性任务，比如事件的轮询或者处理回调等。</strong></li>
-  <li><code class="highlighter-rouge">Schedulers.newThread()  </code>  :  <strong>代表一个常规的新线程</strong></li>
-  <li><code class="highlighter-rouge">AndroidScheduler.mainThread()</code> :   <code class="highlighter-rouge">RxAndroid</code>对<code class="highlighter-rouge">RxJava</code>所做的扩展， <strong>在Android UI线程执行下一个操作符的操作</strong></li>
+  <li><code class="language-plaintext highlighter-rouge">Schedulers.io()</code>  :  <strong>适合在I/O线程执行的工作，例如网络请求和磁盘操作，内部有一个线程池可以重复使用</strong></li>
+  <li><code class="language-plaintext highlighter-rouge">Scheduler.computation()</code> : <strong>计算性任务，比如事件的轮询或者处理回调等。</strong></li>
+  <li><code class="language-plaintext highlighter-rouge">Schedulers.newThread()  </code>  :  <strong>代表一个常规的新线程</strong></li>
+  <li><code class="language-plaintext highlighter-rouge">AndroidScheduler.mainThread()</code> :   <code class="language-plaintext highlighter-rouge">RxAndroid</code>对<code class="language-plaintext highlighter-rouge">RxJava</code>所做的扩展， <strong>在Android UI线程执行下一个操作符的操作</strong></li>
 </ul>
 
 <h4 id="贴士">贴士</h4>
 
 <ul>
-  <li>只有当观察者和被观察者建立连接之后，上游才会开始发送事件，也就是调用<code class="highlighter-rouge">suscribe()</code>方法后，被观察者才会向观察者发送事件</li>
-  <li><code class="highlighter-rouge">flatMap</code>并不保证发送的顺序，如果要求严格按照顺序请使用<code class="highlighter-rouge">concatMap</code></li>
-  <li>如果需要多个接口的数据同步处理那么<code class="highlighter-rouge">zip</code>操作符可以帮助到你</li>
+  <li>只有当观察者和被观察者建立连接之后，上游才会开始发送事件，也就是调用<code class="language-plaintext highlighter-rouge">suscribe()</code>方法后，被观察者才会向观察者发送事件</li>
+  <li><code class="language-plaintext highlighter-rouge">flatMap</code>并不保证发送的顺序，如果要求严格按照顺序请使用<code class="language-plaintext highlighter-rouge">concatMap</code></li>
+  <li>如果需要多个接口的数据同步处理那么<code class="language-plaintext highlighter-rouge">zip</code>操作符可以帮助到你</li>
 </ul>
 
 <h3 id="rxjava2x">RxJava2.X</h3>
 
 <h4 id="environment">Environment</h4>
 
-<p>如果你在项目中使用了<code class="highlighter-rouge">Retrofit</code>+<code class="highlighter-rouge">RxJava</code>，且你想要切换到2.x你会返现<code class="highlighter-rouge">Retrofit</code>目前的<code class="highlighter-rouge">RxJava</code>适配器并不支持2.x.但是没关系jake大神已经为我们写好了新的适配器。</p>
+<p>如果你在项目中使用了<code class="language-plaintext highlighter-rouge">Retrofit</code>+<code class="language-plaintext highlighter-rouge">RxJava</code>，且你想要切换到2.x你会返现<code class="language-plaintext highlighter-rouge">Retrofit</code>目前的<code class="language-plaintext highlighter-rouge">RxJava</code>适配器并不支持2.x.但是没关系jake大神已经为我们写好了新的适配器。</p>
 
 <div class="language-groovy highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 </pre></td><td class="rouge-code"><pre><span class="n">compile</span> <span class="s1">'com.jakewharton.retrofit:retrofit2-rxjava2-adapter:1.0.0'</span>
@@ -87,7 +87,7 @@
 
 <h4 id="flowable">Flowable</h4>
 
-<p><code class="highlighter-rouge">Flowable</code>是RxJava2.0后增加的,为了解决无法意料的<code class="highlighter-rouge">MissingBackpressureException</code>，但是使用起来更加繁琐，它要求强制的处理上下游的接受发送的事件的效率以及决定背压的处理方式。我们原先的<code class="highlighter-rouge">Observable</code>仍然可以使用，用来解决非背压式的问题。如果我们要使用<code class="highlighter-rouge">Flowable</code>必须这样写:</p>
+<p><code class="language-plaintext highlighter-rouge">Flowable</code>是RxJava2.0后增加的,为了解决无法意料的<code class="language-plaintext highlighter-rouge">MissingBackpressureException</code>，但是使用起来更加繁琐，它要求强制的处理上下游的接受发送的事件的效率以及决定背压的处理方式。我们原先的<code class="language-plaintext highlighter-rouge">Observable</code>仍然可以使用，用来解决非背压式的问题。如果我们要使用<code class="language-plaintext highlighter-rouge">Flowable</code>必须这样写:</p>
 
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
@@ -159,21 +159,21 @@
     <span class="o">.</span><span class="na">subscribe</span><span class="o">(</span><span class="n">subscriber</span><span class="o">);</span>  
 </pre></td></tr></tbody></table></code></pre></div></div>
 
-<p><code class="highlighter-rouge">Flowable</code>在上游有一个默认长度为<strong>128</strong>的缓冲池来放置上阻塞的事件，使用<code class="highlighter-rouge">Flowable</code>创建一个事件时候，我们必须使用<code class="highlighter-rouge">BackpressureStrategy</code>这个类中的常量来管理缓冲池:</p>
+<p><code class="language-plaintext highlighter-rouge">Flowable</code>在上游有一个默认长度为<strong>128</strong>的缓冲池来放置上阻塞的事件，使用<code class="language-plaintext highlighter-rouge">Flowable</code>创建一个事件时候，我们必须使用<code class="language-plaintext highlighter-rouge">BackpressureStrategy</code>这个类中的常量来管理缓冲池:</p>
 
 <ul>
-  <li><code class="highlighter-rouge">BackpressureStrategy.ERROR</code> :  <strong>当事件的长度的积累超过缓冲池的长度时直接抛出Exception</strong></li>
-  <li><code class="highlighter-rouge">BackpressureStrategy.BUFFER </code> :  <strong>缓冲池的长度没有限制</strong></li>
-  <li><code class="highlighter-rouge">BackpressureStrategy.DROP</code> :  <strong>超过缓冲池长度的事件直接丢弃</strong></li>
-  <li><code class="highlighter-rouge">BackpressureStrategy.LATEST</code> :  <strong>超过缓冲长度的事件会丢弃最旧的，保留最新的</strong></li>
+  <li><code class="language-plaintext highlighter-rouge">BackpressureStrategy.ERROR</code> :  <strong>当事件的长度的积累超过缓冲池的长度时直接抛出Exception</strong></li>
+  <li><code class="language-plaintext highlighter-rouge">BackpressureStrategy.BUFFER </code> :  <strong>缓冲池的长度没有限制</strong></li>
+  <li><code class="language-plaintext highlighter-rouge">BackpressureStrategy.DROP</code> :  <strong>超过缓冲池长度的事件直接丢弃</strong></li>
+  <li><code class="language-plaintext highlighter-rouge">BackpressureStrategy.LATEST</code> :  <strong>超过缓冲长度的事件会丢弃最旧的，保留最新的</strong></li>
 </ul>
 
-<p>像<code class="highlighter-rouge">interval</code>等不是自己创建的事件我们指定背压策略是可以使用以下函数来:</p>
+<p>像<code class="language-plaintext highlighter-rouge">interval</code>等不是自己创建的事件我们指定背压策略是可以使用以下函数来:</p>
 
 <ul>
-  <li><code class="highlighter-rouge">onBackpressureBuffer()</code></li>
-  <li><code class="highlighter-rouge">onBackpressureDrop()</code></li>
-  <li><code class="highlighter-rouge">onBackpressureLatest()</code></li>
+  <li><code class="language-plaintext highlighter-rouge">onBackpressureBuffer()</code></li>
+  <li><code class="language-plaintext highlighter-rouge">onBackpressureDrop()</code></li>
+  <li><code class="language-plaintext highlighter-rouge">onBackpressureLatest()</code></li>
 </ul>
 
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
@@ -186,22 +186,22 @@
                 <span class="o">.</span><span class="na">subscribe</span><span class="o">(</span><span class="n">subscriber</span><span class="o">);</span>
 </pre></td></tr></tbody></table></code></pre></div></div>
 
-<p>需要注意的是<code class="highlighter-rouge">Flowable</code>现在和<code class="highlighter-rouge">Observable</code>的性能还是有一定的差距的，所以不要为了最求新颖盲目的使用<code class="highlighter-rouge">Flowable</code>且使用不当很容易造成一些致命的错误。</p>
+<p>需要注意的是<code class="language-plaintext highlighter-rouge">Flowable</code>现在和<code class="language-plaintext highlighter-rouge">Observable</code>的性能还是有一定的差距的，所以不要为了最求新颖盲目的使用<code class="language-plaintext highlighter-rouge">Flowable</code>且使用不当很容易造成一些致命的错误。</p>
 
 <h4 id="dispoasble">Dispoasble</h4>
 
-<p><code class="highlighter-rouge">Subscription</code>命名修改为<code class="highlighter-rouge">Dispoasble</code>，相关的api也被修改了，例如<code class="highlighter-rouge">CompositeSubscription</code>修改为<code class="highlighter-rouge">CompositeDisposable</code>。且需要注意的是2.X中<code class="highlighter-rouge">subscribe(subscriber)</code>这个重构方法是没有返回值的,但是通常我们将返回的<code class="highlighter-rouge">Subscription</code>添加到<code class="highlighter-rouge">CompositeSubscription</code>来管理，所以为了适配1.X可以使用<code class="highlighter-rouge">E subscribeWith(E subscriber)</code>方法来返回一个<code class="highlighter-rouge">Dispoable</code>对象，将它添加到<code class="highlighter-rouge">CompositeDisposable</code>中来管理。</p>
+<p><code class="language-plaintext highlighter-rouge">Subscription</code>命名修改为<code class="language-plaintext highlighter-rouge">Dispoasble</code>，相关的api也被修改了，例如<code class="language-plaintext highlighter-rouge">CompositeSubscription</code>修改为<code class="language-plaintext highlighter-rouge">CompositeDisposable</code>。且需要注意的是2.X中<code class="language-plaintext highlighter-rouge">subscribe(subscriber)</code>这个重构方法是没有返回值的,但是通常我们将返回的<code class="language-plaintext highlighter-rouge">Subscription</code>添加到<code class="language-plaintext highlighter-rouge">CompositeSubscription</code>来管理，所以为了适配1.X可以使用<code class="language-plaintext highlighter-rouge">E subscribeWith(E subscriber)</code>方法来返回一个<code class="language-plaintext highlighter-rouge">Dispoable</code>对象，将它添加到<code class="language-plaintext highlighter-rouge">CompositeDisposable</code>中来管理。</p>
 
 <h4 id="consumer">Consumer</h4>
 
-<p><code class="highlighter-rouge">Action1</code>使用<code class="highlighter-rouge">Consumer</code>来代替,如果是两个参数，则用<code class="highlighter-rouge">BiConsumer</code>来代替<code class="highlighter-rouge">Action2</code>,多个参数则用<code class="highlighter-rouge">Consumer&lt;Object[]&gt;</code>,删除了<code class="highlighter-rouge">Action3-9</code>.</p>
+<p><code class="language-plaintext highlighter-rouge">Action1</code>使用<code class="language-plaintext highlighter-rouge">Consumer</code>来代替,如果是两个参数，则用<code class="language-plaintext highlighter-rouge">BiConsumer</code>来代替<code class="language-plaintext highlighter-rouge">Action2</code>,多个参数则用<code class="language-plaintext highlighter-rouge">Consumer&lt;Object[]&gt;</code>,删除了<code class="language-plaintext highlighter-rouge">Action3-9</code>.</p>
 
 <h4 id="function">Function</h4>
 
-<p><code class="highlighter-rouge">func</code>也被<code class="highlighter-rouge">Function</code>替代。同理，<code class="highlighter-rouge">func1</code>和<code class="highlighter-rouge">func2</code>更改为<code class="highlighter-rouge">Function</code>和<code class="highlighter-rouge">BiFunction</code>，多参数的<code class="highlighter-rouge">FuncN</code>被<code class="highlighter-rouge">Function&lt;Object,R&gt;</code>替代，<code class="highlighter-rouge">func3-9</code>的功能并没有被删除，被<code class="highlighter-rouge">Function3-9</code>替换了。</p>
+<p><code class="language-plaintext highlighter-rouge">func</code>也被<code class="language-plaintext highlighter-rouge">Function</code>替代。同理，<code class="language-plaintext highlighter-rouge">func1</code>和<code class="language-plaintext highlighter-rouge">func2</code>更改为<code class="language-plaintext highlighter-rouge">Function</code>和<code class="language-plaintext highlighter-rouge">BiFunction</code>，多参数的<code class="language-plaintext highlighter-rouge">FuncN</code>被<code class="language-plaintext highlighter-rouge">Function&lt;Object,R&gt;</code>替代，<code class="language-plaintext highlighter-rouge">func3-9</code>的功能并没有被删除，被<code class="language-plaintext highlighter-rouge">Function3-9</code>替换了。</p>
 
 <h4 id="fromarrayfromiterablefromfuture">fromArray,fromIterable,fromFuture</h4>
 
-<p>由于在<code class="highlighter-rouge">Java8</code>编译时，<code class="highlighter-rouge">javac</code>不能区分接口类型，所以<code class="highlighter-rouge">from</code>在2.X被分为了<code class="highlighter-rouge">fromArray</code>、<code class="highlighter-rouge">fromIterable</code>和<code class="highlighter-rouge">fromFuture</code>。</p>
+<p>由于在<code class="language-plaintext highlighter-rouge">Java8</code>编译时，<code class="language-plaintext highlighter-rouge">javac</code>不能区分接口类型，所以<code class="language-plaintext highlighter-rouge">from</code>在2.X被分为了<code class="language-plaintext highlighter-rouge">fromArray</code>、<code class="language-plaintext highlighter-rouge">fromIterable</code>和<code class="language-plaintext highlighter-rouge">fromFuture</code>。</p>
 
 :ET
