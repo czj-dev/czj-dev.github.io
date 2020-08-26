@@ -3,10 +3,10 @@ title: Base Station
 SEOTitle: Just的博客 | Just in the blog
 header-img: img/home-bg.jpg
 email: mrchenzhaojun@gmail.com
-description: "Welcome to me blog"
-keyword: "一个普通的Android Developer"
-url: "https://mr9527.github.io" # your host, for absolute URL
-baseurl: "" # for example, '/blog' if your blog hosted on 'host/blog'
+description: 'Welcome to me blog'
+keyword: '一个普通的Android Developer'
+url: 'http://www.nutcracker.top/' # your host, for absolute URL
+baseurl: '' # for example, '/blog' if your blog hosted on 'host/blog'
 # Publish posts or collection documents with a future date.
 future: true
 
@@ -14,7 +14,7 @@ future: true
 RSS: false
 #weibo_username:     ""
 zhihu_username: chen-zhao-jun-27/activities
-github_username: Mr9527
+github_username: czj-dev
 #twitter_username:  huxpro
 #facebook_username:  huxpro
 
@@ -23,15 +23,7 @@ github_username: Mr9527
 highlighter: rouge
 permalink: pretty
 paginate: 10
-exclude:
-  [
-    "less",
-    "node_modules",
-    "Gruntfile.js",
-    "package.json",
-    "README.md",
-    "README.zh.md",
-  ]
+exclude: ['less', 'node_modules', 'Gruntfile.js', 'package.json', 'README.md', 'README.zh.md']
 anchorjs: true # if you want to customize anchor. check out line:181 of `post.html`
 # If you have timezone issue (e.g. #68) in China, uncomment to use this:
 #timezone: CN
@@ -48,13 +40,13 @@ plugins: [jekyll-paginate]
 # document: http://jekyllrb.com/docs/configuration/#kramdown
 markdown: kramdown
 kramdown:
-  input: GFM # use Github Flavored Markdown !important
-  syntax_highlighter_opts:
-    span:
-      line_numbers: false
-    block:
-      line_numbers: true
-      start_line: 1
+    input: GFM # use Github Flavored Markdown !important
+    syntax_highlighter_opts:
+        span:
+            line_numbers: false
+        block:
+            line_numbers: true
+            start_line: 1
 
 # Disqus settings
 disqus_username: Rank
@@ -72,7 +64,7 @@ netease_comment: false
 
 # Sidebar settings
 sidebar: true # whether or not using Sidebar.
-sidebar-about-description: "你以后会遇到很多机遇，但你的平庸会毁掉它们。当你觉得自己做的还不错的时候，你已经杀死了那个能够让你做的更好的自己"
+sidebar-about-description: '你以后会遇到很多机遇，但你的平庸会毁掉它们。当你觉得自己做的还不错的时候，你已经杀死了那个能够让你做的更好的自己'
 sidebar-avatar: /img/user.jpg # use absolute URL, seeing it's used in both `/` and `/about/`
 
 # Featured Tags
@@ -80,15 +72,11 @@ featured-tags: true # whether or not using Feature-Tags
 featured-condition-size: 1 # A tag will be featured if the size of it is more than this condition value
 
 # Progressive Web Apps
-chrome-tab-theme-color: "#000000"
+chrome-tab-theme-color: '#000000'
 service-worker: true
 
 # MathJax rendering for layout:page (e.g. post preview)
 page-mathjax: false
 
 # Friends
-friends:
-  [
-    { title: "Hux Blog", href: "http://huangxuan.me" },
-    { title: "None", href: "#" },
-  ]
+friends: [{ title: 'Hux Blog', href: 'http://huangxuan.me' }, { title: 'None', href: '#' }]
