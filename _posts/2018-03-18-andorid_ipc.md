@@ -24,7 +24,7 @@ IPC 是 Inter-Process Communication 的缩写，含义为进程间通信或跨�
 3. SharedPreferences 的可靠性下降
 4. Application 会多次创建
 
-所以任何一个操作系统都需要相应的 IPC 机制，比如 Windows 上可以通过剪贴板、管道和邮槽等俩进行进程间通信；Linux 上可以通过命名管道、共享内容、信号量等来进行进程通信。对于 Android来说，它是一种基于 Linux 内核的移动操作系统，但它有自己的进程通信方式 Binder，除此之外还支持 Socket。
+所以任何一个操作系统都需要相应的 IPC 机制，比如 Windows 上可以通过剪贴板、管道和邮槽等来进行进程间通信；Linux 上可以通过命名管道、共享内容、信号量等来进行进程通信。对于 Android来说，它是一种基于 Linux 内核的移动操作系统，但它有自己的进程通信方式 Binder，除此之外还支持 Socket。
 
 ### Android 中的多进程模式
 
@@ -61,7 +61,7 @@ Android 系统为每个应用分配了一个唯一的 UID，具有相同 UID 应
 
 ##### 使用Bundle
 
-Activity、Service、Receiver 都是支持在 Intent 中传递 Bundle 数据的，由于 Bundle 时间了 Parcelable 接口，所以它可以方便地在不同的进程间传输。除了直接传递数据这种经典的使用场景，它还有一种特殊的使用场景。比如 A 进程在进行一个加速那，计算完成后它要启动 B 进程的一个组件并把计算结果传递给 B 进程，并且遗憾的是这个计算结果不支持放入 Bundle 中，因此无法通过 Intent 来传输，这个时候使用 其他 IPC 就略显复杂。我们可以考虑将通过 Intent 启动 B 进程的一个 Service 组件，让 Service 在后台进行计算，计算完毕再启动 B 进程真正想要启动的目标组件，由于 Service 也运行在 B 进程中，所以目标组件就可以直接获取计算结果，这样一来就轻松解决了夸进程的问题。
+Activity、Service、Receiver 都是支持在 Intent 中传递 Bundle 数据的，由于 Bundle 时间了 Parcelable 接口，所以它可以方便地在不同的进程间传输。除了直接传递数据这种经典的使用场景，它还有一种特殊的使用场景。比如 A 进程在进行一个计算，计算完成后它要启动 B 进程的一个组件并把计算结果传递给 B 进程，并且遗憾的是这个计算结果不支持放入 Bundle 中，因此无法通过 Intent 来传输，这个时候使用 其他 IPC 就略显复杂。我们可以考虑将通过 Intent 启动 B 进程的一个 Service 组件，让 Service 在后台进行计算，计算完毕再启动 B 进程真正想要启动的目标组件，由于 Service 也运行在 B 进程中，所以目标组件就可以直接获取计算结果，这样一来就轻松解决了夸进程的问题。
 
 #### 使用文件共享
 
@@ -69,11 +69,11 @@ Activity、Service、Receiver 都是支持在 Intent 中传递 Bundle 数据的�
 
 系统的 SharedPreferences 是 Android 提供的轻量级存储方案，它通过键值对的方式来存储数据，在底层上使用 xml 文件来保存。从本质上 SharedPreferences 也是文件的一种，但是由于系统对它的读/写做了一定的缓存策略，即在内存中会有一份 SharedPreferences 文件的缓存，因此在多进程模式下，系统对它的读写就变得很不可靠，当面对高并发的读/写访问，SharedPreferences 有很大几率丢失数据。
 
-####使用 Messenger
+#### 使用 Messenger
 
 Messenger 可以在不同进程传递 Message 对象，它是一种基于 AIDL 的轻量级 IPC 方案，对 AIDL 做了封装从而使我们可以更简便地进行进程间通信。且由于它一次只处理一种请求，因此服务端我们不用考虑线程同步的问题，这是因为在服务端中不存在并发执行的情况。
 
-####使用AIDL
+#### 使用AIDL
 
 Messeneger 是以串行的方式来处理客户端发送的消息，如果大量的消息同时发送到到服务端，而服务端只能一个一个处理，那么用 Messenger 就不大合适了。同时，Messenger 的作用主要是为了传递消息，很多时候我们可能需要夸进程的调用服务端的方法，这种情况 Messenger 就无法做到了，但是我们可以使用 AIDL 来实现。
 
@@ -193,11 +193,11 @@ class ThirdActivity : AppCompatActivity() {
 }
 ```
 
-####使用ContentProvider
+#### 使用ContentProvider
 
 ContentProvider 是 Android 中提供的专门用于不同应用之间共享数据的方式，从这一点来看，它天生就适合进程间通信。和 Messenger 一样，ContentProvider 的底层实现同样为 Binder。
 
-######创建数据源
+###### 创建数据源
 
 我们先创建一个数据库为ContentProvider提供数据
 
@@ -358,11 +358,11 @@ class SecondActivity : AppCompatActivity() {
 03-18 22:54:42.415 1935-1935/com.example.nutcracker.myapplication:remote I/Application Provider: id:6 name :编程之美
 ```
 
-####使用Socket
+#### 使用Socket
 
 我们也开始使用 Socket 来进行夸进程通信，除了使用 TCP  还可以使用 UDP 套接字。在性能上 UDP 具有更好的效率，其缺点是不保证数据一定能够正确传输，尤其是网络堵塞的情况下。
 
-####Binder 连接池
+#### Binder 连接池
 
 
 

@@ -17,7 +17,7 @@ tags:
 
 View 的位置由它的四个顶点来决定，分别对应于 View 的四个属性：top、left、right、bottom，其中 top 是左上角纵坐标，left 是左上角横坐标，right 是右下角横坐标，bottom 是右下角纵坐标。这些坐标都是相对于 View 的父容器来说的，因此它是一种相对坐标。它们的关系以及获取的 API 如下图。
 
-![](http://img.blog.csdn.net/20150115155321445?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvamFzb24wNTM5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center)
+![](upload/image-20150115155321445.png)
 
 #### MotionEvent 和 TouchSlope
 
@@ -119,7 +119,7 @@ public void computeScroll(){
 
 滑动在 Android 开发中具有很重要的作用，不管一些效果多么绚丽，归根结底，它们都是由不同的滑动外加一些特效组成。因此，掌握滑动的方法是实现绚丽的自定义控件的基础。通过三种方式可以实现 View 的滑动。
 
-####使用 scrollTo/scrollBy
+#### 使用 scrollTo/scrollBy
 
 为了实现 View 的滑动 ，View 专门提供了这两种方法来实现这个功能，就是 scrollTo 和 scrollBy。
 
@@ -233,7 +233,7 @@ public boolean dipatchTouchEvent(MotionEvent ev){
 
 #### 事件分发的源码解析
 
-#####Activity 对点击事件的分发过程
+##### Activity 对点击事件的分发过程
 
 当一个时间产生的时候，事件最先传递给当前的 Activity，由 Activity 的 dispatchTouchEvent 进行事件派发，具体的工作是由 Activity 的 Windows 完成的。windows（PhoneWindow）会将事件传递给 decorView（Activity 根容器）。
 
@@ -272,5 +272,5 @@ View 对点击事件的处理过程简单一些。
 
 总的来说就是验证了上面总结的 11 条结论。
 
-### 
+ 
 
