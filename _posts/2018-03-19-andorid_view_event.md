@@ -17,7 +17,7 @@ tags:
 
 View 的位置由它的四个顶点来决定，分别对应于 View 的四个属性：top、left、right、bottom，其中 top 是左上角纵坐标，left 是左上角横坐标，right 是右下角横坐标，bottom 是右下角纵坐标。这些坐标都是相对于 View 的父容器来说的，因此它是一种相对坐标。它们的关系以及获取的 API 如下图。
 
-![](upload/image-20150115155321445.png)
+![img](\img\in-post\image-20150115155321445.png)
 
 #### MotionEvent 和 TouchSlope
 
