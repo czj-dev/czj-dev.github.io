@@ -21,7 +21,7 @@
     <meta name="description" content="">
     <meta property="og:type" content="website">
 <meta property="og:title" content="Hexo">
-<meta property="og:url" content="https://czj-dev.github.io/index.html">
+<meta property="og:url" content="https://czj-dev.github.io/archives/2017/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:locale">
 <meta property="article:author" content="Nutcracker">
@@ -217,10 +217,8 @@
         }
     </script>
     
-        <body class="home-body">
-    
         <!-- header -->
-        <header class="header header-mobile index-header">
+        <header class="header header-mobile">
     <!-- top read progress line -->
     <div class="header-element">
         <div class="read-progress"></div>
@@ -251,7 +249,7 @@
 </header>
 
         <!-- fixed footer -->
-        <footer class="footer-fixed index-footer-fixed">
+        <footer class="footer-fixed">
     <!-- back to top button -->
     <div class="footer-fixed-element">
         
@@ -274,34 +272,21 @@
 
 
 
-    height:50vh;
-
 ">
     
     <!-- 主页  -->
-    
-        
-    <!-- 文章页  -->
             
     <div class="site-intro-placeholder"></div>
-    <div class="site-intro-img" style="background-image: url(/intro/index-bg.jpg)"></div>
+    <div class="site-intro-img" style="background-image: url(/)"></div>
     <div class="site-intro-meta">
         <!-- 标题  -->
         <h1 class="intro-title">
             <!-- 主页  -->
             
-                Base Station
-            <!-- 文章页  -->
-            
         </h1>
         <!-- 副标题 -->
         <p class="intro-subtitle">
             <!-- 主页副标题  -->
-            
-                
-                    君子坐而论道 少年起而行之
-                
-            <!-- 文章页  -->
             
         </p>
         <!-- 文章页 meta -->
@@ -443,28 +428,29 @@
             
         
         <article class="index-post">
-            <a class="abstract-title" href="/2021/03/24/2021-03-25-thinking/">
+            <a class="abstract-title" href="/2017/05/19/2017-05-19-android_databinding/">
                 
-                <span class="abstract-title-text">庸碌</span>
+                <span class="abstract-title-text">Data Binding学习笔记</span>
             </a>
             <div class="abstract-content">
-                庸碌Created: Mar 23, 2021 5:28 PMTags: Life Lesson, Personal
-本来计划新年的第一篇文章输出一下 Flutter 列表的分析和功能优化,但是在陆续看过闲鱼技术和一些同行的文章后感觉要是还按照原来的思路写一篇就显得过于搪塞,这个理由马上就说服了我自己,从而心安理得拖延了起来.但是在相继整理了房间、单车、简历、甚至是 Chrome 的收藏夹后,我已经找不到能够继续让写博客这项事情往后拖延的理由,就想着先写一篇随笔吧 ,也算是对去年的自己一份回顾与交代.
-去年的疫情对在小公司工作的自己来说受影响还是蛮大的,前半年居家办公、薪资减少、年中在公...
+                前言DataBinding 出来很久了，不过现在连 MVP 都没有大规模被使用，别说写法用法更颠覆性的 DatatBinding 这样的了。但 DataBinding 这种面向 MVVM 的编程思想前端的使用已经非常普遍了，且确实给开发带来很大的便利。所以还是有必要学习和了解。
+什么是 DataBinding?简单的来说 DataBinding 是 Google 在 Android 上的一种 MVVM 的实现。MVVM 是Model-View-ViewModel的简写，它是 MVP(Model-View-Persenter) 模式与 WPF 结合的应用方式发展演变过来的一种新型架构。而 ...
             </div>
             <!-- read more -->
             
             <div class="abstract-post-meta">
                 <!-- date -->
                 <div class="abstract-date" title="Last updated: 2021/12/18">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/03/24</span>
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/05/19</span>
                 </div>
                 <!-- tags -->
                 
                     <div class= abstract-tags >
     
     
-        <a class="post-tag" href="javascript:void(0);" data-tags="Note">Note</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="Android">Android</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="Booklet">Booklet</a>
     
 </div>
 
@@ -480,115 +466,29 @@
             
         
         <article class="index-post">
-            <a class="abstract-title" href="/2020/05/22/2020-05-22-note_wiki_widget/">
+            <a class="abstract-title" href="/2017/03/08/2017-03-08-adapter/">
                 
-                <span class="abstract-title-text">官方文档的重要性</span>
+                <span class="abstract-title-text">适配器模式与外观模式</span>
             </a>
             <div class="abstract-content">
-                今天发生了两件事情,解决方法倒是殊途同亏,都是通过官方文档来解决的.事后回想下来也有总结的必要,在这里聊两句.
-一是在看 elm 开源项目源码的时候发现了一个挺奇怪的语法
-12345678910export const USERINFO =“userInfo”;export default&#123; 	[USERINFO](&#123;commit,state&#125;)&#123;    commit(&quot;xxx&quot;,xx);  &#125;&#125;
+                
+如果你浪费了自己的年龄，那是挺可悲的。因为你的青春只能持续一点儿时间——很短的一点儿时间。 —— 王尔德
 
-函数中间和逻辑倒是没什么好讨论的,但是函数面前加了一个数组变量,这倒是让我有点晕了,百思不得其解这是什么操作,...
+前言今天学习的设计模式为适配器模式和外观模式，至于为什么两个一起学，因为书上是这样的。至于为什么书上是这样的，就一起来回顾吧。
+正文适配器模式（adapter）**适配器模式(Adapter)**在 Android 中真是不能再常见了，因为我们所用到的很多控件都需要编写适配器给控件提供数据源，例如: ListView、RecyclerView、spinner等待呢个，至于为什么这些控件要使用适配器模式却一直不求甚解，今天就来好好思考一下。
+还记得第一节课的Duck吗，我们可以通过...
             </div>
             <!-- read more -->
             
             <div class="abstract-post-meta">
                 <!-- date -->
                 <div class="abstract-date" title="Last updated: 2021/12/18">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/05/22</span>
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/03/08</span>
                 </div>
                 <!-- tags -->
                 
                     <div class= abstract-tags >
     
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="Note">Note</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2020/05/11/2020-05-11-flutter_depth/">
-                
-                <span class="abstract-title-text">Flutter 深入探索</span>
-            </a>
-            <div class="abstract-content">
-                Flutter 框架简介
-在深入代码之前，我们先了解一下 Flutter 框架结构：
-
-底层的 Engine 库，负责语言的解释（Dart）、视图的渲染（Skia、Text）.它们都是使用C、C++ 编写的，具有极高的性能。
-Framework 中将编写 UI 所需要的动画、绘制、手势等独立实现，然后组合起来交由 rendering 层级来产生强大的效果，组件的层次是扁平化的，最大化可能的组合数量。
- Flutter 自带了两套较为完善的 Widgets 套件，Android 平台风格的 Material 与 iOS 平台风格的 Cupertino
-
-从结构图的我们可以看到 Androi...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2021/12/18">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/05/11</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="Flutter">Flutter</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2020/04/30/2020-04-30-dart_basic/">
-                
-                <span class="abstract-title-text">Dart 实践（一）</span>
-            </a>
-            <div class="abstract-content">
-                数据类型Dart 中一切都是对象，包含数字、布尔值、函数等，它们和 java 一样继承与 object，所以它们的默认值都是 Null  这点尤为需要注意，在定义数据类型的时候如 布尔 、数字类型都需要我们手动去设定业务中所需要的默认值。
-常用数据类型布尔类型（bool）布尔类型与 C 语言一样，使用 bool 声明一个布尔类型的对象，拥有 true 和 false 两个值
-1bool isOpened=true;
-
-
-
-数字类型（int、double）在 Dart 中的数字只有类型 int、double ，它们都继承于 num 类，num 类是一个抽象类，声明了整数和浮点数的抽象实现，...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2021/12/18">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/04/30</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="Flutter">Flutter</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="Dart">Dart</a>
     
         <a class="post-tag" href="javascript:void(0);" data-tags="基础">基础</a>
     
@@ -606,32 +506,35 @@ Framework 中将编写 UI 所需要的动画、绘制、手势等独立实现，
             
         
         <article class="index-post">
-            <a class="abstract-title" href="/2020/04/29/2020-04-29-book_read_01/">
+            <a class="abstract-title" href="/2017/02/20/2017-02-20-factory/">
                 
-                <span class="abstract-title-text">《精进：如何成为一个很厉害的人》阅读笔记 01</span>
+                <span class="abstract-title-text">工厂模式(factory Pettern)</span>
             </a>
             <div class="abstract-content">
-                如何对待时间
-瑞典心理学家林德沃(Lindvall)提出,具有平衡式时间视角的人，在内心具有一种“延伸的当下感（extended now ）,既可以“从当来审视过去”，也可以“视未来存于当下”，他应具有囊括“过去”和“未来的”包容性。
-这种既不疏离也不漠视未来的当下感，显然与享乐主义视角差别明显，它显示了一个人对事件所应具有的责任感，既以更严肃（虽不一定是更迫切）的态度来对待时间。这与梁漱溟先生的“郑重”一说便不谋而合了。近百年前人文学者的自我审思与新近基于实证的科学观点实现了相会，这是件多么奇妙的事！
+                前言一看日期吓一跳，已经一周多没有写笔记了。除了懒之外还是懒….其实之前认真思考过，是否应该花大量的时间去排版笔记去写 bolg，想想还是应该写下去，除了给予自己反馈增加自己的动力确实能让自己学习到的东西再梳理一遍增加知识在脑袋里的存储时间。
+正文工厂模式无论是在平时开发还是各种源码中都经常出现的，它细分为三种 :
 
-林德沃提出的对待时间的十条建议：
+简单工厂
+工厂方法
+抽象工厂
 
-生活在当下——不瞻前顾后，不左顾右盼，不患得患...
+虽然分类较多，不过具体的作用都是将对象创建的过程封装起来，以便将代码从具体类解耦。重点介绍较为复杂的抽象工厂，简单工厂和工厂发方法我们应该在平时都经常用到，很容易理解。
+简单工厂那么我们先来实现一个小目标吧，比如说，开一个 🍕 披萨店！
+披...
             </div>
             <!-- read more -->
             
             <div class="abstract-post-meta">
                 <!-- date -->
                 <div class="abstract-date" title="Last updated: 2021/12/18">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/04/29</span>
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/02/20</span>
                 </div>
                 <!-- tags -->
                 
                     <div class= abstract-tags >
     
     
-        <a class="post-tag" href="javascript:void(0);" data-tags="Book">Book</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="基础">基础</a>
     
 </div>
 
@@ -647,29 +550,30 @@ Framework 中将编写 UI 所需要的动画、绘制、手势等独立实现，
             
         
         <article class="index-post">
-            <a class="abstract-title" href="/2020/04/27/2020-04-27-flutter_application/">
+            <a class="abstract-title" href="/2017/02/08/2017-02-08-decorator/">
                 
-                <span class="abstract-title-text">Flutter 实践</span>
+                <span class="abstract-title-text">装饰者模式(Decorator)</span>
             </a>
             <div class="abstract-content">
-                前言4月公司客户端业务没有什么大的动向，我自己自然也就落得清闲了。打算按照年前指定的计划，这段时间用来实战和深入了解一些 Flutter 相关的知识。个人感觉，学到的知识如果不能转化成成果，那么价值和留存率都是级低的。敲定目标后，打算做什么就很重要了。毕竟 UI 什么的可以自己想，但是数据可不是无源之水，去买感觉又不大必要；苦恼之际，正巧浏览的时候看到 gank 翻修改版了，也就打算做一个 Flutter 版本客户端，虽然没什么特色，但也聊胜于无，而且 API 现在是越来越稀缺了，只能要求自己做的劲量精细点，不要制造垃圾。
-下面就是半个月的成果——gank-flutter：
+                
+your internal mediocrity is the moment when you lost the faith of being excellent
 
-个人感触目...
+前言又到了学习 Head First 的时间了，今天大名鼎鼎的星巴兹咖啡找到我们，让我们帮忙更新他们的订单系统,他们现在的订单系统是这样的：
+看起来还好不是吗，简单清晰。所有的饮料都继承Beverage，具体的饮料用cost()来计算价格description来描述。但是他们遇到了一个问题，购买咖啡时候，也可以要求在其中加入各种调料，例如 : milk(牛奶)、Soy(豆浆)、Mocha(摩卡)等等。最后会更具加入的不同调...
             </div>
             <!-- read more -->
             
             <div class="abstract-post-meta">
                 <!-- date -->
                 <div class="abstract-date" title="Last updated: 2021/12/18">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/04/27</span>
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/02/08</span>
                 </div>
                 <!-- tags -->
                 
                     <div class= abstract-tags >
     
     
-        <a class="post-tag" href="javascript:void(0);" data-tags="Flutter">Flutter</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="基础">基础</a>
     
 </div>
 
@@ -685,20 +589,75 @@ Framework 中将编写 UI 所需要的动画、绘制、手势等独立实现，
             
         
         <article class="index-post">
-            <a class="abstract-title" href="/2019/10/15/2019-10-15-retrofit-and-okHttp/">
+            <a class="abstract-title" href="/2017/02/07/2017-02-07-observer/">
                 
-                <span class="abstract-title-text">Retrofit与OkHttp源码解析</span>
+                <span class="abstract-title-text">观察者模式(Observer Pettern)</span>
             </a>
             <div class="abstract-content">
-                Android 网络框架解析从 2016 Retrofit 开源以来，Retrofit 以它优雅的设计，方便的使用迅速征服了很多开发者，Retrofit+OkHttp 成了 Android 网络开发开源解决方案的佼佼者。 Retrofit 已经在实际项目使用很久了，也对 Retorfit 和 OkHttp 实现原理有一定的了解，但却一直没有书面的记录，网上已经有很多相关的优秀文章，但本着思前想后千万遍,不如动笔写下来的道理，还是打算写一整篇 Retrofit、OkHttp 以及 Okio 的解析，整理和完善相关的知识，总结和归纳比阅读更重要。
-Retrofit、OkHttp、Okio 三...
+                
+在对象之间定义一对多的依赖，这样一来，当一个对象改变状态，依赖它的对象都会收到通知，并自动更新
+
+代码实现观察者模式应该是Java和Android中用到的非常多的一个设计模式了，Java还提供了Observer相关的实现类，它们在java.util.*下，但它的Observable是个实现类，我们使用时需要继承它,这样并不方便我们的使用， 今天我们就参照书籍和相关类自己实现一个传统的观察者模式。
+上一次我们公司通过策略模式(StrategyPattern)来实现了一个暂时完美的产品“Bird”。公司已经步入了正轨，名气也逐渐大了起来，气象站的老板Just找到我们想让我们帮它做一款气象站...
             </div>
             <!-- read more -->
             
             <div class="abstract-post-meta">
                 <!-- date -->
                 <div class="abstract-date" title="Last updated: 2021/12/18">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/10/15</span>
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/02/07</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="基础">基础</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2017/02/06/2017-02-06-annotation/">
+                
+                <span class="abstract-title-text">Android自定义注解</span>
+            </a>
+            <div class="abstract-content">
+                [TOC]
+原注解原注解的作用就是负责注解其他注解，Java5.0提供了四种meta-annotation,用来提供annotation类型的说明。
+java.lang.annotation
+
+@Target
+@Retention
+@Document
+@inhrited
+
+@Target作用 :  用于描述注解的使用范围
+ElementType取值 :  
+
+CONSTRUCTOR :  用于描述构造器
+FIELD : 用于描述域
+LOCAL_VARIABLE  :  用于描述局部变量
+METHOD :  用于描述方法
+PACKAGE :  用于描述包
+PARAMETER :  用于描述...
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2021/12/18">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/02/06</span>
                 </div>
                 <!-- tags -->
                 
@@ -721,29 +680,27 @@ Retrofit、OkHttp、Okio 三...
             
         
         <article class="index-post">
-            <a class="abstract-title" href="/2019/10/11/2019-10-11-HTTP_The_Definitive_Guide/">
+            <a class="abstract-title" href="/2017/02/04/2017-02-04-Strategy/">
                 
-                <span class="abstract-title-text">HTTP 权威指南阅读笔记（一）</span>
+                <span class="abstract-title-text">策略模式(Strategy Pettern)</span>
             </a>
             <div class="abstract-content">
-                URIURI 是一种更通用的资源标识符，URL 实际是它的子集。URI 是一个通用的概念，由两个主要的子集 URL 和 URN 构成 ，URL 是通过描述资源的位置来标识自愿的，而 URN 则是通过名称来识别资源，与它们所处的位置无关
-URN 的好处是显而易见的，但是将 URL 转换成 URN 需要进行大量的工作，在可预见的未来，英特网资源仍然会以 URL 来命名。
-URL 格式
-1&lt;scheme&gt;://&lt;user&gt;:&lt;password&gt;@&lt;host&gt;&lt;port&gt;&lt;path&gt;;&lt;params&gt;?&lt;q...
+                前言今年的读书计划正式开张了，其实过年的时候就把书单中的《了不起的盖茨比》给阅读完了，但是看完如猪八戒吃人参果——不知啥滋味。只知道大概的故事情节，书中华丽的词藻、作品的艺术和主题并不能完全体会，更别说写一些阅读后的观感了。抽空肯定是要重新阅读几遍的，所以就不把它当作已读书籍了。
+正式的阅读是从今天开始了，准备学习技术方面的书籍，但也先来点轻松的，就是这本《Head First 设计模式》。之前看过《Head First Java》书中内容通俗易懂，生动有趣是本入门的好书，设计模式呢是和那本书一起买的，买了也有些时候了，但是从学校到工作都是各种地方吃灰的角色，一直不能静下心来实践，感到十...
             </div>
             <!-- read more -->
             
             <div class="abstract-post-meta">
                 <!-- date -->
                 <div class="abstract-date" title="Last updated: 2021/12/18">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/10/11</span>
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/02/04</span>
                 </div>
                 <!-- tags -->
                 
                     <div class= abstract-tags >
     
     
-        <a class="post-tag" href="javascript:void(0);" data-tags="HTTP">HTTP</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="基础">基础</a>
     
 </div>
 
@@ -759,30 +716,31 @@ URL 格式
             
         
         <article class="index-post">
-            <a class="abstract-title" href="/2018/05/26/2018-05-06-gradle_learning_notes_2/">
+            <a class="abstract-title" href="/2017/01/24/2017-01-24-rxjava_learning_notes/">
                 
-                <span class="abstract-title-text">Gradle的架构和api</span>
+                <span class="abstract-title-text">RxAndroid学习笔记</span>
             </a>
             <div class="abstract-content">
-                了解 Gradle 的架构
-每个 Gradle 构架都包括了三个基本的构建块:项目(Projects)、任务(tasks)、和属性(properties),每个构建至少包括一个项目,项目包括一个或多个任务,项目中有很多属性来控制构建过程.
-Gradle 运用了领域驱动的设计理念（DDD）来给自己的领域构建软件建模，因此 Gradle 的项目和任务都在 Gradle 的 API 中有一个直接的 class 来表示，接下来我们来深入了解每一个组件和它对应的 API。
+                
+万物始于微而后成,始于无而后生
 
-ProjectProject 表示你想要构建的一个目标，对应具体的内容可以是一个项目、组件、jar 等。当开始构建的时候，G...
+前言RxJava在项目中早就开始使用了，但是一直都是结合Retrofit来做一些简单的数据处理，和异步操作。用到操作符并不不多且对RxJava没有很清晰的概念，所以想写一篇文章将学习和用到的东西总结一下。本文并不是RxJava的理解与教学，网上这类优秀的文章已经很多了。更多的是介绍开发中需要注意的细节，和RxJava2.X的迭代。
+正文使用RxJavaRxAndorid是RxJava在Android上的一个扩展，它让我们更方便的在UI和子线程中切换。所以在日常开发中，我们一般两个库都要依赖。
+123//jcentercompile &#x27;io.r...
             </div>
             <!-- read more -->
             
             <div class="abstract-post-meta">
                 <!-- date -->
                 <div class="abstract-date" title="Last updated: 2021/12/18">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/05/26</span>
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/01/24</span>
                 </div>
                 <!-- tags -->
                 
                     <div class= abstract-tags >
     
     
-        <a class="post-tag" href="javascript:void(0);" data-tags="Gradle">Gradle</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="Android">Android</a>
     
 </div>
 
@@ -798,28 +756,32 @@ ProjectProject 表示你想要构建的一个目标，对应具体的内容可�
             
         
         <article class="index-post">
-            <a class="abstract-title" href="/2018/04/28/2018-05-26-gradle_learning_notes_1/">
+            <a class="abstract-title" href="/2017/01/23/2017-01-23-new_start/">
                 
-                <span class="abstract-title-text">Gradle的基础概念</span>
+                <span class="abstract-title-text">Hello Blog</span>
             </a>
             <div class="abstract-content">
-                Gradle 实战(一)Gradle 是继 Ant 、Maven 之后又一个优秀的 Java 项目构建工具.它同样实现了依赖管理、仓库、约定优于配置等优秀的概念.对 maven 和 Ant 项目与资源也有很好的兼容和支持.相比 Maven 和 Ant 来说 Gradle 的构件脚本是声明式的、可读的,可以清晰的表达意图.它使用一个 DSL 语言 Groovy (类似 java ) 来代替 XML 语言大大减少了构件代码的大小。在 Android Studio 中更是成为了构建 Android 项目的标准工具. 我们就来学习和了解它是如何工作和使用的。
-###Groovy
-Groovy 是...
+                
+A new start
+
+前言年底的几天公司比较轻松，想到郭神之前发过一篇使用hexo+GithubPages搭建博客的文章，就想尝试一下。就搭建了一个以 next 为主题的 blog。非常的小清新，但总感觉不够精(zhuang)细(bi)，随即又花功夫去找了别的主题。看到了黄玄的博客感觉看的非常舒适，虽然并不是hexo而是jekll构建意味着要重头再来，但秉着美即使正义的观念还是重新做了，最后就有了现在博客的样式。在此感谢黄玄的开源，感兴趣的可以去 start 一下。
+正文搭建博客的目前除了开阔新视野、尝试一下新东西，也是想要在新的一年有一个新的开始。虽然今年的我依然是个弱鸡
+
+但在...
             </div>
             <!-- read more -->
             
             <div class="abstract-post-meta">
                 <!-- date -->
                 <div class="abstract-date" title="Last updated: 2021/12/18">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/04/28</span>
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/01/23</span>
                 </div>
                 <!-- tags -->
                 
                     <div class= abstract-tags >
     
     
-        <a class="post-tag" href="javascript:void(0);" data-tags="Gradle">Gradle</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="生活">生活</a>
     
 </div>
 
@@ -830,111 +792,9 @@ Groovy 是...
     
     <!-- paginator  -->
     
-        <nav class="page-nav">
-            <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">NEXT &gt;</a>
-        </nav>
-    
 </main>
 
                 <!-- profile -->
-                
-                    <div class="profile">
-    <img class="profile-avatar" alt="avatar" src= /avatar/Misaka.jpg />
-    <div class="profile-name">Nutcracker</div>
-    
-        <div class="profile-signature">
-            你以后会遇到很多机遇，但你的平庸会毁掉它们。当你觉得自己做的还不错的时候，你已经杀死了那个能够让你做的更好的自己
-        </div>
-    
-    
-        <div class="profile-social">
-            
-    
-        
-            
-                <a href="mailto:mrchenzhaojun@gmail.com" class="iconfont-archer email" title=email ></a>
-            
-        
-    
-        
-            
-                <a href="//github.com/czj-dev" class="iconfont-archer github" target="_blank" title=github></a>
-            
-        
-    
-        
-    
-        
-    
-        
-    
-        
-            
-                <a href="https://www.zhihu.com/people/chen-zhao-jun-27" class="iconfont-archer zhihu" target="_blank" title=zhihu></a>
-            
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-            
-                <a href="https://steamcommunity.com/id/Mr9527/" class="iconfont-archer steam" target="_blank" title=steam></a>
-            
-        
-    
-        
-    
-        
-    
-
-
-        </div>
-    
-    
-        <div class="friends">
-            <div>
-                
-                FRIENDS
-            </div>
-            
-                
-                    <span>
-                        <a href="//intheworld.win/" target="_black">沧海浮舟</a>
-                    </span>
-                
-            
-        </div>
-    
-    
-        <div class="profile-link-item">
-            <a href="/about" class="about-me">
-                
-                ABOUT ME
-            </a>
-        </div>
-    
-    
-    
-</div>
-
                 
             </div>
             <footer class="footer footer-unloaded">

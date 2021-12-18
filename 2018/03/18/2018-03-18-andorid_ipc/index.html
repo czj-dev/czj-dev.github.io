@@ -1,0 +1,1395 @@
+<!DOCTYPE html>
+<html lang="cn">
+    <!-- title -->
+
+
+    
+
+<!-- keywords -->
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="Nutcracker">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="Nutcracker">
+    
+        <meta name="keywords" content="Android,Live,Nutcracker">
+    
+    <meta name="description" content="">
+    <meta name="description" content="IPC 是 Inter-Process Communication 的缩写，含义为进程间通信或跨进程通信，是指两个进程之间进行数据交换的过程。那么什么是进程？什么是线程？按照操作系统的概念，线程是 CPU 调度的最小单元，同时线程是一种有限的系统资源。二进程一般指一个执行单元，在 PC 和移动设备上指一个程序或者应用。一个进程可以包含多个线程，也可以只有一个线程即主线程，在Android 也叫 U">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android IPC 机制">
+<meta property="og:url" content="https://czj-dev.github.io/2018/03/18/2018-03-18-andorid_ipc/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="IPC 是 Inter-Process Communication 的缩写，含义为进程间通信或跨进程通信，是指两个进程之间进行数据交换的过程。那么什么是进程？什么是线程？按照操作系统的概念，线程是 CPU 调度的最小单元，同时线程是一种有限的系统资源。二进程一般指一个执行单元，在 PC 和移动设备上指一个程序或者应用。一个进程可以包含多个线程，也可以只有一个线程即主线程，在Android 也叫 U">
+<meta property="og:locale">
+<meta property="article:published_time" content="2018-03-18T12:55:00.000Z">
+<meta property="article:modified_time" content="2021-12-18T13:07:07.299Z">
+<meta property="article:author" content="Nutcracker">
+<meta property="article:tag" content="Note">
+<meta property="article:tag" content="Android">
+<meta name="twitter:card" content="summary">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="icon" href="/assets/favicon.ico">
+    
+    <title>Android IPC 机制 · Base Station</title>
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+    (function (w) {
+        'use strict'
+        // rel=preload support test
+        if (!w.loadCSS) {
+            w.loadCSS = function () {}
+        }
+        // define on the loadCSS obj
+        var rp = (loadCSS.relpreload = {})
+        // rel=preload feature support test
+        // runs once and returns a function for compat purposes
+        rp.support = (function () {
+            var ret
+            try {
+                ret = w.document.createElement('link').relList.supports('preload')
+            } catch (e) {
+                ret = false
+            }
+            return function () {
+                return ret
+            }
+        })()
+
+        // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+        // then change that media back to its intended value on load
+        rp.bindMediaToggle = function (link) {
+            // remember existing media attr for ultimate state, or default to 'all'
+            var finalMedia = link.media || 'all'
+
+            function enableStylesheet() {
+                link.media = finalMedia
+            }
+
+            // bind load handlers to enable media
+            if (link.addEventListener) {
+                link.addEventListener('load', enableStylesheet)
+            } else if (link.attachEvent) {
+                link.attachEvent('onload', enableStylesheet)
+            }
+
+            // Set rel and non-applicable media type to start an async request
+            // note: timeout allows this to happen async to let rendering continue in IE
+            setTimeout(function () {
+                link.rel = 'stylesheet'
+                link.media = 'only x'
+            })
+            // also enable media after 3 seconds,
+            // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+            setTimeout(enableStylesheet, 3000)
+        }
+
+        // loop through link elements in DOM
+        rp.poly = function () {
+            // double check this to prevent external calls from running
+            if (rp.support()) {
+                return
+            }
+            var links = w.document.getElementsByTagName('link')
+            for (var i = 0; i < links.length; i++) {
+                var link = links[i]
+                // qualify links to those with rel=preload and as=style attrs
+                if (
+                    link.rel === 'preload' &&
+                    link.getAttribute('as') === 'style' &&
+                    !link.getAttribute('data-loadcss')
+                ) {
+                    // prevent rerunning on link
+                    link.setAttribute('data-loadcss', true)
+                    // bind listeners to toggle media back
+                    rp.bindMediaToggle(link)
+                }
+            }
+        }
+
+        // if unsupported, run the polyfill
+        if (!rp.support()) {
+            // run once at least
+            rp.poly()
+
+            // rerun poly on an interval until onload
+            var run = w.setInterval(rp.poly, 500)
+            if (w.addEventListener) {
+                w.addEventListener('load', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            } else if (w.attachEvent) {
+                w.attachEvent('onload', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            }
+        }
+
+        // commonjs
+        if (typeof exports !== 'undefined') {
+            exports.loadCSS = loadCSS
+        } else {
+            w.loadCSS = loadCSS
+        }
+    })(typeof global !== 'undefined' ? global : this)
+</script>
+
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20211217" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="/css/dark.css?v=20211217" as="style">
+    <link rel="stylesheet" href="/css/dark.css" media="(prefers-color-scheme: dark)">
+    <link rel="stylesheet" href="/css/mobile.css?v=20211217" media="(max-width: 960px)">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js?v=20211217" as="script">
+    <link rel="preload" href="/scripts/dark.js?v=20211217" as="script">
+    <link rel="preload" href="/font/Oswald-Regular.ttf" as="font" crossorigin>
+    <link rel="preload" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" as="font" crossorigin>
+    <!-- algolia -->
+    
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ == undefined) {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js" />')
+        }
+    </script>
+    
+        <body class="post-body">
+    
+        <!-- header -->
+        <header class="header header-mobile">
+    <!-- top read progress line -->
+    <div class="header-element">
+        <div class="read-progress"></div>
+    </div>
+    <!-- sidebar menu button -->
+    <div class="header-element">
+        
+            <div class="header-sidebar-menu">
+        
+            
+                <div style="padding-left: 1px;">&#xe775;</div>
+            
+        </div>
+    </div>
+    <!-- header actions -->
+    <div class="header-actions">
+        <!-- theme mode switch button -->
+        <span class="header-theme-btn header-element">
+            <i class="fas fa-adjust"></i>
+        </span>
+        <!-- back to home page text -->
+        <span class="home-link header-element">
+            <a href=/>Base Station</a>
+        </span>
+    </div>
+    <!-- toggle banner for post layout -->
+    
+        
+            <div class="banner">
+        
+            <div class="blog-title header-element">
+                <a href="/">Base Station</a>
+            </div>
+            <div class="post-title header-element">
+                <a href="#" class="post-name">Android IPC 机制</a>
+            </div>
+        </div>
+    
+</header>
+
+        <!-- fixed footer -->
+        <footer class="footer-fixed">
+    <!-- back to top button -->
+    <div class="footer-fixed-element">
+        
+            <div class="back-top back-top-hidden">
+        
+        
+            <div>&#xe639;</div>
+        
+        </div>
+    </div>
+</footer>
+
+        <!-- wrapper -->
+        <div class="wrapper">
+            <div class="site-intro" style="
+
+
+
+
+
+
+
+    height:50vh;
+
+">
+    
+    <!-- 主页  -->
+    
+        
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/img/post-bg-android.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+                Android IPC 机制
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+                
+                    Android 艺术开发探索笔记
+                
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页 meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="Note">Note</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="Android">Android</a>
+    
+</div>
+
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">3.9k</span>阅读时长: <span class="post-count reading-time">16 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <!-- 撰写日期 -->
+                    <span class="iconfont-archer post-intro-calander">&#xe676;</span>
+                    <span class="post-intro-time">2018/03/18</span>
+                    <!-- busuanzi -->
+                    
+                        <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                            <span class="iconfont-archer post-intro-busuanzi">&#xe602;</span>
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    
+                    <!-- 文章分享 -->
+                    <span class="share-wrapper">
+                        <span class="iconfont-archer share-icon">&#xe71d;</span>
+                        <span class="share-text">Share</span>
+                        <ul class="share-list">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+
+            <script>
+  // get user agent
+  function getBrowserVersions() {
+    var u = window.navigator.userAgent
+    return {
+      userAgent: u,
+      trident: u.indexOf('Trident') > -1, //IE内核
+      presto: u.indexOf('Presto') > -1, //opera内核
+      webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+      gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+      mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+      ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+      android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+      iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+      iPad: u.indexOf('iPad') > -1, //是否为iPad
+      webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+      weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+      uc: u.indexOf('UCBrowser') > -1, //是否为android下的UC浏览器
+    }
+  }
+  var browser = {
+    versions: getBrowserVersions(),
+  }
+  console.log('userAgent: ' + browser.versions.userAgent)
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded')
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document
+        .getElementsByClassName('intro-title')[0]
+        .classList.add('intro-fade-in')
+      document
+        .getElementsByClassName('intro-subtitle')[0]
+        .classList.add('intro-fade-in')
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in')
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb() {
+    if (browser.versions.uc) {
+      console.log('UCBrowser')
+      fontLoaded()
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular'],
+        },
+        loading: function () {
+          // 所有字体开始加载
+          // console.log('font loading');
+        },
+        active: function () {
+          // 所有字体已渲染
+          fontLoaded()
+        },
+        inactive: function () {
+          // 字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout')
+          fontLoaded()
+        },
+        timeout: 5000, // Set the timeout to two seconds
+      })
+    }
+  }
+
+  function asyncErr() {
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document,
+      t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0]
+    o.src = u
+    if (cb) {
+      o.addEventListener(
+        'load',
+        function (e) {
+          cb(null, e)
+        },
+        false
+      )
+    }
+    if (err) {
+      o.addEventListener(
+        'error',
+        function (e) {
+          err(null, e)
+        },
+        false
+      )
+    }
+    s.parentNode.insertBefore(o, s)
+  }
+
+  var asyncLoadWithFallBack = function (arr, success, reject) {
+    var currReject = function () {
+      reject()
+      arr.shift()
+      if (arr.length) async(arr[0], success, currReject)
+    }
+
+    async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack(
+    [
+      'https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js',
+      'https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js',
+      "/lib/webfontloader.min.js",
+    ],
+    asyncCb,
+    asyncErr
+  )
+</script>
+
+            <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+            <div class="container container-unloaded">
+                <main class="main post-page">
+    <article class="article-entry">
+        <p>IPC 是 Inter-Process Communication 的缩写，含义为进程间通信或跨进程通信，是指两个进程之间进行数据交换的过程。那么什么是进程？什么是线程？按照操作系统的概念，线程是 CPU 调度的最小单元，同时线程是一种有限的系统资源。二进程一般指一个执行单元，在 PC 和移动设备上指一个程序或者应用。一个进程可以包含多个线程，也可以只有一个线程即主线程，在Android 也叫 UI 线程。</p>
+<h3 id="为什么需要多进程通信，使用场景"><a href="#为什么需要多进程通信，使用场景" class="headerlink" title="为什么需要多进程通信，使用场景"></a>为什么需要多进程通信，使用场景</h3><p>前面也有说在操作系统中一个进程对应的指一个程序或者应用，当两个应用需要数据交互的时候就必须要采取夸进程的通信方式来获取所需要的数据。<strong>在 Android 中每一个应用或进程都分配了一个独立的虚拟机，不同的虚拟机在内存分配上有不同的地址空间，这会导致不同虚拟机访问同一个类会产生多份副本。这时候通过内存来共享数据，都会共享失败</strong>，不仅如此还会造成很多问题，例如：</p>
+<ol>
+<li>静态成员和单例模式完全失效</li>
+<li>线程同步机制完全失效</li>
+<li>SharedPreferences 的可靠性下降</li>
+<li>Application 会多次创建</li>
+</ol>
+<p>所以任何一个操作系统都需要相应的 IPC 机制，比如 Windows 上可以通过剪贴板、管道和邮槽等来进行进程间通信；Linux 上可以通过命名管道、共享内容、信号量等来进行进程通信。对于 Android来说，它是一种基于 Linux 内核的移动操作系统，但它有自己的进程通信方式 Binder，除此之外还支持 Socket。</p>
+<h3 id="Android-中的多进程模式"><a href="#Android-中的多进程模式" class="headerlink" title="Android 中的多进程模式"></a>Android 中的多进程模式</h3><h4 id="开启多进程"><a href="#开启多进程" class="headerlink" title="开启多进程"></a>开启多进程</h4><p>在一个应用开启多进程只有一种方法，那就是给四大组件在 AndroidMenifest 中指定 android:process 属性，除此之外没有其他方法。还有一种非常规的多进程方法，那就是通过 JNI 在native 层去 fork 一个新的进程，这里不做阐述。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;activity android:name=<span class="string">&quot;.MainActivity&quot;</span>&gt;</span><br><span class="line">          &lt;intent-filter&gt;</span><br><span class="line">              &lt;action android:name=<span class="string">&quot;android.intent.action.MAIN&quot;</span> /&gt;</span><br><span class="line">              &lt;category android:name=<span class="string">&quot;android.intent.category.LAUNCHER&quot;</span>/&gt;</span><br><span class="line">          &lt;/intent-filter&gt;</span><br><span class="line">      &lt;/activity&gt;</span><br><span class="line">      &lt;activity</span><br><span class="line">          android:name=<span class="string">&quot;.SecondActivity&quot;</span></span><br><span class="line">          android:process=<span class="string">&quot;:remote&quot;</span> /&gt;</span><br><span class="line">      &lt;activity</span><br><span class="line">          android:name=<span class="string">&quot;.ThirdActivity&quot;</span></span><br><span class="line">          android:process=<span class="string">&quot;com.czj.adapter.remote&quot;</span> /&gt;</span><br></pre></td></tr></table></figure>
+
+<p>通过 process 属性值指定其运行的进程，假设当前应用的进程为 <code>com.czj.adapte</code> 那么当 SecondActivity 启动时 系统会为它创建一个新的进程，名为<code>com.czj.adpater:remote</code> ，当ThirdActiivty 启动时候系统也会为它新建一个进程，名为<code>com.czj.adpater.remote</code>。新建的两个进程其实是有区别的，” : “ 的含义是指要在当前的进程名前面附加上当前的包名，这是一种简写的方法，对于 SecondActivity 它完整的进程是 <code>com.czj.adpate:remote</code> 它属于当前应用的私有进程，而不适用 “ ：” 开头的属于全局进程，其他应用通过 ShareUID 方式可以和它跑在同一个进程中。</p>
+<p>Android 系统为每个应用分配了一个唯一的 UID，具有相同 UID 应用才能共享数据。这里要说明的是，两个应用只有拥有相同的ShareUID并且签名相同才可以跑在统一进程。在这种情况下它们可以互相访问对方的私有数据，比如 data 目录、组件信息等，不管它们是否泡在同一个进程中。</p>
+<h3 id="IPC基础概念介绍"><a href="#IPC基础概念介绍" class="headerlink" title="IPC基础概念介绍"></a>IPC基础概念介绍</h3><h4 id="Binder"><a href="#Binder" class="headerlink" title="Binder"></a>Binder</h4><blockquote>
+<p>直观来讲，Binder 是 Android 中的一个类，它实现了 IBinder 接口。从 IPC 角度来讲，Binder 是 Android 系统的一种夸进程通信方式，BInder 还可以理解为一种虚拟的物理设备，它的设备驱动是 <code>/dev/binder</code>，该通信方式在 Linux 中没有；从 Android Framework 层角度来说，Binder 是 ServiceManager 连接各种 Manger (ActivityMnager、WindowManger，等等)和相应 ManagerService 的桥梁；从 Android 应用层来说，Binder 是客户端和服务端进行通信的媒介，当 bindService 的时候，服务端会返回一个包含了服务端业务调用的 Binder 对象，通过这个 Binder 对象，客户端就可以获得服务端提供的服务或者数据，这里的服务包括普通服务和机遇 AIDL 的服务。</p>
+</blockquote>
+<h4 id="Android-中的-IPC-方式"><a href="#Android-中的-IPC-方式" class="headerlink" title="Android 中的 IPC 方式"></a>Android 中的 IPC 方式</h4><h5 id="使用Bundle"><a href="#使用Bundle" class="headerlink" title="使用Bundle"></a>使用Bundle</h5><p>Activity、Service、Receiver 都是支持在 Intent 中传递 Bundle 数据的，由于 Bundle 时间了 Parcelable 接口，所以它可以方便地在不同的进程间传输。除了直接传递数据这种经典的使用场景，它还有一种特殊的使用场景。比如 A 进程在进行一个计算，计算完成后它要启动 B 进程的一个组件并把计算结果传递给 B 进程，并且遗憾的是这个计算结果不支持放入 Bundle 中，因此无法通过 Intent 来传输，这个时候使用 其他 IPC 就略显复杂。我们可以考虑将通过 Intent 启动 B 进程的一个 Service 组件，让 Service 在后台进行计算，计算完毕再启动 B 进程真正想要启动的目标组件，由于 Service 也运行在 B 进程中，所以目标组件就可以直接获取计算结果，这样一来就轻松解决了夸进程的问题。</p>
+<h4 id="使用文件共享"><a href="#使用文件共享" class="headerlink" title="使用文件共享"></a>使用文件共享</h4><p>共享文件也是一种不错的进程间通信，两个进程通过读/写同一个文件来交换数据。通过文件共享数据对文件格式是没有具体要求的，比如可以是文本共享、也是是 XML 只要双方约定数据格式即可。通过文件共享的方式也是有局限性的，比如并发读/写的问题，如果有并发的情况，那么我们读的内容可不能不是最新的，如果是并发写的话就更严重了。文件共享方式比较适合在对同步数据要求不高的进程间通信，并且妥善处理并发/读写的问题。</p>
+<p>系统的 SharedPreferences 是 Android 提供的轻量级存储方案，它通过键值对的方式来存储数据，在底层上使用 xml 文件来保存。从本质上 SharedPreferences 也是文件的一种，但是由于系统对它的读/写做了一定的缓存策略，即在内存中会有一份 SharedPreferences 文件的缓存，因此在多进程模式下，系统对它的读写就变得很不可靠，当面对高并发的读/写访问，SharedPreferences 有很大几率丢失数据。</p>
+<h4 id="使用-Messenger"><a href="#使用-Messenger" class="headerlink" title="使用 Messenger"></a>使用 Messenger</h4><p>Messenger 可以在不同进程传递 Message 对象，它是一种基于 AIDL 的轻量级 IPC 方案，对 AIDL 做了封装从而使我们可以更简便地进行进程间通信。且由于它一次只处理一种请求，因此服务端我们不用考虑线程同步的问题，这是因为在服务端中不存在并发执行的情况。</p>
+<h4 id="使用AIDL"><a href="#使用AIDL" class="headerlink" title="使用AIDL"></a>使用AIDL</h4><p>Messeneger 是以串行的方式来处理客户端发送的消息，如果大量的消息同时发送到到服务端，而服务端只能一个一个处理，那么用 Messenger 就不大合适了。同时，Messenger 的作用主要是为了传递消息，很多时候我们可能需要夸进程的调用服务端的方法，这种情况 Messenger 就无法做到了，但是我们可以使用 AIDL 来实现。</p>
+<h6 id="创建-AIDL"><a href="#创建-AIDL" class="headerlink" title="创建 AIDL"></a>创建 AIDL</h6><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//创建 AIDL 文件Build后生成相应的类</span></span><br><span class="line"><span class="comment">// AIDL 支持 基本类型和 String、CharSequence、List、Map、Parcelable、AIDL</span></span><br><span class="line"><span class="comment">//当我们使用Parcelable时，我们要单独创建一个同名使用 parcelable 声明。</span></span><br><span class="line"><span class="comment">//Book.aidl</span></span><br><span class="line"><span class="keyword">package</span> com.example.nutcracker.myapplication;</span><br><span class="line">parcelable Book;</span><br><span class="line"><span class="comment">//IBookManager.aidl</span></span><br><span class="line"><span class="keyword">package</span> com.example.nutcracker.myapplication;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.example.nutcracker.myapplication.Book;</span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">IBookManger</span></span>&#123;</span><br><span class="line">    <span class="function">List&lt;Book&gt; <span class="title">getBook</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">addBook</span><span class="params">(Book book)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h6 id="服务端实现"><a href="#服务端实现" class="headerlink" title="服务端实现"></a>服务端实现</h6><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AIDLService</span> <span class="title">extends</span> <span class="title">Service</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> List&lt;Book&gt; bookList = new ArrayList&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> IBookManager.Stub mBookManager = new IBookManager.Stub() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> List&lt;Book&gt; getBookList() throws RemoteException &#123;</span><br><span class="line">            Log.i(<span class="string">&quot;service&quot;</span>, <span class="string">&quot;读取书籍&quot;</span>);</span><br><span class="line">            <span class="keyword">return</span> bookList;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> void addBook(Book book) throws RemoteException &#123;</span><br><span class="line">            Log.i(<span class="string">&quot;service&quot;</span>, <span class="string">&quot;添加书籍&quot;</span>);</span><br><span class="line">            bookList.add(book);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Nullable</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> IBinder onBind(Intent intent) &#123;</span><br><span class="line">        <span class="keyword">return</span> mBookManager;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h6 id="客户端实现"><a href="#客户端实现" class="headerlink" title="客户端实现"></a>客户端实现</h6><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//我们实现了一个定时向服务端添加书籍并查询书籍的组件</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ThirdActivity</span> : <span class="type">AppCompatActivity</span></span>() &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">lateinit</span> <span class="keyword">var</span> promptView: TextView</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">(savedInstanceState: <span class="type">Bundle</span>?)</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState)</span><br><span class="line">        setContentView(R.layout.activity_third)</span><br><span class="line">        promptView = findViewById(R.id.textView2)</span><br><span class="line">        <span class="keyword">val</span> intent = Intent(<span class="keyword">this</span>, AIDLService::<span class="keyword">class</span>.java)</span><br><span class="line">        bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">val</span> handle: Handler = <span class="meta">@SuppressLint(<span class="meta-string">&quot;HandlerLeak&quot;</span>)</span></span><br><span class="line">    <span class="keyword">object</span> : Handler() &#123;</span><br><span class="line">        <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">handleMessage</span><span class="params">(msg: <span class="type">Message</span>?)</span></span> &#123;</span><br><span class="line">            <span class="keyword">super</span>.handleMessage(msg)</span><br><span class="line">            <span class="keyword">val</span> book = manager.bookList.last()</span><br><span class="line">            promptView.text = book.bookName</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">var</span> sum: <span class="built_in">Int</span> = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">inner</span> <span class="class"><span class="keyword">class</span> <span class="title">MyThread</span> : <span class="type">Runnable &#123;</span></span></span><br><span class="line">        <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">run</span><span class="params">()</span></span> &#123;</span><br><span class="line">            <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    manager.addBook(Book(<span class="number">1</span>, <span class="string">&quot;book<span class="variable">$sum</span>&quot;</span>))</span><br><span class="line">                    sum++</span><br><span class="line">                    Thread.sleep(<span class="number">1000</span>)<span class="comment">// 线程暂停1秒</span></span><br><span class="line">                    <span class="keyword">val</span> message = Message()</span><br><span class="line">                    message.what = <span class="number">1</span></span><br><span class="line">                    handle.sendMessage(message)<span class="comment">// 发送消息</span></span><br><span class="line">                &#125; <span class="keyword">catch</span> (e: InterruptedException) &#123;</span><br><span class="line">                    e.printStackTrace()</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> isConnection = <span class="literal">false</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">lateinit</span> <span class="keyword">var</span> manager: IBookManager</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">val</span> serviceConnection = <span class="keyword">object</span> : ServiceConnection &#123;</span><br><span class="line">        <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onServiceConnected</span><span class="params">(p0: <span class="type">ComponentName</span>?, p1: <span class="type">IBinder</span>?)</span></span> &#123;</span><br><span class="line">            manager = IBookManager.Stub.asInterface(p1)</span><br><span class="line">            isConnection = <span class="literal">true</span></span><br><span class="line">            Log.i(<span class="string">&quot;client&quot;</span>, <span class="string">&quot; 连接上客户端&quot;</span>)</span><br><span class="line">            Thread(MyThread()).start()</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onServiceDisconnected</span><span class="params">(p0: <span class="type">ComponentName</span>?)</span></span> &#123;</span><br><span class="line">            isConnection = <span class="literal">false</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onDestroy</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onDestroy()</span><br><span class="line">        unbindService(serviceConnection)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="使用ContentProvider"><a href="#使用ContentProvider" class="headerlink" title="使用ContentProvider"></a>使用ContentProvider</h4><p>ContentProvider 是 Android 中提供的专门用于不同应用之间共享数据的方式，从这一点来看，它天生就适合进程间通信。和 Messenger 一样，ContentProvider 的底层实现同样为 Binder。</p>
+<h6 id="创建数据源"><a href="#创建数据源" class="headerlink" title="创建数据源"></a>创建数据源</h6><p>我们先创建一个数据库为ContentProvider提供数据</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DbOpenHelper</span></span>(context: Context) : SQLiteOpenHelper(context, DB_NAME, <span class="literal">null</span>, DB_VERSION) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">companion</span> <span class="keyword">object</span> &#123;</span><br><span class="line">        <span class="keyword">const</span> <span class="keyword">val</span> DB_VERSION = <span class="number">1</span></span><br><span class="line">        <span class="keyword">const</span> <span class="keyword">val</span> DB_NAME = <span class="string">&quot;book_provider&quot;</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">const</span> <span class="keyword">val</span> BOOK_TABLE_NAME = <span class="string">&quot;book&quot;</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">const</span> <span class="keyword">val</span> USER_TABLE_NAME = <span class="string">&quot;user&quot;</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">const</span> <span class="keyword">val</span> CREATE_BOOK_TABLE = <span class="string">&quot;CREATE TABLE  IF NOT EXISTS <span class="variable">$BOOK_TABLE_NAME</span> (_id INTEGER PRIMARY KEY,name TEXT)&quot;</span></span><br><span class="line">        <span class="keyword">const</span> <span class="keyword">val</span> CREATE_USER_TABLE = <span class="string">&quot;CREATE TABLE  IF NOT EXISTS <span class="variable">$USER_TABLE_NAME</span> (_id INTEGER PRIMARY KEY,name TEXT,sex INT)&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">(db: <span class="type">SQLiteDatabase</span>?)</span></span> &#123;</span><br><span class="line">        db?.execSQL(CREATE_BOOK_TABLE)</span><br><span class="line">        db?.execSQL(CREATE_USER_TABLE)</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onUpgrade</span><span class="params">(p0: <span class="type">SQLiteDatabase</span>?, p1: <span class="type">Int</span>, p2: <span class="type">Int</span>)</span></span> &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h6 id="创建一个-ContentProvider"><a href="#创建一个-ContentProvider" class="headerlink" title="创建一个 ContentProvider"></a>创建一个 ContentProvider</h6><blockquote>
+<p>创建一个自定义的ContentProvider 只需要集成 ContentProvider 并实现六个抽象方法即可：onCreate、query、update、insert、delte、和  getType。这六个抽象方法都很好理解，onCreate 代表 ContentProvider 的创建，一般来说我们要做一些初始化的工作；getType 用来返回一个 Uri 请求所对应的 MIME 类型（媒体类型），比如图片、视频等，如果我们不关注这个类型可以直接返回 null 或 <code>*/*</code> ;剩下的四个方法对应 CRUD 操作，即实现对数据表的增删改查工作。根据 Binder 的工作原理，我们知道这六个方法均在 ContentProvider 的进程中，除了 onCreate 由系统回调并运行在主线程中，其他五个方法均由外界回调并运行在 Binder 线程池中。</p>
+</blockquote>
+<p>我们来自定义一个 ContentProvider 并使用之前定义的DbOpenHelper 来作为操作的数据</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BookProvider</span> : <span class="type">ContentProvider</span></span>() &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">companion</span> <span class="keyword">object</span> &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">const</span> <span class="keyword">val</span> TAG: String = <span class="string">&quot;BookProvider&quot;</span></span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">const</span> <span class="keyword">val</span> AUTHORITIES = <span class="string">&quot;com.example.nutcracker.myapplication.BookProvider&quot;</span></span><br><span class="line">        <span class="keyword">val</span> BOOK_CONTENT_URI = Uri.parse(<span class="string">&quot;content://<span class="variable">$AUTHORITIES</span>/book&quot;</span>)</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">const</span> <span class="keyword">val</span> BOOK_URI_CODE = <span class="number">0</span></span><br><span class="line">        <span class="keyword">val</span> USER_CONTENT_URI = Uri.parse(<span class="string">&quot;content://<span class="variable">$AUTHORITIES</span>/user&quot;</span>)</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">const</span> <span class="keyword">val</span> USER_URI_CODE = <span class="number">1</span></span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">val</span> uriMather = UriMatcher(UriMatcher.NO_MATCH)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">init</span> &#123;</span><br><span class="line">        uriMather.addURI(AUTHORITIES, <span class="string">&quot;book&quot;</span>, BOOK_URI_CODE)</span><br><span class="line">        uriMather.addURI(AUTHORITIES, <span class="string">&quot;user&quot;</span>, USER_URI_CODE)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">lateinit</span> <span class="keyword">var</span> db: SQLiteDatabase</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">()</span></span>: <span class="built_in">Boolean</span> &#123;</span><br><span class="line">        Log.i(TAG, <span class="string">&quot;onCreate,current thread:<span class="subst">$&#123;Thread.currentThread()&#125;</span>&quot;</span>)</span><br><span class="line">        <span class="keyword">val</span> openHelper = DbOpenHelper(context)</span><br><span class="line">        db = openHelper.writableDatabase</span><br><span class="line">        db.execSQL(<span class="string">&quot;delete from &quot;</span> + DbOpenHelper.BOOK_TABLE_NAME)</span><br><span class="line">        db.execSQL(<span class="string">&quot;delete from &quot;</span> + DbOpenHelper.USER_TABLE_NAME)</span><br><span class="line">        db.execSQL(<span class="string">&quot;insert into book values(3,&#x27;android&#x27;);&quot;</span>)</span><br><span class="line">        db.execSQL(<span class="string">&quot;insert into book values(4,&#x27;iOS&#x27;);&quot;</span>)</span><br><span class="line">        db.execSQL(<span class="string">&quot;insert into book values(5,&#x27;html&#x27;);&quot;</span>)</span><br><span class="line">        db.execSQL(<span class="string">&quot;insert into user values(1,&#x27;jon&#x27;,11);&quot;</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">query</span><span class="params">(uri: <span class="type">Uri</span>, strings: <span class="type">Array</span>&lt;<span class="type">String</span>&gt;?, s: <span class="type">String</span>?, strings1: <span class="type">Array</span>&lt;<span class="type">String</span>&gt;?, s1: <span class="type">String</span>?)</span></span>: Cursor? &#123;</span><br><span class="line">        Log.i(TAG, <span class="string">&quot;query,current thread:<span class="subst">$&#123;Thread.currentThread()&#125;</span>&quot;</span>)</span><br><span class="line">        <span class="keyword">val</span> tableName: String = getTableName(uri)</span><br><span class="line">        <span class="keyword">return</span> db.query(tableName, strings, s, strings1, <span class="literal">null</span>, <span class="literal">null</span>, s1, <span class="literal">null</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">getType</span><span class="params">(uri: <span class="type">Uri</span>)</span></span>: String? &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">insert</span><span class="params">(uri: <span class="type">Uri</span>, contentValues: <span class="type">ContentValues</span>?)</span></span>: Uri? &#123;</span><br><span class="line">        <span class="keyword">val</span> tableName: String = getTableName(uri)</span><br><span class="line">        db.insert(tableName, <span class="literal">null</span>, contentValues)</span><br><span class="line">        context.contentResolver.notifyChange(uri, <span class="literal">null</span>)</span><br><span class="line">        <span class="keyword">return</span> uri</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">delete</span><span class="params">(uri: <span class="type">Uri</span>, s: <span class="type">String</span>?, strings: <span class="type">Array</span>&lt;<span class="type">String</span>&gt;?)</span></span>: <span class="built_in">Int</span> &#123;</span><br><span class="line">        <span class="keyword">val</span> count = db.delete(getTableName(uri), s, strings)</span><br><span class="line">        <span class="keyword">if</span> (count &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            context.contentResolver.notifyChange(uri, <span class="literal">null</span>)</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> count</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">update</span><span class="params">(uri: <span class="type">Uri</span>, contentValues: <span class="type">ContentValues</span>?, s: <span class="type">String</span>?, strings: <span class="type">Array</span>&lt;<span class="type">String</span>&gt;?)</span></span>: <span class="built_in">Int</span> &#123;</span><br><span class="line">        <span class="keyword">val</span> row = db.update(getTableName(uri), contentValues, s, strings)</span><br><span class="line">        <span class="keyword">if</span> (row &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            context.contentResolver.notifyChange(uri, <span class="literal">null</span>)</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> row</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="title">getTableName</span><span class="params">(uri: <span class="type">Uri</span>)</span></span>: String &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">when</span> (uriMather.match(uri)) &#123;</span><br><span class="line">            BOOK_URI_CODE -&gt; DbOpenHelper.BOOK_TABLE_NAME</span><br><span class="line">            USER_URI_CODE -&gt; DbOpenHelper.USER_TABLE_NAME</span><br><span class="line">            <span class="keyword">else</span> -&gt; <span class="keyword">throw</span> IllegalAccessException(<span class="string">&quot;Unsupported URI:<span class="variable">$uri</span>&quot;</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>然后在清单文件申明它</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">provider</span></span></span><br><span class="line"><span class="tag">     <span class="attr">android:name</span>=<span class="string">&quot;.BookProvider&quot;</span></span></span><br><span class="line"><span class="tag"><span class="attr">android:authorities</span>=<span class="string">&quot;com.example.nutcracker.myapplication.BookProvider&quot;</span></span></span><br><span class="line"><span class="tag">     <span class="attr">android:permission</span>=<span class="string">&quot;com.example.provider&quot;</span></span></span><br><span class="line"><span class="tag">     <span class="attr">android:process</span>=<span class="string">&quot;:provider&quot;</span></span></span><br><span class="line"><span class="tag">     /&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>其中 authorities 是Content-Provider 的唯一标示，通过这个属性外部应用就可以访问我们的 ContentProvider ，所以这个值必须是唯一的。为了演示进程间通信，我们让 BookProvider 运行在独立的进程并给它添加了权限，这样如果外部应用想访问它就必须申明对应的权限（这里指“”com.example.provider”）,否则外部应用就会异常终止。</p>
+<h6 id="最后我们在Activity中测试使用我们的ContentProvider"><a href="#最后我们在Activity中测试使用我们的ContentProvider" class="headerlink" title="最后我们在Activity中测试使用我们的ContentProvider"></a>最后我们在Activity中测试使用我们的ContentProvider</h6><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SecondActivity</span> : <span class="type">AppCompatActivity</span></span>() &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">companion</span> <span class="keyword">object</span> &#123;</span><br><span class="line">        <span class="keyword">const</span> <span class="keyword">val</span> TAG = <span class="string">&quot;Application Provider&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">(savedInstanceState: <span class="type">Bundle</span>?)</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState)</span><br><span class="line">        setContentView(R.layout.activity_second)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">val</span> values = ContentValues()</span><br><span class="line">        values.put(<span class="string">&quot;_id&quot;</span>, <span class="number">6</span>)</span><br><span class="line">        values.put(<span class="string">&quot;name&quot;</span>, <span class="string">&quot;编程之美&quot;</span>)</span><br><span class="line">        contentResolver.insert(BookProvider.BOOK_CONTENT_URI, values)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">val</span> cursor = contentResolver.query(BookProvider.BOOK_CONTENT_URI, arrayOf(<span class="string">&quot;_id&quot;</span>, <span class="string">&quot;name&quot;</span>), <span class="literal">null</span>, <span class="literal">null</span>, <span class="literal">null</span>)</span><br><span class="line">        <span class="keyword">while</span> (cursor.moveToNext()) &#123;</span><br><span class="line">            Log.i(TAG, <span class="string">&quot;id:<span class="subst">$&#123;cursor.getInt(<span class="number">0</span>)&#125;</span> name :<span class="subst">$&#123;cursor.getString(<span class="number">1</span>)&#125;</span>&quot;</span>)</span><br><span class="line">        &#125;</span><br><span class="line">        cursor.close()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">----------------- 输出</span><br><span class="line"><span class="number">03</span>-<span class="number">18</span> <span class="number">22</span>:<span class="number">54</span>:<span class="number">42.415</span> <span class="number">1935</span>-<span class="number">1935</span>/com.example.nutcracker.myapplication:remote I/Application Provider: id:<span class="number">3</span> name :android</span><br><span class="line"><span class="number">03</span>-<span class="number">18</span> <span class="number">22</span>:<span class="number">54</span>:<span class="number">42.415</span> <span class="number">1935</span>-<span class="number">1935</span>/com.example.nutcracker.myapplication:remote I/Application Provider: id:<span class="number">4</span> name :iOS</span><br><span class="line"><span class="number">03</span>-<span class="number">18</span> <span class="number">22</span>:<span class="number">54</span>:<span class="number">42.415</span> <span class="number">1935</span>-<span class="number">1935</span>/com.example.nutcracker.myapplication:remote I/Application Provider: id:<span class="number">5</span> name :html</span><br><span class="line"><span class="number">03</span>-<span class="number">18</span> <span class="number">22</span>:<span class="number">54</span>:<span class="number">42.415</span> <span class="number">1935</span>-<span class="number">1935</span>/com.example.nutcracker.myapplication:remote I/Application Provider: id:<span class="number">6</span> name :编程之美</span><br></pre></td></tr></table></figure>
+
+<h4 id="使用Socket"><a href="#使用Socket" class="headerlink" title="使用Socket"></a>使用Socket</h4><p>我们也开始使用 Socket 来进行夸进程通信，除了使用 TCP  还可以使用 UDP 套接字。在性能上 UDP 具有更好的效率，其缺点是不保证数据一定能够正确传输，尤其是网络堵塞的情况下。</p>
+<h4 id="Binder-连接池"><a href="#Binder-连接池" class="headerlink" title="Binder 连接池"></a>Binder 连接池</h4><h4 id="选择合适的-IPC-方式"><a href="#选择合适的-IPC-方式" class="headerlink" title="选择合适的 IPC 方式"></a>选择合适的 IPC 方式</h4><table>
+<thead>
+<tr>
+<th align="center">名称</th>
+<th align="center">优点</th>
+<th align="center">缺点</th>
+<th align="center">适用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Bundle</td>
+<td align="center">简单易用</td>
+<td align="center">只能传输 Bundle 支持的数据</td>
+<td align="center">四大组件间的进程通信</td>
+</tr>
+<tr>
+<td align="center">文件共享</td>
+<td align="center">简单易用</td>
+<td align="center">不适合高并发场景，并且无法做到进程间的即时通信</td>
+<td align="center">无并发访问情况，交换简单的数据实时性不高的场景</td>
+</tr>
+<tr>
+<td align="center">AIDL</td>
+<td align="center">功能强大，支持一对多并发通信，支持实时通信</td>
+<td align="center">使用稍复杂，需要处理好线程同步</td>
+<td align="center">一对多通信并且有 RPC 需求</td>
+</tr>
+<tr>
+<td align="center">Messenger</td>
+<td align="center">功能一般，支持一对多串行通信，支持实时通信</td>
+<td align="center">不能很好的处理高并发场景，不支持 RPC，数据通过 Message 传输，因此只支持 Bundle 支持的数据类型</td>
+<td align="center">低并发的一对多即使通信，无 RPC需求，或者无需返回结果的 PRC 需求</td>
+</tr>
+<tr>
+<td align="center">ContentProvider</td>
+<td align="center">在数据源访问功能强大，支持一对多并发数据共享，可通过 call 方法扩展其他操作</td>
+<td align="center">可以理解为，受约束的 AIDL，主要提供数据源的 CURD 操作</td>
+<td align="center">一对多的进程间的数据共享</td>
+</tr>
+<tr>
+<td align="center">Socket</td>
+<td align="center">功能强大，可以通过网络传输套接字，支持一对多并发实时通信</td>
+<td align="center">实现细节稍微有点繁琐，不支持直接的RPC</td>
+<td align="center">网络数据交换</td>
+</tr>
+</tbody></table>
+
+    </article>
+    <!-- license -->
+    
+        <div class="license-wrapper">
+            <p>原文作者：<a href="https://czj-dev.github.io">Nutcracker</a>
+            <p>原文链接：<a href="https://czj-dev.github.io/2018/03/18/2018-03-18-andorid_ipc/">https://czj-dev.github.io/2018/03/18/2018-03-18-andorid_ipc/</a>
+            <p>发表日期：<a href="https://czj-dev.github.io/2018/03/18/2018-03-18-andorid_ipc/">March 18th 2018, 8:55:00 pm</a>
+            <p>更新日期：<a href="https://czj-dev.github.io/2018/03/18/2018-03-18-andorid_ipc/">December 18th 2021, 9:07:07 pm</a>
+            <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2018/03/19/2018-03-19-andorid_view_event/" title="Android View 事件体系">
+                    <div class="nextTitle">Android View 事件体系</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2018/03/15/2018-03-15-andorid_exploration_book_read_01/" title="Android 艺术开发探索笔记">
+                    <div class="prevTitle">Android 艺术开发探索笔记</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- comment -->
+    
+        <div class="post-comment">
+            <!-- 来必力 City 版安装代码 -->
+
+
+            
+
+            
+
+            
+
+            <!-- utteranc评论 -->
+
+
+            <!-- partial('_partial/comment/changyan') -->
+            <!--PC版-->
+
+
+            
+            
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+    <div id="comment"></div>
+    <script>
+        new Valine({
+            el: '#comment',
+            notify:false,
+            verify:false,
+            appId: "IiPsw8Ob4JVxOMx3gayw548j-gzGzoHsz",
+            appKey: "0mXzTUSWpgkGqAO5TN7XfdtN",
+            placeholder: "",
+            path:window.location.pathname,
+            avatar:'mm'
+        });
+    </script>
+
+
+        </div>
+    
+    <!-- timeliness note -->
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+    
+    <!-- Mathjax -->
+    
+</main>
+
+                <!-- profile -->
+                
+            </div>
+            <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+        <div class="social">
+            
+    
+        
+            
+                <a href="mailto:mrchenzhaojun@gmail.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/czj-dev" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a href="https://www.zhihu.com/people/chen-zhao-jun-27" class="iconfont-archer zhihu" target="_blank" title=zhihu></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a href="https://steamcommunity.com/id/Mr9527/" class="iconfont-archer steam" target="_blank" title=steam></a>
+            
+        
+    
+        
+    
+        
+    
+
+
+        </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- website approve for Chinese user -->
+    
+    <!-- 不蒜子  -->
+    
+        <div class="busuanzi-container">
+            
+             
+                <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+            
+        </div>
+    	
+</footer>
+
+        </div>
+        <!-- toc -->
+        
+            <div class="toc-wrapper toc-wrapper-loding" style=
+
+
+
+
+
+
+
+    top:50vh;
+
+>
+                <div class="toc-catalog">
+                    <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+                </div>
+                <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E5%A4%9A%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1%EF%BC%8C%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">1.</span> <span class="toc-text">为什么需要多进程通信，使用场景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Android-%E4%B8%AD%E7%9A%84%E5%A4%9A%E8%BF%9B%E7%A8%8B%E6%A8%A1%E5%BC%8F"><span class="toc-number">2.</span> <span class="toc-text">Android 中的多进程模式</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BC%80%E5%90%AF%E5%A4%9A%E8%BF%9B%E7%A8%8B"><span class="toc-number">2.1.</span> <span class="toc-text">开启多进程</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#IPC%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5%E4%BB%8B%E7%BB%8D"><span class="toc-number">3.</span> <span class="toc-text">IPC基础概念介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Binder"><span class="toc-number">3.1.</span> <span class="toc-text">Binder</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Android-%E4%B8%AD%E7%9A%84-IPC-%E6%96%B9%E5%BC%8F"><span class="toc-number">3.2.</span> <span class="toc-text">Android 中的 IPC 方式</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8Bundle"><span class="toc-number">3.2.1.</span> <span class="toc-text">使用Bundle</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E6%96%87%E4%BB%B6%E5%85%B1%E4%BA%AB"><span class="toc-number">3.3.</span> <span class="toc-text">使用文件共享</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-Messenger"><span class="toc-number">3.4.</span> <span class="toc-text">使用 Messenger</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8AIDL"><span class="toc-number">3.5.</span> <span class="toc-text">使用AIDL</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA-AIDL"><span class="toc-number">3.5.0.1.</span> <span class="toc-text">创建 AIDL</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1%E7%AB%AF%E5%AE%9E%E7%8E%B0"><span class="toc-number">3.5.0.2.</span> <span class="toc-text">服务端实现</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%AE%9E%E7%8E%B0"><span class="toc-number">3.5.0.3.</span> <span class="toc-text">客户端实现</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8ContentProvider"><span class="toc-number">3.6.</span> <span class="toc-text">使用ContentProvider</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E6%95%B0%E6%8D%AE%E6%BA%90"><span class="toc-number">3.6.0.1.</span> <span class="toc-text">创建数据源</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AA-ContentProvider"><span class="toc-number">3.6.0.2.</span> <span class="toc-text">创建一个 ContentProvider</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%9C%80%E5%90%8E%E6%88%91%E4%BB%AC%E5%9C%A8Activity%E4%B8%AD%E6%B5%8B%E8%AF%95%E4%BD%BF%E7%94%A8%E6%88%91%E4%BB%AC%E7%9A%84ContentProvider"><span class="toc-number">3.6.0.3.</span> <span class="toc-text">最后我们在Activity中测试使用我们的ContentProvider</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8Socket"><span class="toc-number">3.7.</span> <span class="toc-text">使用Socket</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Binder-%E8%BF%9E%E6%8E%A5%E6%B1%A0"><span class="toc-number">3.8.</span> <span class="toc-text">Binder 连接池</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%80%89%E6%8B%A9%E5%90%88%E9%80%82%E7%9A%84-IPC-%E6%96%B9%E5%BC%8F"><span class="toc-number">3.9.</span> <span class="toc-text">选择合适的 IPC 方式</span></a></li></ol></li></ol>
+            </div>
+        
+        <!-- sidebar -->
+        <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+        <div class="sidebar-panel-archives">
+    <!-- 在 ejs 中将 archive 按照时间排序 -->
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 25
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+        
+            
+            
+            <div class="archive-year"> 2021 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/24</span>
+            <a class="archive-post-title" href="/2021/03/24/2021-03-25-thinking/">庸碌</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2020 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/22</span>
+            <a class="archive-post-title" href="/2020/05/22/2020-05-22-note_wiki_widget/">官方文档的重要性</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/11</span>
+            <a class="archive-post-title" href="/2020/05/11/2020-05-11-flutter_depth/">Flutter 深入探索</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/30</span>
+            <a class="archive-post-title" href="/2020/04/30/2020-04-30-dart_basic/">Dart 实践（一）</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/29</span>
+            <a class="archive-post-title" href="/2020/04/29/2020-04-29-book_read_01/">《精进：如何成为一个很厉害的人》阅读笔记 01</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2020/04/27/2020-04-27-flutter_application/">Flutter 实践</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2019 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/15</span>
+            <a class="archive-post-title" href="/2019/10/15/2019-10-15-retrofit-and-okHttp/">Retrofit与OkHttp源码解析</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/11</span>
+            <a class="archive-post-title" href="/2019/10/11/2019-10-11-HTTP_The_Definitive_Guide/">HTTP 权威指南阅读笔记（一）</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2018 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/26</span>
+            <a class="archive-post-title" href="/2018/05/26/2018-05-06-gradle_learning_notes_2/">Gradle的架构和api</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/28</span>
+            <a class="archive-post-title" href="/2018/04/28/2018-05-26-gradle_learning_notes_1/">Gradle的基础概念</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/19</span>
+            <a class="archive-post-title" href="/2018/04/19/2018-04-19-memory_management/">Android 内存管理机制</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/01</span>
+            <a class="archive-post-title" href="/2018/04/01/2018-04-04-andorid_thread/">Android 的线程和线程池</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/25</span>
+            <a class="archive-post-title" href="/2018/03/25/2018-03-25-andorid_view_working_principle/">Android View 工作原理</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/19</span>
+            <a class="archive-post-title" href="/2018/03/19/2018-03-19-andorid_view_event/">Android View 事件体系</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/18</span>
+            <a class="archive-post-title" href="/2018/03/18/2018-03-18-andorid_ipc/">Android IPC 机制</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/15</span>
+            <a class="archive-post-title" href="/2018/03/15/2018-03-15-andorid_exploration_book_read_01/">Android 艺术开发探索笔记</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2017 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/19</span>
+            <a class="archive-post-title" href="/2017/05/19/2017-05-19-android_databinding/">Data Binding学习笔记</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/08</span>
+            <a class="archive-post-title" href="/2017/03/08/2017-03-08-adapter/">适配器模式与外观模式</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/20</span>
+            <a class="archive-post-title" href="/2017/02/20/2017-02-20-factory/">工厂模式(factory Pettern)</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/08</span>
+            <a class="archive-post-title" href="/2017/02/08/2017-02-08-decorator/">装饰者模式(Decorator)</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/07</span>
+            <a class="archive-post-title" href="/2017/02/07/2017-02-07-observer/">观察者模式(Observer Pettern)</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/06</span>
+            <a class="archive-post-title" href="/2017/02/06/2017-02-06-annotation/">Android自定义注解</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/04</span>
+            <a class="archive-post-title" href="/2017/02/04/2017-02-04-Strategy/">策略模式(Strategy Pettern)</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/24</span>
+            <a class="archive-post-title" href="/2017/01/24/2017-01-24-rxjava_learning_notes/">RxAndroid学习笔记</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/23</span>
+            <a class="archive-post-title" href="/2017/01/23/2017-01-23-new_start/">Hello Blog</a>
+        </li>
+    
+    </div>
+</div>
+
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+        
+            <span class="sidebar-tag-name" data-tags="Note">
+                <span class="iconfont-archer">&#xe606;</span>
+                Note
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Gradle">
+                <span class="iconfont-archer">&#xe606;</span>
+                Gradle
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="HTTP">
+                <span class="iconfont-archer">&#xe606;</span>
+                HTTP
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Android">
+                <span class="iconfont-archer">&#xe606;</span>
+                Android
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Flutter">
+                <span class="iconfont-archer">&#xe606;</span>
+                Flutter
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Book">
+                <span class="iconfont-archer">&#xe606;</span>
+                Book
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Dart">
+                <span class="iconfont-archer">&#xe606;</span>
+                Dart
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="基础">
+                <span class="iconfont-archer">&#xe606;</span>
+                基础
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="生活">
+                <span class="iconfont-archer">&#xe606;</span>
+                生活
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Booklet">
+                <span class="iconfont-archer">&#xe606;</span>
+                Booklet
+            </span>
+        
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+        缺失模块，请参考主题文档进行安装配置：https://github.com/fi3ework/hexo-theme-archer#%E5%AE%89%E8%A3%85%E4%B8%BB%E9%A2%98
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+
+    </div>
+</div>
+
+        <!-- site-meta -->
+        <script>
+    var siteMetaRoot = "/"
+    if (siteMetaRoot === "undefined") {
+        siteMetaRoot = '/'
+    }
+    var siteMeta = {
+        url: "https://czj-dev.github.io",
+        root: siteMetaRoot,
+        author: "Nutcracker"
+    }
+</script>
+
+        <!-- import experimental options here -->
+        <!-- Custom Font -->
+
+
+        <!-- main func -->
+        <script src="/scripts/main.js?v=20211217"></script>
+        <!-- dark mode -->
+        <script src="/scripts/dark.js?v=20211217"></script>
+        <!-- fancybox -->
+        <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" defer></script>
+        <!-- algolia -->
+        
+        <!-- busuanzi -->
+        
+            <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+        
+        <!-- CNZZ -->
+        
+        <!-- async load share.js -->
+        
+            <script src="/scripts/share.js?v=20211217" async></script>
+        
+        <!-- mermaid -->
+        
+    </body>
+</html>

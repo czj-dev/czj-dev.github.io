@@ -19,18 +19,25 @@
         <meta name="keywords" content="Android,Live,Nutcracker">
     
     <meta name="description" content="">
-    <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="https://czj-dev.github.io/index.html">
+    <meta name="description" content="前言4月公司客户端业务没有什么大的动向，我自己自然也就落得清闲了。打算按照年前指定的计划，这段时间用来实战和深入了解一些 Flutter 相关的知识。个人感觉，学到的知识如果不能转化成成果，那么价值和留存率都是级低的。敲定目标后，打算做什么就很重要了。毕竟 UI 什么的可以自己想，但是数据可不是无源之水，去买感觉又不大必要；苦恼之际，正巧浏览的时候看到 gank 翻修改版了，也就打算做一个 Flu">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Flutter 实践">
+<meta property="og:url" content="https://czj-dev.github.io/2020/04/27/2020-04-27-flutter_application/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="前言4月公司客户端业务没有什么大的动向，我自己自然也就落得清闲了。打算按照年前指定的计划，这段时间用来实战和深入了解一些 Flutter 相关的知识。个人感觉，学到的知识如果不能转化成成果，那么价值和留存率都是级低的。敲定目标后，打算做什么就很重要了。毕竟 UI 什么的可以自己想，但是数据可不是无源之水，去买感觉又不大必要；苦恼之际，正巧浏览的时候看到 gank 翻修改版了，也就打算做一个 Flu">
 <meta property="og:locale">
+<meta property="og:image" content="https://s1.ax1x.com/2020/04/27/Jfooa8.gif">
+<meta property="article:published_time" content="2020-04-27T07:00:00.000Z">
+<meta property="article:modified_time" content="2021-12-18T13:07:07.187Z">
 <meta property="article:author" content="Nutcracker">
+<meta property="article:tag" content="Flutter">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s1.ax1x.com/2020/04/27/Jfooa8.gif">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <link rel="icon" href="/assets/favicon.ico">
     
-    <title>Base Station</title>
+    <title>Flutter 实践 · Base Station</title>
     <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
 /* This file is meant as a standalone workflow for
 - testing support for link[rel=preload]
@@ -217,10 +224,10 @@
         }
     </script>
     
-        <body class="home-body">
+        <body class="post-body">
     
         <!-- header -->
-        <header class="header header-mobile index-header">
+        <header class="header header-mobile">
     <!-- top read progress line -->
     <div class="header-element">
         <div class="read-progress"></div>
@@ -248,10 +255,21 @@
     </div>
     <!-- toggle banner for post layout -->
     
+        
+            <div class="banner">
+        
+            <div class="blog-title header-element">
+                <a href="/">Base Station</a>
+            </div>
+            <div class="post-title header-element">
+                <a href="#" class="post-name">Flutter 实践</a>
+            </div>
+        </div>
+    
 </header>
 
         <!-- fixed footer -->
-        <footer class="footer-fixed index-footer-fixed">
+        <footer class="footer-fixed">
     <!-- back to top button -->
     <div class="footer-fixed-element">
         
@@ -281,17 +299,17 @@
     <!-- 主页  -->
     
         
-    <!-- 文章页  -->
+    <!-- 404页  -->
             
     <div class="site-intro-placeholder"></div>
-    <div class="site-intro-img" style="background-image: url(/intro/index-bg.jpg)"></div>
+    <div class="site-intro-img" style="background-image: url(/img/post-bg-flutter.jpg)"></div>
     <div class="site-intro-meta">
         <!-- 标题  -->
         <h1 class="intro-title">
             <!-- 主页  -->
             
-                Base Station
-            <!-- 文章页  -->
+                Flutter 实践
+            <!-- 404 -->
             
         </h1>
         <!-- 副标题 -->
@@ -299,12 +317,56 @@
             <!-- 主页副标题  -->
             
                 
-                    君子坐而论道 少年起而行之
+                    gank.io flutter 版客户端开发有感
                 
-            <!-- 文章页  -->
+            <!-- 404 -->
             
         </p>
         <!-- 文章页 meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="Flutter">Flutter</a>
+    
+</div>
+
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">1.2k</span>阅读时长: <span class="post-count reading-time">4 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <!-- 撰写日期 -->
+                    <span class="iconfont-archer post-intro-calander">&#xe676;</span>
+                    <span class="post-intro-time">2020/04/27</span>
+                    <!-- busuanzi -->
+                    
+                        <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                            <span class="iconfont-archer post-intro-busuanzi">&#xe602;</span>
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    
+                    <!-- 文章分享 -->
+                    <span class="share-wrapper">
+                        <span class="iconfont-archer share-icon">&#xe71d;</span>
+                        <span class="share-text">Share</span>
+                        <ul class="share-list">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
         
     </div>
 </div>
@@ -434,507 +496,107 @@
 
             <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
             <div class="container container-unloaded">
-                <main class="main index-page">
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2021/03/24/2021-03-25-thinking/">
-                
-                <span class="abstract-title-text">庸碌</span>
-            </a>
-            <div class="abstract-content">
-                庸碌Created: Mar 23, 2021 5:28 PMTags: Life Lesson, Personal
-本来计划新年的第一篇文章输出一下 Flutter 列表的分析和功能优化,但是在陆续看过闲鱼技术和一些同行的文章后感觉要是还按照原来的思路写一篇就显得过于搪塞,这个理由马上就说服了我自己,从而心安理得拖延了起来.但是在相继整理了房间、单车、简历、甚至是 Chrome 的收藏夹后,我已经找不到能够继续让写博客这项事情往后拖延的理由,就想着先写一篇随笔吧 ,也算是对去年的自己一份回顾与交代.
-去年的疫情对在小公司工作的自己来说受影响还是蛮大的,前半年居家办公、薪资减少、年中在公...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2021/12/18">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/03/24</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="Note">Note</a>
-    
-</div>
+                <main class="main post-page">
+    <article class="article-entry">
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>4月公司客户端业务没有什么大的动向，我自己自然也就落得清闲了。打算按照年前指定的计划，这段时间用来实战和深入了解一些 <code>Flutter</code> 相关的知识。个人感觉，学到的知识如果不能转化成成果，那么价值和留存率都是级低的。敲定目标后，打算做什么就很重要了。毕竟 UI 什么的可以自己想，但是数据可不是无源之水，去买感觉又不大必要；苦恼之际，正巧浏览的时候看到 <a target="_blank" rel="noopener" href="https://gank.io/">gank</a> 翻修改版了，也就打算做一个 Flutter 版本客户端，虽然没什么特色，但也聊胜于无，而且 API 现在是越来越稀缺了，只能要求自己做的劲量精细点，不要制造垃圾。</p>
+<p>下面就是半个月的成果——<a target="_blank" rel="noopener" href="https://github.com/Mr9527/GankClient-Flutter">gank-flutter</a>：</p>
+<p><img src="https://s1.ax1x.com/2020/04/27/Jfooa8.gif" alt="演示图"></p>
+<h2 id="个人感触"><a href="#个人感触" class="headerlink" title="个人感触"></a>个人感触</h2><p>目前就只有这些功能了。之所以功能并不多，有两点原因：一是目前新版客户端提供的 API 并不多；二是之前预想的是与 <code>github </code> 的部分 API 结合起来扩充个人中心的内容，但后来都胎死腹中了。因为目前 <code>gank</code> 的登录接口只提供了原始的 <code>github</code> OAuth 接口来直接登录授权，尝试了下合并无果就暂时搁置了这一部分的计划，等后续有接口了一起迭代，如果强行弄一起感觉就像缝合怪一样，并不想这样做。</p>
+<p>闲聊完，来说说这次开发完的感觉，不得不说 flutter 的跨平台在 UI 方面对开发者和用户的体验感觉是目前最好的。常规的应用完全可以迅速的开发并进行多端布置，现阶段提供的 <code>API</code>和开源社区的库扩展可以覆盖大部分常规的功能场景。平台特点的功能也可以通过 plugin 的方式使用。可能针对硬件方面的功能会有一些缺陷，这个没有了解过。缺点也有，项目中常用的 <code>webView </code> 目前扩展性和功能都很单一，cookie 管理还是测试性功能，对国内 hybrid 生态比较重的环境来说并不是个好消息，不过因为 webView 的扩展库是官方管理的，可以相信其迭代的能力。总的来说，我觉得确实对得起这个正式的版号（1.x.x )。现阶段的 flutter 虽然各方面不一定是最好的，但是它未来的路线都画的很明确了,各大头部公司也在几级背书，身为一个客户端开发感觉还是很有学习的必要的。</p>
+<h2 id="学习路线"><a href="#学习路线" class="headerlink" title="学习路线"></a>学习路线</h2><ol>
+<li>先学习 <code>Dart</code>语言基础。现代编程语言的语法特性都类似，<code>Dart</code> 较为特殊的就是它的异步 <code>async await</code> 和类似多继承的 <code>mixinx</code> 机制。这两点要着重理解。还有就是较为常规的函数、集合、stream 等。</li>
+<li>去 <a target="_blank" rel="noopener" href="https://flutter.cn/">flutter.cn</a> 跟着官方的<a target="_blank" rel="noopener" href="https://flutter.cn/docs">中文文档</a>从头到尾实践一遍，会对 flutter 开发有较为完整的认知。虽然较为碎片，但是后边实践会让迅速的将知识穿插起来。</li>
+<li>看完官方文档基本还停留在写 demo 的阶段。这里我找了几个项目，编译和阅读了它们。<a target="_blank" rel="noopener" href="https://github.com/alibaba/flutter-go">flutter-go</a>、<a target="_blank" rel="noopener" href="https://github.com/toly1994328/FlutterUnit">flutterUnit</a> 是开源的 widget 合集，可以让你通过可视化以及代码修改编写来快速的熟悉官方的常用 widget。<a target="_blank" rel="noopener" href="https://github.com/CarGuo/gsy_github_app_flutter">gsy_github_app_flutter</a> 则可以让你对常用的开源库，自定义 widget 以及商业化的项目结构有一定的了解，读起来对我这种小白来说受益匪浅。</li>
+<li>之后就打算将学习到的知识转化为实践，于是就花了半个月的时间开发了这款 <a target="_blank" rel="noopener" href="https://github.com/Mr9527/GankClient-Flutter">gank-flutter</a></li>
+</ol>
+<p>一圈下来算是快速了解了 flutter 生态、开发环境以及商业项目的实践应用。当然也仅仅做到 T 型的 — ，对具体实现、运作机制、性能优化、复杂的功能应用知之甚少。如果想成为一个合格的 Flutter 开发者，我想这些都是必不可少的。之后我也打算对 flutter 的具体实现进行进一步的了解.:dog:</p>
+<h2 id="挖坑"><a href="#挖坑" class="headerlink" title="挖坑"></a>挖坑</h2><p>后续计划：</p>
+<ul>
+<li>了解 Flutter framework 的运行原理</li>
+<li>了解 widget 具体的代码实现和工作原理</li>
+<li>继续迭代 gank-flutter 项目</li>
+<li>对 gank-flutter 做一篇技术性的总结</li>
+</ul>
+<p>2020 年的第一篇博客总算在五月之前发出来了，虽然灌水的既视感满满，但也对自己这段时间所做的事情有了一定的交代。希望之后的自己可以再接再厉，完成年初制定的一揽子计划。疫情的影响在国内也快逐渐淡去，希望之后国内的大环境也能尽快好起来:pizza:</p>
 
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
+    </article>
+    <!-- license -->
     
-        
-        
-        
-        
+        <div class="license-wrapper">
+            <p>原文作者：<a href="https://czj-dev.github.io">Nutcracker</a>
+            <p>原文链接：<a href="https://czj-dev.github.io/2020/04/27/2020-04-27-flutter_application/">https://czj-dev.github.io/2020/04/27/2020-04-27-flutter_application/</a>
+            <p>发表日期：<a href="https://czj-dev.github.io/2020/04/27/2020-04-27-flutter_application/">April 27th 2020, 3:00:00 pm</a>
+            <p>更新日期：<a href="https://czj-dev.github.io/2020/04/27/2020-04-27-flutter_application/">December 18th 2021, 9:07:07 pm</a>
+            <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator -->
+    <ul class="post-paginator">
+        <li class="next">
             
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2020/05/22/2020-05-22-note_wiki_widget/">
-                
-                <span class="abstract-title-text">官方文档的重要性</span>
-            </a>
-            <div class="abstract-content">
-                今天发生了两件事情,解决方法倒是殊途同亏,都是通过官方文档来解决的.事后回想下来也有总结的必要,在这里聊两句.
-一是在看 elm 开源项目源码的时候发现了一个挺奇怪的语法
-12345678910export const USERINFO =“userInfo”;export default&#123; 	[USERINFO](&#123;commit,state&#125;)&#123;    commit(&quot;xxx&quot;,xx);  &#125;&#125;
-
-函数中间和逻辑倒是没什么好讨论的,但是函数面前加了一个数组变量,这倒是让我有点晕了,百思不得其解这是什么操作,...
-            </div>
-            <!-- read more -->
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2020/04/29/2020-04-29-book_read_01/" title="《精进：如何成为一个很厉害的人》阅读笔记 01">
+                    <div class="nextTitle">《精进：如何成为一个很厉害的人》阅读笔记 01</div>
+                </a>
             
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2021/12/18">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/05/22</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="Note">Note</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
+        </li>
+        <li class="previous">
             
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2020/05/11/2020-05-11-flutter_depth/">
-                
-                <span class="abstract-title-text">Flutter 深入探索</span>
-            </a>
-            <div class="abstract-content">
-                Flutter 框架简介
-在深入代码之前，我们先了解一下 Flutter 框架结构：
-
-底层的 Engine 库，负责语言的解释（Dart）、视图的渲染（Skia、Text）.它们都是使用C、C++ 编写的，具有极高的性能。
-Framework 中将编写 UI 所需要的动画、绘制、手势等独立实现，然后组合起来交由 rendering 层级来产生强大的效果，组件的层次是扁平化的，最大化可能的组合数量。
- Flutter 自带了两套较为完善的 Widgets 套件，Android 平台风格的 Material 与 iOS 平台风格的 Cupertino
-
-从结构图的我们可以看到 Androi...
-            </div>
-            <!-- read more -->
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2019/10/15/2019-10-15-retrofit-and-okHttp/" title="Retrofit与OkHttp源码解析">
+                    <div class="prevTitle">Retrofit与OkHttp源码解析</div>
+                </a>
             
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2021/12/18">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/05/11</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
+        </li>
+    </ul>
+    <!-- comment -->
     
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="Flutter">Flutter</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2020/04/30/2020-04-30-dart_basic/">
-                
-                <span class="abstract-title-text">Dart 实践（一）</span>
-            </a>
-            <div class="abstract-content">
-                数据类型Dart 中一切都是对象，包含数字、布尔值、函数等，它们和 java 一样继承与 object，所以它们的默认值都是 Null  这点尤为需要注意，在定义数据类型的时候如 布尔 、数字类型都需要我们手动去设定业务中所需要的默认值。
-常用数据类型布尔类型（bool）布尔类型与 C 语言一样，使用 bool 声明一个布尔类型的对象，拥有 true 和 false 两个值
-1bool isOpened=true;
+        <div class="post-comment">
+            <!-- 来必力 City 版安装代码 -->
 
 
+            
 
-数字类型（int、double）在 Dart 中的数字只有类型 int、double ，它们都继承于 num 类，num 类是一个抽象类，声明了整数和浮点数的抽象实现，...
-            </div>
-            <!-- read more -->
             
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2021/12/18">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/04/30</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="Flutter">Flutter</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="Dart">Dart</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="基础">基础</a>
-    
-</div>
 
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
             
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2020/04/29/2020-04-29-book_read_01/">
-                
-                <span class="abstract-title-text">《精进：如何成为一个很厉害的人》阅读笔记 01</span>
-            </a>
-            <div class="abstract-content">
-                如何对待时间
-瑞典心理学家林德沃(Lindvall)提出,具有平衡式时间视角的人，在内心具有一种“延伸的当下感（extended now ）,既可以“从当来审视过去”，也可以“视未来存于当下”，他应具有囊括“过去”和“未来的”包容性。
-这种既不疏离也不漠视未来的当下感，显然与享乐主义视角差别明显，它显示了一个人对事件所应具有的责任感，既以更严肃（虽不一定是更迫切）的态度来对待时间。这与梁漱溟先生的“郑重”一说便不谋而合了。近百年前人文学者的自我审思与新近基于实证的科学观点实现了相会，这是件多么奇妙的事！
 
-林德沃提出的对待时间的十条建议：
+            <!-- utteranc评论 -->
 
-生活在当下——不瞻前顾后，不左顾右盼，不患得患...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2021/12/18">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/04/29</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="Book">Book</a>
-    
-</div>
 
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2020/04/27/2020-04-27-flutter_application/">
-                
-                <span class="abstract-title-text">Flutter 实践</span>
-            </a>
-            <div class="abstract-content">
-                前言4月公司客户端业务没有什么大的动向，我自己自然也就落得清闲了。打算按照年前指定的计划，这段时间用来实战和深入了解一些 Flutter 相关的知识。个人感觉，学到的知识如果不能转化成成果，那么价值和留存率都是级低的。敲定目标后，打算做什么就很重要了。毕竟 UI 什么的可以自己想，但是数据可不是无源之水，去买感觉又不大必要；苦恼之际，正巧浏览的时候看到 gank 翻修改版了，也就打算做一个 Flutter 版本客户端，虽然没什么特色，但也聊胜于无，而且 API 现在是越来越稀缺了，只能要求自己做的劲量精细点，不要制造垃圾。
-下面就是半个月的成果——gank-flutter：
+            <!-- partial('_partial/comment/changyan') -->
+            <!--PC版-->
 
-个人感触目...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2021/12/18">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/04/27</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="Flutter">Flutter</a>
-    
-</div>
 
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
             
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2019/10/15/2019-10-15-retrofit-and-okHttp/">
-                
-                <span class="abstract-title-text">Retrofit与OkHttp源码解析</span>
-            </a>
-            <div class="abstract-content">
-                Android 网络框架解析从 2016 Retrofit 开源以来，Retrofit 以它优雅的设计，方便的使用迅速征服了很多开发者，Retrofit+OkHttp 成了 Android 网络开发开源解决方案的佼佼者。 Retrofit 已经在实际项目使用很久了，也对 Retorfit 和 OkHttp 实现原理有一定的了解，但却一直没有书面的记录，网上已经有很多相关的优秀文章，但本着思前想后千万遍,不如动笔写下来的道理，还是打算写一整篇 Retrofit、OkHttp 以及 Okio 的解析，整理和完善相关的知识，总结和归纳比阅读更重要。
-Retrofit、OkHttp、Okio 三...
-            </div>
-            <!-- read more -->
             
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2021/12/18">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/10/15</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="Android">Android</a>
-    
-</div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+    <div id="comment"></div>
+    <script>
+        new Valine({
+            el: '#comment',
+            notify:false,
+            verify:false,
+            appId: "IiPsw8Ob4JVxOMx3gayw548j-gzGzoHsz",
+            appKey: "0mXzTUSWpgkGqAO5TN7XfdtN",
+            placeholder: "",
+            path:window.location.pathname,
+            avatar:'mm'
+        });
+    </script>
 
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2019/10/11/2019-10-11-HTTP_The_Definitive_Guide/">
-                
-                <span class="abstract-title-text">HTTP 权威指南阅读笔记（一）</span>
-            </a>
-            <div class="abstract-content">
-                URIURI 是一种更通用的资源标识符，URL 实际是它的子集。URI 是一个通用的概念，由两个主要的子集 URL 和 URN 构成 ，URL 是通过描述资源的位置来标识自愿的，而 URN 则是通过名称来识别资源，与它们所处的位置无关
-URN 的好处是显而易见的，但是将 URL 转换成 URN 需要进行大量的工作，在可预见的未来，英特网资源仍然会以 URL 来命名。
-URL 格式
-1&lt;scheme&gt;://&lt;user&gt;:&lt;password&gt;@&lt;host&gt;&lt;port&gt;&lt;path&gt;;&lt;params&gt;?&lt;q...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2021/12/18">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/10/11</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="HTTP">HTTP</a>
-    
-</div>
 
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
+        </div>
     
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2018/05/26/2018-05-06-gradle_learning_notes_2/">
-                
-                <span class="abstract-title-text">Gradle的架构和api</span>
-            </a>
-            <div class="abstract-content">
-                了解 Gradle 的架构
-每个 Gradle 构架都包括了三个基本的构建块:项目(Projects)、任务(tasks)、和属性(properties),每个构建至少包括一个项目,项目包括一个或多个任务,项目中有很多属性来控制构建过程.
-Gradle 运用了领域驱动的设计理念（DDD）来给自己的领域构建软件建模，因此 Gradle 的项目和任务都在 Gradle 的 API 中有一个直接的 class 来表示，接下来我们来深入了解每一个组件和它对应的 API。
-
-ProjectProject 表示你想要构建的一个目标，对应具体的内容可以是一个项目、组件、jar 等。当开始构建的时候，G...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2021/12/18">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/05/26</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
+    <!-- timeliness note -->
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
     
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="Gradle">Gradle</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-        
-        
-        
-        
-            
-        
-        <article class="index-post">
-            <a class="abstract-title" href="/2018/04/28/2018-05-26-gradle_learning_notes_1/">
-                
-                <span class="abstract-title-text">Gradle的基础概念</span>
-            </a>
-            <div class="abstract-content">
-                Gradle 实战(一)Gradle 是继 Ant 、Maven 之后又一个优秀的 Java 项目构建工具.它同样实现了依赖管理、仓库、约定优于配置等优秀的概念.对 maven 和 Ant 项目与资源也有很好的兼容和支持.相比 Maven 和 Ant 来说 Gradle 的构件脚本是声明式的、可读的,可以清晰的表达意图.它使用一个 DSL 语言 Groovy (类似 java ) 来代替 XML 语言大大减少了构件代码的大小。在 Android Studio 中更是成为了构建 Android 项目的标准工具. 我们就来学习和了解它是如何工作和使用的。
-###Groovy
-Groovy 是...
-            </div>
-            <!-- read more -->
-            
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2021/12/18">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/04/28</span>
-                </div>
-                <!-- tags -->
-                
-                    <div class= abstract-tags >
-    
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="Gradle">Gradle</a>
-    
-</div>
-
-                
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-    
-    <!-- paginator  -->
-    
-        <nav class="page-nav">
-            <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">NEXT &gt;</a>
-        </nav>
+    <!-- Mathjax -->
     
 </main>
 
                 <!-- profile -->
-                
-                    <div class="profile">
-    <img class="profile-avatar" alt="avatar" src= /avatar/Misaka.jpg />
-    <div class="profile-name">Nutcracker</div>
-    
-        <div class="profile-signature">
-            你以后会遇到很多机遇，但你的平庸会毁掉它们。当你觉得自己做的还不错的时候，你已经杀死了那个能够让你做的更好的自己
-        </div>
-    
-    
-        <div class="profile-social">
-            
-    
-        
-            
-                <a href="mailto:mrchenzhaojun@gmail.com" class="iconfont-archer email" title=email ></a>
-            
-        
-    
-        
-            
-                <a href="//github.com/czj-dev" class="iconfont-archer github" target="_blank" title=github></a>
-            
-        
-    
-        
-    
-        
-    
-        
-    
-        
-            
-                <a href="https://www.zhihu.com/people/chen-zhao-jun-27" class="iconfont-archer zhihu" target="_blank" title=zhihu></a>
-            
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-    
-        
-            
-                <a href="https://steamcommunity.com/id/Mr9527/" class="iconfont-archer steam" target="_blank" title=steam></a>
-            
-        
-    
-        
-    
-        
-    
-
-
-        </div>
-    
-    
-        <div class="friends">
-            <div>
-                
-                FRIENDS
-            </div>
-            
-                
-                    <span>
-                        <a href="//intheworld.win/" target="_black">沧海浮舟</a>
-                    </span>
-                
-            
-        </div>
-    
-    
-        <div class="profile-link-item">
-            <a href="/about" class="about-me">
-                
-                ABOUT ME
-            </a>
-        </div>
-    
-    
-    
-</div>
-
                 
             </div>
             <footer class="footer footer-unloaded">
@@ -1020,6 +682,23 @@ Groovy 是...
 
         </div>
         <!-- toc -->
+        
+            <div class="toc-wrapper toc-wrapper-loding" style=
+
+
+
+
+
+
+
+    top:50vh;
+
+>
+                <div class="toc-catalog">
+                    <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+                </div>
+                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%AA%E4%BA%BA%E6%84%9F%E8%A7%A6"><span class="toc-number">2.</span> <span class="toc-text">个人感触</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF"><span class="toc-number">3.</span> <span class="toc-text">学习路线</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%96%E5%9D%91"><span class="toc-number">4.</span> <span class="toc-text">挖坑</span></a></li></ol>
+            </div>
         
         <!-- sidebar -->
         <div class="sidebar sidebar-hide">
@@ -1633,6 +1312,8 @@ Groovy 是...
         <!-- CNZZ -->
         
         <!-- async load share.js -->
+        
+            <script src="/scripts/share.js?v=20211217" async></script>
         
         <!-- mermaid -->
         
