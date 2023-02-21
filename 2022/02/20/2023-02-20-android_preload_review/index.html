@@ -1,0 +1,1474 @@
+<!DOCTYPE html>
+<html lang="cn">
+    <!-- title -->
+
+
+    
+
+<!-- keywords -->
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="Nutcracker">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="Nutcracker">
+    
+        <meta name="keywords" content="Android,Live,Nutcracker">
+    
+    <meta name="description" content="">
+    <meta name="description" content="列表预加载分析研究 当今移动应用开发中，列表控件是最常用的UI控件之一，它可以显示各种信息，如图片、文本、视频等等。然而，在移动设备上，列表数据的加载和显示是非常耗费资源的操作。当列表中的数据量较大时，用户往往需要等待较长的时间才能看到完整的列表。为了提高用户体验，开发人员需要采取一些策略来减少加载时间，如预加载。预加载是指在用户滑动列表之前，提前加载一部分列表数据，以便在用户滑动到这些数据时可以">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android 列表预加载分析研究">
+<meta property="og:url" content="https://czj-dev.github.io/2022/02/20/2023-02-20-android_preload_review/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="列表预加载分析研究 当今移动应用开发中，列表控件是最常用的UI控件之一，它可以显示各种信息，如图片、文本、视频等等。然而，在移动设备上，列表数据的加载和显示是非常耗费资源的操作。当列表中的数据量较大时，用户往往需要等待较长的时间才能看到完整的列表。为了提高用户体验，开发人员需要采取一些策略来减少加载时间，如预加载。预加载是指在用户滑动列表之前，提前加载一部分列表数据，以便在用户滑动到这些数据时可以">
+<meta property="og:locale">
+<meta property="article:published_time" content="2022-02-20T08:56:00.000Z">
+<meta property="article:modified_time" content="2023-02-21T14:06:12.955Z">
+<meta property="article:author" content="Nutcracker">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="RecyclerView">
+<meta name="twitter:card" content="summary">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="icon" href="/assets/favicon.ico">
+    
+    <title>Android 列表预加载分析研究 · Base Station</title>
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+    (function (w) {
+        'use strict'
+        // rel=preload support test
+        if (!w.loadCSS) {
+            w.loadCSS = function () {}
+        }
+        // define on the loadCSS obj
+        var rp = (loadCSS.relpreload = {})
+        // rel=preload feature support test
+        // runs once and returns a function for compat purposes
+        rp.support = (function () {
+            var ret
+            try {
+                ret = w.document.createElement('link').relList.supports('preload')
+            } catch (e) {
+                ret = false
+            }
+            return function () {
+                return ret
+            }
+        })()
+
+        // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+        // then change that media back to its intended value on load
+        rp.bindMediaToggle = function (link) {
+            // remember existing media attr for ultimate state, or default to 'all'
+            var finalMedia = link.media || 'all'
+
+            function enableStylesheet() {
+                link.media = finalMedia
+            }
+
+            // bind load handlers to enable media
+            if (link.addEventListener) {
+                link.addEventListener('load', enableStylesheet)
+            } else if (link.attachEvent) {
+                link.attachEvent('onload', enableStylesheet)
+            }
+
+            // Set rel and non-applicable media type to start an async request
+            // note: timeout allows this to happen async to let rendering continue in IE
+            setTimeout(function () {
+                link.rel = 'stylesheet'
+                link.media = 'only x'
+            })
+            // also enable media after 3 seconds,
+            // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+            setTimeout(enableStylesheet, 3000)
+        }
+
+        // loop through link elements in DOM
+        rp.poly = function () {
+            // double check this to prevent external calls from running
+            if (rp.support()) {
+                return
+            }
+            var links = w.document.getElementsByTagName('link')
+            for (var i = 0; i < links.length; i++) {
+                var link = links[i]
+                // qualify links to those with rel=preload and as=style attrs
+                if (
+                    link.rel === 'preload' &&
+                    link.getAttribute('as') === 'style' &&
+                    !link.getAttribute('data-loadcss')
+                ) {
+                    // prevent rerunning on link
+                    link.setAttribute('data-loadcss', true)
+                    // bind listeners to toggle media back
+                    rp.bindMediaToggle(link)
+                }
+            }
+        }
+
+        // if unsupported, run the polyfill
+        if (!rp.support()) {
+            // run once at least
+            rp.poly()
+
+            // rerun poly on an interval until onload
+            var run = w.setInterval(rp.poly, 500)
+            if (w.addEventListener) {
+                w.addEventListener('load', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            } else if (w.attachEvent) {
+                w.attachEvent('onload', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            }
+        }
+
+        // commonjs
+        if (typeof exports !== 'undefined') {
+            exports.loadCSS = loadCSS
+        } else {
+            w.loadCSS = loadCSS
+        }
+    })(typeof global !== 'undefined' ? global : this)
+</script>
+
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20211217" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="/css/dark.css?v=20211217" as="style">
+    <link rel="stylesheet" href="/css/dark.css" media="(prefers-color-scheme: dark)">
+    <link rel="stylesheet" href="/css/mobile.css?v=20211217" media="(max-width: 960px)">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js?v=20211217" as="script">
+    <link rel="preload" href="/scripts/dark.js?v=20211217" as="script">
+    <link rel="preload" href="/font/Oswald-Regular.ttf" as="font" crossorigin>
+    <link rel="preload" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" as="font" crossorigin>
+    <!-- algolia -->
+    
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ == undefined) {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js" />')
+        }
+    </script>
+    
+        <body class="post-body">
+    
+        <!-- header -->
+        <header class="header header-mobile">
+    <!-- top read progress line -->
+    <div class="header-element">
+        <div class="read-progress"></div>
+    </div>
+    <!-- sidebar menu button -->
+    <div class="header-element">
+        
+            <div class="header-sidebar-menu">
+        
+            
+                <div style="padding-left: 1px;">&#xe775;</div>
+            
+        </div>
+    </div>
+    <!-- header actions -->
+    <div class="header-actions">
+        <!-- theme mode switch button -->
+        <span class="header-theme-btn header-element">
+            <i class="fas fa-adjust"></i>
+        </span>
+        <!-- back to home page text -->
+        <span class="home-link header-element">
+            <a href=/>Base Station</a>
+        </span>
+    </div>
+    <!-- toggle banner for post layout -->
+    
+        
+            <div class="banner">
+        
+            <div class="blog-title header-element">
+                <a href="/">Base Station</a>
+            </div>
+            <div class="post-title header-element">
+                <a href="#" class="post-name">Android 列表预加载分析研究</a>
+            </div>
+        </div>
+    
+</header>
+
+        <!-- fixed footer -->
+        <footer class="footer-fixed">
+    <!-- back to top button -->
+    <div class="footer-fixed-element">
+        
+            <div class="back-top back-top-hidden">
+        
+        
+            <div>&#xe639;</div>
+        
+        </div>
+    </div>
+</footer>
+
+        <!-- wrapper -->
+        <div class="wrapper">
+            <div class="site-intro" style="
+
+
+
+
+
+
+
+    height:50vh;
+
+">
+    
+    <!-- 主页  -->
+    
+        
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/img/about-bg-walle.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+                Android 列表预加载分析研究
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+                
+                    
+                
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页 meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="Android">Android</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="RecyclerView">RecyclerView</a>
+    
+</div>
+
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">3.7k</span>阅读时长: <span class="post-count reading-time">13 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <!-- 撰写日期 -->
+                    <span class="iconfont-archer post-intro-calander">&#xe676;</span>
+                    <span class="post-intro-time">2022/02/20</span>
+                    <!-- busuanzi -->
+                    
+                        <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                            <span class="iconfont-archer post-intro-busuanzi">&#xe602;</span>
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    
+                    <!-- 文章分享 -->
+                    <span class="share-wrapper">
+                        <span class="iconfont-archer share-icon">&#xe71d;</span>
+                        <span class="share-text">Share</span>
+                        <ul class="share-list">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+
+            <script>
+  // get user agent
+  function getBrowserVersions() {
+    var u = window.navigator.userAgent
+    return {
+      userAgent: u,
+      trident: u.indexOf('Trident') > -1, //IE内核
+      presto: u.indexOf('Presto') > -1, //opera内核
+      webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+      gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+      mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+      ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+      android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+      iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+      iPad: u.indexOf('iPad') > -1, //是否为iPad
+      webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+      weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+      uc: u.indexOf('UCBrowser') > -1, //是否为android下的UC浏览器
+    }
+  }
+  var browser = {
+    versions: getBrowserVersions(),
+  }
+  console.log('userAgent: ' + browser.versions.userAgent)
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded')
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document
+        .getElementsByClassName('intro-title')[0]
+        .classList.add('intro-fade-in')
+      document
+        .getElementsByClassName('intro-subtitle')[0]
+        .classList.add('intro-fade-in')
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in')
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb() {
+    if (browser.versions.uc) {
+      console.log('UCBrowser')
+      fontLoaded()
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular'],
+        },
+        loading: function () {
+          // 所有字体开始加载
+          // console.log('font loading');
+        },
+        active: function () {
+          // 所有字体已渲染
+          fontLoaded()
+        },
+        inactive: function () {
+          // 字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout')
+          fontLoaded()
+        },
+        timeout: 5000, // Set the timeout to two seconds
+      })
+    }
+  }
+
+  function asyncErr() {
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document,
+      t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0]
+    o.src = u
+    if (cb) {
+      o.addEventListener(
+        'load',
+        function (e) {
+          cb(null, e)
+        },
+        false
+      )
+    }
+    if (err) {
+      o.addEventListener(
+        'error',
+        function (e) {
+          err(null, e)
+        },
+        false
+      )
+    }
+    s.parentNode.insertBefore(o, s)
+  }
+
+  var asyncLoadWithFallBack = function (arr, success, reject) {
+    var currReject = function () {
+      reject()
+      arr.shift()
+      if (arr.length) async(arr[0], success, currReject)
+    }
+
+    async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack(
+    [
+      'https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js',
+      'https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js',
+      "/lib/webfontloader.min.js",
+    ],
+    asyncCb,
+    asyncErr
+  )
+</script>
+
+            <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+            <div class="container container-unloaded">
+                <main class="main post-page">
+    <article class="article-entry">
+        <h1 id="列表预加载分析研究"><a href="#列表预加载分析研究" class="headerlink" title="列表预加载分析研究"></a>列表预加载分析研究</h1><blockquote>
+<p>当今移动应用开发中，列表控件是最常用的UI控件之一，它可以显示各种信息，如图片、文本、视频等等。然而，在移动设备上，列表数据的加载和显示是非常耗费资源的操作。当列表中的数据量较大时，用户往往需要等待较长的时间才能看到完整的列表。为了提高用户体验，开发人员需要采取一些策略来减少加载时间，如预加载。<br>预加载是指在用户滑动列表之前，提前加载一部分列表数据，以便在用户滑动到这些数据时可以立即显示，从而提高用户的体验和感知速度。Android系统提供了一些API和技术来实现列表预加载，本课题旨在对Android列表预加载进行深入研究和分析，探究其实现原理、优化策略和性能影响，为开发人员提供参考和指导。</p>
+</blockquote>
+<p>接下来我们就深入研究几种预加载列表的方法，它们或是通过 Android 系统的 API 扩展或是各种第三方框架完备的实现，了解它们的实现原理，方便我们根据具体的业务需求和性能要求进行综合评估和比较，从而选择最合适的方案来实现列表预加载功能。</p>
+<h1 id="RecyclerView-OnScrollListener"><a href="#RecyclerView-OnScrollListener" class="headerlink" title="RecyclerView.OnScrollListener"></a>RecyclerView.OnScrollListener</h1><blockquote>
+<p>通过 RecyclerView 的 addOnScrollListener 接口，我们可以监听到 RecyclerView 的滑动状态，然后通过该 RecyclerView 装载的 LayoutManager 来得到当前滑动最下方或最上方展示的 item 的索引，痛殴索引来判断我们是否需要执行预加载逻辑。</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">rvList.addOnScrollListener(<span class="keyword">new</span> <span class="title class_">RecyclerView</span>.OnScrollListener() &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onScrolled</span><span class="params">(<span class="meta">@NonNull</span> RecyclerView recyclerView, <span class="type">int</span> dx, <span class="type">int</span> dy)</span> &#123;</span><br><span class="line">        <span class="built_in">super</span>.onScrolled(recyclerView, dx, dy);</span><br><span class="line">        <span class="comment">// 获取 LayoutManger</span></span><br><span class="line">        RecyclerView.<span class="type">LayoutManager</span> <span class="variable">layoutManager</span> <span class="operator">=</span> recyclerView.getLayoutManager();</span><br><span class="line">        <span class="comment">// 如果 LayoutManager 是 LinearLayoutManager</span></span><br><span class="line">        <span class="keyword">if</span> (layoutManager <span class="keyword">instanceof</span> GridLayoutManager) &#123;</span><br><span class="line">            <span class="type">GridLayoutManager</span> <span class="variable">manager</span> <span class="operator">=</span> (GridLayoutManager) layoutManager;</span><br><span class="line">            <span class="type">int</span> <span class="variable">nextPreloadCount</span> <span class="operator">=</span> <span class="number">8</span>;</span><br><span class="line">            <span class="type">int</span> <span class="variable">previousPreloadCount</span> <span class="operator">=</span> <span class="number">4</span>;</span><br><span class="line">            <span class="keyword">if</span> (dy &gt; <span class="number">0</span></span><br><span class="line">                    &amp;&amp; manager.findLastVisibleItemPosition()</span><br><span class="line">                    == layoutManager.getItemCount() - <span class="number">1</span> - nextPreloadCount) &#123;</span><br><span class="line">                mViewModel.loadNext();</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (dy &gt; <span class="number">0</span> &amp;&amp; manager.findFirstVisibleItemPosition() == previousPreloadCount) &#123;</span><br><span class="line">                mViewModel.loadPrevious();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>通过给列表页的 RecyerView 增加这一段代码，我们就可以很轻松的实现列表的预加载，在有本地本地数据缓存排除网络状态的情况下，和之前通过框架的 <code>loadMore</code> 触发有着显而易见的差别。但于此同时，在查看日志是就很容易发现，<code>onScrolled</code> 方法会在一次滑动中多次重复调用，造成同一个页面加载的多次调用，网络加载下对性能以及数据流量有很大的影响，需要业务逻辑上做去重处理。</p>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p><code>RecyclerView.onScrollListener</code> 的实现和集成方式大致如上，通过实践我们可以得出以前结论：  </p>
+<p><strong>优点</strong>：</p>
+<ul>
+<li>编码简单</li>
+<li>代码入侵性低，无需修改现有的 RecyclerView 或 adapter</li>
+</ul>
+<p><strong>缺点</strong>：</p>
+<ul>
+<li><code>onScrolled</code> 方法会在一次滑动中多次重复调用，需要业务逻辑自行做去重判断</li>
+<li>不同的 <code>LayoutManager</code>  会有不同的判断逻辑，需要不停的兼容扩展</li>
+</ul>
+<h1 id="Adapter-onBindViewHolder"><a href="#Adapter-onBindViewHolder" class="headerlink" title="Adapter.onBindViewHolder"></a>Adapter.onBindViewHolder</h1><blockquote>
+<p>我们监听列表的原因是想知道当前滑动到第几项目，从而来决定是否要开始预加载，为此需要拿到滑动的状态和 <code>LayoutManager</code>  .  实际上 Adapter 就有天生的简单易用的回调，那就是 <code>onBindViewHolder</code>  <code>onBindViewHolder</code> 在 <code>RecyclerView</code> 需要显示指定的 <code>Position</code> 的 数据时才会通知，这时我们就可以根据 <code>BindViewHolder</code> 的 <code>Position</code> 以及整个列表的数据对比来判断我们是否需要进行预加载，而无需实时的关心列表的滑动状态和 <code>LayoutManager</code> 的类型</p>
+</blockquote>
+<p>接下来我们就使用 Adpater 的 onBindViewHolder 来实现以下预加载：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ListAdapter</span> <span class="keyword">extends</span> <span class="title class_">RecyclerView</span>.Adapter&lt;ViewHolder&gt; &#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="type">int</span> <span class="variable">nextPreloadCount</span> <span class="operator">=</span> <span class="number">8</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="type">int</span> <span class="variable">previousPreloadCount</span> <span class="operator">=</span> <span class="number">4</span>;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">private</span> <span class="type">boolean</span> isScroll</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onBindViewHolder</span><span class="params">(<span class="meta">@NonNull</span> VH holder, <span class="type">int</span> position,</span></span><br><span class="line"><span class="params">                <span class="meta">@NonNull</span> List&lt;Object&gt; payloads)</span> &#123;</span><br><span class="line">			checkPreload(position);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">bindRecyelerView</span><span class="params">(<span class="meta">@NonNull</span> RecyclerView recyclerView )</span> &#123;</span><br><span class="line">		 <span class="keyword">if</span> (newState == RecyclerView.SCROLL_STATE_IDLE) &#123;</span><br><span class="line">         isScroll = <span class="literal">false</span>;</span><br><span class="line">     &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			 	 isScroll = <span class="literal">true</span>;</span><br><span class="line">		 &#125;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">checkPreload</span><span class="params">(<span class="type">int</span> position)</span> &#123;</span><br><span class="line">		 <span class="keyword">if</span> (!isScroll)&#123;</span><br><span class="line">				<span class="keyword">return</span>;</span><br><span class="line">		 &#125;</span><br><span class="line">     <span class="keyword">if</span> (position == previousPreloadCount) &#123;</span><br><span class="line">          mViewModel.loadPrevious();</span><br><span class="line">     &#125; <span class="keyword">else</span> <span class="keyword">if</span> (position == getItemCount() - <span class="number">1</span> - nextPreloadCount) &#123;</span><br><span class="line">          mViewModel.loadNext();</span><br><span class="line">     &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>代码整体实现也简单易懂，列表滑动过程中所有的列表项的加载都会经过 <code>Adapter.onBindViewHolder</code><br>从而触发预加载检测一致，由于 RecyclerView 的逻辑处理，<code>onBindViewHolder</code>  不会存在单次滑动中被多次调用的情况。且由于 Adpater 的 position 获取是与 layoutManger 无关的，所以也不需要 layoutManger 相关的代码逻辑。但是这个方案也仍然优缺点，那就是当触发预加载的 viewHolder 在列表加载过程中被向上滑出了 RecyclerView 的缓存区域时，再向下滑动到页尾时会再次被绑定导致 <code>onBindViewHolder</code>  触发，从而使得预加载重复触发。</p>
+<h2 id="结论-1"><a href="#结论-1" class="headerlink" title="结论"></a>结论</h2><p><code>Adapter.onBindViewHolder</code> 的实现也并不复杂，且相较于监听列表的实现差异明显</p>
+<p><strong>优点</strong>：</p>
+<ul>
+<li>代码编写逻辑简单，基类可多处复用，与类型无关</li>
+<li><code>RecyclerView</code> 对页首页尾的 <code>ViewHolder</code> 并不会立即回收，不会在正常的滑动事件内触发多次加载</li>
+</ul>
+<p><strong>缺点</strong>：</p>
+<ul>
+<li>仍会重新触发上拉加载，还是需要做去重操作。</li>
+</ul>
+<h1 id="BaseRecyclerViewAdapterHelpr"><a href="#BaseRecyclerViewAdapterHelpr" class="headerlink" title="BaseRecyclerViewAdapterHelpr"></a>BaseRecyclerViewAdapterHelpr</h1><p><code>BaseRecyclerViewAdapterHelpr</code>  是一个强大而灵活的 RecyclerView Adapter ，是一个在 github 拥有 23.4 K star 的库，很多商业项目的的 adapter 都会采用它，以下简称 <code>BRVAH</code> 。 我们来探究下它是如何处理预加载方案的，通过文档查看我们发现它的加载更多的逻辑是专门有 <code>QuickAdapterHelper.kt</code> 来实现的，直接查看它的预加载方案 ：</p>
+<h3 id="加载上一页"><a href="#加载上一页" class="headerlink" title="加载上一页"></a>加载上一页</h3><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">leadingLoadStateAdapter?.let &#123;</span><br><span class="line">            mAdapter.addAdapter(it)</span><br><span class="line"></span><br><span class="line">            firstAdapterOnViewAttachChangeListener =</span><br><span class="line">                <span class="keyword">object</span> : BaseQuickAdapter.OnViewAttachStateChangeListener &#123;</span><br><span class="line"></span><br><span class="line">                    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onViewAttachedToWindow</span><span class="params">(holder: <span class="type">RecyclerView</span>.<span class="type">ViewHolder</span>)</span></span> &#123;</span><br><span class="line">                        leadingLoadStateAdapter.checkPreload(holder.bindingAdapterPosition)</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onViewDetachedFromWindow</span><span class="params">(holder: <span class="type">RecyclerView</span>.<span class="type">ViewHolder</span>)</span></span> &#123;</span><br><span class="line"></span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;.apply &#123; contentAdapter.addOnViewAttachStateChangeListener(<span class="keyword">this</span>) &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="加载下一页"><a href="#加载下一页" class="headerlink" title="加载下一页"></a>加载下一页</h3><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">trailingLoadStateAdapter?.let &#123;</span><br><span class="line">            mAdapter.addAdapter(it)</span><br><span class="line"></span><br><span class="line">            lastAdapterOnViewAttachChangeListener =</span><br><span class="line">                <span class="keyword">object</span> : BaseQuickAdapter.OnViewAttachStateChangeListener &#123;</span><br><span class="line"></span><br><span class="line">                    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onViewAttachedToWindow</span><span class="params">(holder: <span class="type">RecyclerView</span>.<span class="type">ViewHolder</span>)</span></span> &#123;</span><br><span class="line">                        trailingLoadStateAdapter.checkPreload(</span><br><span class="line">                            holder.bindingAdapter?.itemCount ?: <span class="number">0</span>,</span><br><span class="line">                            holder.bindingAdapterPosition</span><br><span class="line">                        )</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onViewDetachedFromWindow</span><span class="params">(holder: <span class="type">RecyclerView</span>.<span class="type">ViewHolder</span>)</span></span> &#123;</span><br><span class="line"></span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;.apply &#123; contentAdapter.addOnViewAttachStateChangeListener(<span class="keyword">this</span>) &#125;</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>BRVAH</code> 整体对加载的方案采用的是 <code>ConcatAdapter</code>  ，加载的头部和尾部通过独立的 adapter 来做逻辑控制，所以两部的代码基本一致，这里我们就拿加载下一页的逻辑来梳理。 <code>contentAdapter</code> 就是实际的列表 adapter ，<code>trailingLoadStateAdapter</code> 则是专门负责列表尾部逻辑处理的 adapter ，可以看到它创建了一个 <code>OnViewAttachStateChangeListener</code>   用来监听 viewHolder 的 onViewAttachedToWindow ,  其具体实现是绑定了  Adapter 的 <code>onViewAttachedToWindow</code> ，通过这个契机触发预加载监测机制。具体实现就不在深究了，我们知道它的触发契机和大致实现即可，感兴趣的可以直接去查阅对应的源码，其实际实现也并不复杂。</p>
+<p>可以看到 <code>BRVAH</code> 虽然采用了对 Adapter 进行封装处理预加载逻辑，但它并没有采用 Adpater 的 <code>onBindViewHolder</code>  当作触发契机而是采用了 <code>onViewAttachedToWindow</code>  造成这样的差异是什么，我们可以看下这两者的实际差别:</p>
+<p><code>onViewAttachedToWindow</code>方法在RecyclerView中显示一个ViewHolder时被调用。当RecyclerView需要显示一个新的ViewHolder时，它会调用Adapter的<code>onCreateViewHolder</code>方法来创建一个ViewHolder，然后将这个ViewHolder绑定到数据源中对应的数据上，最后调用ViewHolder的<code>onBindViewHolder</code>方法将数据显示在ViewHolder的视图上。这时，如果ViewHolder被成功添加到RecyclerView中，<code>onViewAttachedToWindow</code>方法就会被调用。</p>
+<p>因此，<code>onViewAttachedToWindow</code>方法在ViewHolder显示在RecyclerView上时触发，而**<code>onBindViewHolder</code>方法则是在RecyclerView需要更新ViewHolder数据时触发。</p>
+<p>从我们的业务场景出发—— 预加载的目的是通过滑动来判断用户可能有向下滑动的意图，提前补充列表数据，避免用户等待。业务场景其实并不太依赖当前视图是否真的展示在界面上了，所以这里没有用生命周期更靠前的 <strong><code>onBindViewHolder</code></strong> 而用了更靠后的 <strong><code>onViewAttachedToWindow</code></strong> 从源码角度上来看并没有得到好的解释，去查看仓库也没有相关的提交注释。只能后续看是否能联系上作者询问了</p>
+<h2 id="结论-2"><a href="#结论-2" class="headerlink" title="结论"></a>结论</h2><p><code>BRVAH</code> 带了新的预加载方案，虽然目前看本质上与 onBindViewHolder 类似，但是<code>BRVAH</code> 除此之外还提供了成套的解决方案，包括防止重复加载以及列表头尾的优雅处理。</p>
+<p> <strong>优点</strong>：</p>
+<ul>
+<li>集成难度中等</li>
+<li>有较高的 star 和活跃度，出现问题的概率较小</li>
+<li>提供了成套的解决方案，避免造轮子</li>
+</ul>
+<p><strong>缺点</strong>：</p>
+<ul>
+<li>需要引入新的库，修改调整现有的 adapter</li>
+</ul>
+<h1 id="BRV"><a href="#BRV" class="headerlink" title="BRV"></a>BRV</h1><p><code>BRV</code> 是一个基于 <code>SmartRefreshLayout</code>  框架的扩展库，他在 <code>SmartRefreshLayout</code> 的基础上提供了预加载，缺省页，悬停标题等功能，号称拥有比 <code>BRVAH</code>   更强大的功能以及实用性，它的其中预加载逻辑如下：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** 监听onBindViewHolder事件 */</span></span><br><span class="line">    <span class="keyword">var</span> onBindViewHolderListener = <span class="keyword">object</span> : OnBindViewHolderListener &#123;</span><br><span class="line">        <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onBindViewHolder</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">            rv: <span class="type">RecyclerView</span>,</span></span></span><br><span class="line"><span class="params"><span class="function">            adapter: <span class="type">BindingAdapter</span>,</span></span></span><br><span class="line"><span class="params"><span class="function">            holder: <span class="type">BindingAdapter</span>.<span class="type">BindingViewHolder</span>,</span></span></span><br><span class="line"><span class="params"><span class="function">            position: <span class="type">Int</span>,</span></span></span><br><span class="line"><span class="params"><span class="function">        )</span></span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (mEnableLoadMore &amp;&amp; !mFooterNoMoreData &amp;&amp;</span><br><span class="line">                rv.scrollState != SCROLL_STATE_IDLE &amp;&amp;</span><br><span class="line">                preloadIndex != -<span class="number">1</span> &amp;&amp;</span><br><span class="line">                (adapter.itemCount - preloadIndex &lt;= position)</span><br><span class="line">            ) &#123;</span><br><span class="line">                post &#123;</span><br><span class="line">                    <span class="keyword">if</span> (state == RefreshState.None) &#123;</span><br><span class="line">                        notifyStateChanged(RefreshState.Loading)</span><br><span class="line">                        onLoadMore(<span class="keyword">this</span><span class="symbol">@PageRefreshLayout</span>)</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到与我们编写 onBindViewHolder 的监听逻辑基本如出一辙，通过当前的触发的　bindViewHolder position  来判断是否要触发预加载，而加载的头部和尾部则是基于 <code>SmartRefreshLayout</code>  来的，通过 ViewGruop 单独的 add 添加和 remove 掉。</p>
+<h2 id="结论-3"><a href="#结论-3" class="headerlink" title="结论"></a>结论</h2><p><code>BRV</code>  的预加载方案基本与我们自己基于 Adpater 的基本一致，在此基础上增加了去重处理</p>
+<p> <strong>优点</strong>：</p>
+<ul>
+<li>提供了成套的解决方案，避免数据重复造轮子</li>
+</ul>
+<p><strong>缺点</strong>：</p>
+<ul>
+<li>集成难度复杂，依赖 <code>SmartRefreshLayout</code>  没有引入 <code>SmartRefreshLayout</code>  库的话还需要单独引入</li>
+<li>只提供了向后预加载，不支持向前预加载</li>
+</ul>
+<h1 id="Paging-3"><a href="#Paging-3" class="headerlink" title="Paging 3"></a>Paging 3</h1><p><a target="_blank" rel="noopener" href="https://developer.android.com/topic/libraries/architecture/paging/v3-overview?hl=zh-cn#paging">Paging 库概览  |  Android 开发者  |  Android Developers</a></p>
+<p>Paging 作为 Jetpack 的组件，专门用于加载和显示来自本地和网络中的数据页面，同样也提供了数据预加载的功能，那么作为官方的列表加载方案，它又是如何实现的。</p>
+<p><code>Paging3</code>   作为一整套的列表解决方案，它提供了分页数据的内存缓存、内置的请求重复信息删除功能 以及对刷新与重试功能的支持等等，此外， <code>paging3</code> 还大量的使用了 Flow 作为数据处理实现，功能调用栈也极深。导致代码阅读复杂较高，这里我们就只了解下 <code>Paging3</code>  预加载的契机以及判断逻辑，用于跟其他框架进行对比。</p>
+<h3 id="触发契机"><a href="#触发契机" class="headerlink" title="触发契机"></a>触发契机</h3><p>首先是触发契机，<code>Paging3</code>  提供了 <code>PagingDataAdapter</code>  作为 RecyclerView 的适配器，开发者必须使用基于它的 Adapter 来进行列表适配，<code>PagingDataAdapter</code>  内置了 diff 机制以及直接管理列表数据，列表设置和更新需要通过 <code>submitData</code> 方法，获取数据则通过 <code>getItem</code>  方法，而 <code>paging3</code> 的预加载机制则就藏匿在 <code>getItem</code>  的具体实现中，由于列表数据是完全封装起来的，调用者只能通过 <code>getItem</code> 来获取列表数据，而调用 <code>getItem</code> 往往是在 <code>onBindViewHolder</code> 时，所以 paging3 的分页触发契机也基本等同于 <code>onBindViewHolder</code> 方式</p>
+<h3 id="判断逻辑"><a href="#判断逻辑" class="headerlink" title="判断逻辑"></a>判断逻辑</h3><p><code>getItem</code> 方法触发时，paging3 会生成 <code>ViewportHint</code> 的快照，用来存储描述当前列表的状态，同时依据这些信息来判断是否要触发预加载</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Processes the hint coming from UI.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">processHint</span><span class="params">(viewportHint: <span class="type">ViewportHint</span>)</span></span> &#123;</span><br><span class="line">        state.modify(viewportHint <span class="keyword">as</span>? ViewportHint.Access) &#123; prependHint, appendHint -&gt;</span><br><span class="line">            <span class="keyword">if</span> (viewportHint.shouldPrioritizeOver(</span><br><span class="line">                    previous = prependHint.value,</span><br><span class="line">                    loadType = PREPEND</span><br><span class="line">                )</span><br><span class="line">            ) &#123;</span><br><span class="line">                prependHint.value = viewportHint</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (viewportHint.shouldPrioritizeOver(</span><br><span class="line">                    previous = appendHint.value,</span><br><span class="line">                    loadType = APPEND</span><br><span class="line">                )</span><br><span class="line">            ) &#123;</span><br><span class="line">                appendHint.value = viewportHint</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>prependHint</code>, <code>appendHint</code> 本质也分别是一个 <code>Flow</code> ，当前符合预加载机制后，它们会将 <code>viewportHint</code> 发送到专门用于处理此类数据的 <code>PageFetcherSnapshot</code>  将来转换成一个刷新事件从而融入整个数据加载流程。</p>
+<p><code>Paging3</code> 的预加载机制大致就是如此，更详细的机制由于代码量太多不变深入，如果对 <code>Paging3</code> 不熟悉和感兴趣的可以放下边官方的 CodeLab 做深入了解</p>
+<h2 id="结论-4"><a href="#结论-4" class="headerlink" title="结论"></a>结论</h2><p><code>paging3</code>  的预加载只是整个库的冰山一角，但是由此也可以看到官方也是通过 <code>onBindViewHodler</code> 作为预加载的判断契机的，给我们挑选更轻量的方案做了一定的背书</p>
+<h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h3><ul>
+<li>有完备的机制以及官方背书，出现问题的概率较小</li>
+<li>预加载还加入了锁的处理，考虑了多线程并发,完全解决了可能出现的多次请求问题。</li>
+</ul>
+<h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><ul>
+<li>集成难度非常大，<code>paging3</code> 是一整套列表解决方案，需要各个层级的逻辑变更</li>
+<li>代码由 kotlin 、Flow 以及协程编写，预读和调适性教差，Java 接入不友好</li>
+</ul>
+<h2 id="CodeLab"><a href="#CodeLab" class="headerlink" title="CodeLab"></a>CodeLab</h2><p>Google 提供了两个引导文档来让开发人员快速的学习如何集成和使用 Paging 3</p>
+<p><a target="_blank" rel="noopener" href="https://developer.android.com/codelabs/android-paging-basics?hl=zh-cn#0">Android Paging 基础知识  |  Android Developers</a></p>
+<p><a target="_blank" rel="noopener" href="https://developer.android.com/codelabs/android-paging?hl=zh-cn#0">Android Paging Advanced Codelab  |  Android Developers</a></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>在实现列表预加载的过程中，选择合适的技术方案非常关键，今天我们介绍了以下几种列表预加载方案：</p>
+<ol>
+<li>使用onScrollListener技术，可以通过监听滚动事件，在滑动到指定位置之前提前加载数据，以此实现列表预加载的功能。它的实现简单，同时缺点也相当明显。</li>
+<li>使用 BindViewHolder 技术，可以在绑定 ViewHolder 时进行数据的预加载，以此提高列表数据的加载速度和用户体验。它的逻辑简单明了，也是很多解决方案的核心逻辑。如果考虑自己封装的话，那么以它为蓝本是不二之选。</li>
+<li>BRV框架是一个开源的Android列表框架，它基于<code>SmartRefreshLayout</code>  ，提供了很多常用的列表功能，包括列表预加载。BRV框架可以方便地实现列表预加载，并提供了许多其他的功能，如分组、拖拽等等。遗憾的是并不支持列表向前预加载。</li>
+<li>Paging框架是一个Android官方提供的用于实现分页加载的框架。它可以方便地实现列表预加载，同时还提供了分页加载、数据缓存等功能。</li>
+<li>BaseRecyclerViewAdapterHelper是一个轻量级的RecyclerView适配器，它可以快速地构建RecyclerView 列表，并支持列表预加载等功能。</li>
+</ol>
+<p>选择哪种方案实现列表预加载，需要根据具体的业务需求和性能要求进行综合评估和比较，从而选择最合适的方案来实现列表预加载功能。</p>
+<h1 id="参考资料："><a href="#参考资料：" class="headerlink" title="参考资料："></a>参考资料：</h1><p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6885146484791050247">换一个思路，超简单的RecyclerView预加载 - 掘金</a></p>
+<p><a target="_blank" rel="noopener" href="https://liangjingkanji.github.io/BRV/preload/#_1">预加载&#x2F;预拉取 - BRV</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/CymChad/BaseRecyclerViewAdapterHelper">https://github.com/CymChad/BaseRecyclerViewAdapterHelper</a></p>
+<p><a target="_blank" rel="noopener" href="https://developer.android.com/jetpack/androidx/releases/paging?hl=zh_cn">Paging  |  Android 开发者  |  Android Developers</a></p>
+
+    </article>
+    <!-- license -->
+    
+        <div class="license-wrapper">
+            <p>原文作者：<a href="https://czj-dev.github.io">Nutcracker</a>
+            <p>原文链接：<a href="https://czj-dev.github.io/2022/02/20/2023-02-20-android_preload_review/">https://czj-dev.github.io/2022/02/20/2023-02-20-android_preload_review/</a>
+            <p>发表日期：<a href="https://czj-dev.github.io/2022/02/20/2023-02-20-android_preload_review/">February 20th 2022, 4:56:00 pm</a>
+            <p>更新日期：<a href="https://czj-dev.github.io/2022/02/20/2023-02-20-android_preload_review/">February 21st 2023, 10:06:12 pm</a>
+            <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2023/02/20/2023-02-21-android_preload_review/" title="Android 列表预加载分析研究">
+                    <div class="nextTitle">Android 列表预加载分析研究</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2021/03/24/2021-03-25-thinking/" title="庸碌">
+                    <div class="prevTitle">庸碌</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- comment -->
+    
+        <div class="post-comment">
+            <!-- 来必力 City 版安装代码 -->
+
+
+            
+
+            
+
+            
+
+            <!-- utteranc评论 -->
+
+
+            <!-- partial('_partial/comment/changyan') -->
+            <!--PC版-->
+
+
+            
+            
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+    <div id="comment"></div>
+    <script>
+        new Valine({
+            el: '#comment',
+            notify:false,
+            verify:false,
+            appId: "IiPsw8Ob4JVxOMx3gayw548j-gzGzoHsz",
+            appKey: "0mXzTUSWpgkGqAO5TN7XfdtN",
+            placeholder: "",
+            path:window.location.pathname,
+            avatar:'mm'
+        });
+    </script>
+
+
+        </div>
+    
+    <!-- timeliness note -->
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+    
+    <!-- Mathjax -->
+    
+</main>
+
+                <!-- profile -->
+                
+            </div>
+            <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+        <div class="social">
+            
+    
+        
+            
+                <a href="mailto:mrchenzhaojun@gmail.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/czj-dev" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a href="https://www.zhihu.com/people/chen-zhao-jun-27" class="iconfont-archer zhihu" target="_blank" title=zhihu></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a href="https://steamcommunity.com/id/Mr9527/" class="iconfont-archer steam" target="_blank" title=steam></a>
+            
+        
+    
+        
+    
+        
+    
+
+
+        </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- website approve for Chinese user -->
+    
+    <!-- 不蒜子  -->
+    
+        <div class="busuanzi-container">
+            
+             
+                <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+            
+        </div>
+    	
+</footer>
+
+        </div>
+        <!-- toc -->
+        
+            <div class="toc-wrapper toc-wrapper-loding" style=
+
+
+
+
+
+
+
+    top:50vh;
+
+>
+                <div class="toc-catalog">
+                    <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+                </div>
+                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%88%97%E8%A1%A8%E9%A2%84%E5%8A%A0%E8%BD%BD%E5%88%86%E6%9E%90%E7%A0%94%E7%A9%B6"><span class="toc-number">1.</span> <span class="toc-text">列表预加载分析研究</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#RecyclerView-OnScrollListener"><span class="toc-number">2.</span> <span class="toc-text">RecyclerView.OnScrollListener</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E8%AE%BA"><span class="toc-number">2.1.</span> <span class="toc-text">结论</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Adapter-onBindViewHolder"><span class="toc-number">3.</span> <span class="toc-text">Adapter.onBindViewHolder</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E8%AE%BA-1"><span class="toc-number">3.1.</span> <span class="toc-text">结论</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#BaseRecyclerViewAdapterHelpr"><span class="toc-number">4.</span> <span class="toc-text">BaseRecyclerViewAdapterHelpr</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%A0%E8%BD%BD%E4%B8%8A%E4%B8%80%E9%A1%B5"><span class="toc-number">4.0.1.</span> <span class="toc-text">加载上一页</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%A0%E8%BD%BD%E4%B8%8B%E4%B8%80%E9%A1%B5"><span class="toc-number">4.0.2.</span> <span class="toc-text">加载下一页</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E8%AE%BA-2"><span class="toc-number">4.1.</span> <span class="toc-text">结论</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#BRV"><span class="toc-number">5.</span> <span class="toc-text">BRV</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E8%AE%BA-3"><span class="toc-number">5.1.</span> <span class="toc-text">结论</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Paging-3"><span class="toc-number">6.</span> <span class="toc-text">Paging 3</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%A6%E5%8F%91%E5%A5%91%E6%9C%BA"><span class="toc-number">6.0.1.</span> <span class="toc-text">触发契机</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A4%E6%96%AD%E9%80%BB%E8%BE%91"><span class="toc-number">6.0.2.</span> <span class="toc-text">判断逻辑</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E8%AE%BA-4"><span class="toc-number">6.1.</span> <span class="toc-text">结论</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E7%82%B9"><span class="toc-number">6.1.1.</span> <span class="toc-text">优点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%BA%E7%82%B9"><span class="toc-number">6.1.2.</span> <span class="toc-text">缺点</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CodeLab"><span class="toc-number">6.2.</span> <span class="toc-text">CodeLab</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">7.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99%EF%BC%9A"><span class="toc-number">8.</span> <span class="toc-text">参考资料：</span></a></li></ol>
+            </div>
+        
+        <!-- sidebar -->
+        <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+        <div class="sidebar-panel-archives">
+    <!-- 在 ejs 中将 archive 按照时间排序 -->
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 27
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+        
+            
+            
+            <div class="archive-year"> 2023 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/20</span>
+            <a class="archive-post-title" href="/2023/02/20/2023-02-21-android_preload_review/">Android 列表预加载分析研究</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2022 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/20</span>
+            <a class="archive-post-title" href="/2022/02/20/2023-02-20-android_preload_review/">Android 列表预加载分析研究</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2021 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/24</span>
+            <a class="archive-post-title" href="/2021/03/24/2021-03-25-thinking/">庸碌</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2020 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/22</span>
+            <a class="archive-post-title" href="/2020/05/22/2020-05-22-note_wiki_widget/">官方文档的重要性</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/11</span>
+            <a class="archive-post-title" href="/2020/05/11/2020-05-11-flutter_depth/">Flutter 深入探索</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/30</span>
+            <a class="archive-post-title" href="/2020/04/30/2020-04-30-dart_basic/">Dart 实践（一）</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/29</span>
+            <a class="archive-post-title" href="/2020/04/29/2020-04-29-book_read_01/">《精进：如何成为一个很厉害的人》阅读笔记 01</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2020/04/27/2020-04-27-flutter_application/">Flutter 实践</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2019 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/15</span>
+            <a class="archive-post-title" href="/2019/10/15/2019-10-15-retrofit-and-okHttp/">Retrofit与OkHttp源码解析</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/11</span>
+            <a class="archive-post-title" href="/2019/10/11/2019-10-11-HTTP_The_Definitive_Guide/">HTTP 权威指南阅读笔记（一）</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2018 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/26</span>
+            <a class="archive-post-title" href="/2018/05/26/2018-05-06-gradle_learning_notes_2/">Gradle的架构和api</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/28</span>
+            <a class="archive-post-title" href="/2018/04/28/2018-05-26-gradle_learning_notes_1/">Gradle的基础概念</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/19</span>
+            <a class="archive-post-title" href="/2018/04/19/2018-04-19-memory_management/">Android 内存管理机制</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/01</span>
+            <a class="archive-post-title" href="/2018/04/01/2018-04-04-andorid_thread/">Android 的线程和线程池</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/25</span>
+            <a class="archive-post-title" href="/2018/03/25/2018-03-25-andorid_view_working_principle/">Android View 工作原理</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/19</span>
+            <a class="archive-post-title" href="/2018/03/19/2018-03-19-andorid_view_event/">Android View 事件体系</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/18</span>
+            <a class="archive-post-title" href="/2018/03/18/2018-03-18-andorid_ipc/">Android IPC 机制</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/15</span>
+            <a class="archive-post-title" href="/2018/03/15/2018-03-15-andorid_exploration_book_read_01/">Android 艺术开发探索笔记</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2017 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/19</span>
+            <a class="archive-post-title" href="/2017/05/19/2017-05-19-android_databinding/">Data Binding学习笔记</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/08</span>
+            <a class="archive-post-title" href="/2017/03/08/2017-03-08-adapter/">适配器模式与外观模式</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/20</span>
+            <a class="archive-post-title" href="/2017/02/20/2017-02-20-factory/">工厂模式(factory Pettern)</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/08</span>
+            <a class="archive-post-title" href="/2017/02/08/2017-02-08-decorator/">装饰者模式(Decorator)</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/07</span>
+            <a class="archive-post-title" href="/2017/02/07/2017-02-07-observer/">观察者模式(Observer Pettern)</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/06</span>
+            <a class="archive-post-title" href="/2017/02/06/2017-02-06-annotation/">Android自定义注解</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/04</span>
+            <a class="archive-post-title" href="/2017/02/04/2017-02-04-Strategy/">策略模式(Strategy Pettern)</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/24</span>
+            <a class="archive-post-title" href="/2017/01/24/2017-01-24-rxjava_learning_notes/">RxAndroid学习笔记</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/23</span>
+            <a class="archive-post-title" href="/2017/01/23/2017-01-23-new_start/">Hello Blog</a>
+        </li>
+    
+    </div>
+</div>
+
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+        
+            <span class="sidebar-tag-name" data-tags="Note">
+                <span class="iconfont-archer">&#xe606;</span>
+                Note
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Gradle">
+                <span class="iconfont-archer">&#xe606;</span>
+                Gradle
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="HTTP">
+                <span class="iconfont-archer">&#xe606;</span>
+                HTTP
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Android">
+                <span class="iconfont-archer">&#xe606;</span>
+                Android
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Flutter">
+                <span class="iconfont-archer">&#xe606;</span>
+                Flutter
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Book">
+                <span class="iconfont-archer">&#xe606;</span>
+                Book
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Dart">
+                <span class="iconfont-archer">&#xe606;</span>
+                Dart
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="基础">
+                <span class="iconfont-archer">&#xe606;</span>
+                基础
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="生活">
+                <span class="iconfont-archer">&#xe606;</span>
+                生活
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Booklet">
+                <span class="iconfont-archer">&#xe606;</span>
+                Booklet
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="RecyclerView">
+                <span class="iconfont-archer">&#xe606;</span>
+                RecyclerView
+            </span>
+        
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+        缺失模块，请参考主题文档进行安装配置：https://github.com/fi3ework/hexo-theme-archer#%E5%AE%89%E8%A3%85%E4%B8%BB%E9%A2%98
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+
+    </div>
+</div>
+
+        <!-- site-meta -->
+        <script>
+    var siteMetaRoot = "/"
+    if (siteMetaRoot === "undefined") {
+        siteMetaRoot = '/'
+    }
+    var siteMeta = {
+        url: "https://czj-dev.github.io",
+        root: siteMetaRoot,
+        author: "Nutcracker"
+    }
+</script>
+
+        <!-- import experimental options here -->
+        <!-- Custom Font -->
+
+
+        <!-- main func -->
+        <script src="/scripts/main.js?v=20211217"></script>
+        <!-- dark mode -->
+        <script src="/scripts/dark.js?v=20211217"></script>
+        <!-- fancybox -->
+        <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" defer></script>
+        <!-- algolia -->
+        
+        <!-- busuanzi -->
+        
+            <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+        
+        <!-- CNZZ -->
+        
+        <!-- async load share.js -->
+        
+            <script src="/scripts/share.js?v=20211217" async></script>
+        
+        <!-- mermaid -->
+        
+    </body>
+</html>
