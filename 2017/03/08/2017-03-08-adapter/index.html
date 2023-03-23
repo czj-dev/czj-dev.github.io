@@ -503,13 +503,13 @@
 <h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="适配器模式（adapter）"><a href="#适配器模式（adapter）" class="headerlink" title="适配器模式（adapter）"></a>适配器模式（adapter）</h2><p>**适配器模式(Adapter)**在 Android 中真是不能再常见了，因为我们所用到的很多控件都需要编写适配器给控件提供数据源，例如: <code>ListView</code>、<code>RecyclerView</code>、<code>spinner</code>等待呢个，至于为什么这些控件要使用适配器模式却一直不求甚解，今天就来好好思考一下。</p>
 <p>还记得第一节课的<code>Duck</code>吗，我们可以通过适配器模式将它变成<code>Turkey</code>！</p>
 <p><code>Duck</code></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Duck</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">fly</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">quack</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">Duck</span> &#123;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">fly</span><span class="params">()</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">quack</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p><code>Turkey</code></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Turkey</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">fly</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">crow</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">Turkey</span> &#123;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">fly</span><span class="params">()</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">crow</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>可以看到它们都有相似的功能，但是用起来却并不一致，我们使用适配器来修改。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TurkeyAdapter</span> <span class="keyword">implements</span> <span class="title">Turkey</span> </span>&#123;</span><br><span class="line">    Duck duck;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">TurkeyAdapter</span><span class="params">(Duck duck)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.duck = duck;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">fly</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        duck.fly();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">crow</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        duck.quack();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TurkeyAdapter</span> <span class="keyword">implements</span> <span class="title class_">Turkey</span> &#123;</span><br><span class="line">    Duck duck;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">TurkeyAdapter</span><span class="params">(Duck duck)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.duck = duck;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">fly</span><span class="params">()</span> &#123;</span><br><span class="line">        duck.fly();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">crow</span><span class="params">()</span> &#123;</span><br><span class="line">        duck.quack();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>这样一个非常简单的适配器就完成了，我们可以<code>TurkeyAdapter</code>的<code>crow</code>以此来调用<code>duck</code>的<code>quack</code>方法来达到叫喊的功能且不需要修改它们。当然，实际代码中可能更为复杂，</p>
 <p>适配器也很贴近生活，我们在生活中经常用到适配器，电源适配器使我们不同电压的电器都能在统一电压的插口中使用。而编程中适配器的作用也是如此。它可以让不同的数据转换后适应现有的系统。而 Android 中也是这样，通过适配器这些控件只需要关心自己逻辑上的各种处理，将具体的显示视图和数据交给适配器来进行转换成控件可使用的。</p>
@@ -1031,6 +1031,14 @@
         
         
         
+        
+        
+        
+        
+        
+        
+        
+        
     
     
     
@@ -1258,6 +1266,26 @@
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
         
+            <span class="sidebar-tag-name" data-tags="生活">
+                <span class="iconfont-archer">&#xe606;</span>
+                生活
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Android">
+                <span class="iconfont-archer">&#xe606;</span>
+                Android
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="基础">
+                <span class="iconfont-archer">&#xe606;</span>
+                基础
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Booklet">
+                <span class="iconfont-archer">&#xe606;</span>
+                Booklet
+            </span>
+        
             <span class="sidebar-tag-name" data-tags="Note">
                 <span class="iconfont-archer">&#xe606;</span>
                 Note
@@ -1273,11 +1301,6 @@
                 HTTP
             </span>
         
-            <span class="sidebar-tag-name" data-tags="Android">
-                <span class="iconfont-archer">&#xe606;</span>
-                Android
-            </span>
-        
             <span class="sidebar-tag-name" data-tags="Flutter">
                 <span class="iconfont-archer">&#xe606;</span>
                 Flutter
@@ -1291,21 +1314,6 @@
             <span class="sidebar-tag-name" data-tags="Dart">
                 <span class="iconfont-archer">&#xe606;</span>
                 Dart
-            </span>
-        
-            <span class="sidebar-tag-name" data-tags="基础">
-                <span class="iconfont-archer">&#xe606;</span>
-                基础
-            </span>
-        
-            <span class="sidebar-tag-name" data-tags="生活">
-                <span class="iconfont-archer">&#xe606;</span>
-                生活
-            </span>
-        
-            <span class="sidebar-tag-name" data-tags="Booklet">
-                <span class="iconfont-archer">&#xe606;</span>
-                Booklet
             </span>
         
             <span class="sidebar-tag-name" data-tags="RecyclerView">
