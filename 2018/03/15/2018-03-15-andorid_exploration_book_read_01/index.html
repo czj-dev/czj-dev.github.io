@@ -29,8 +29,8 @@
 <meta property="article:published_time" content="2018-03-15T05:30:00.000Z">
 <meta property="article:modified_time" content="2021-12-18T13:07:07.299Z">
 <meta property="article:author" content="Nutcracker">
-<meta property="article:tag" content="Note">
 <meta property="article:tag" content="Android">
+<meta property="article:tag" content="Note">
 <meta name="twitter:card" content="summary">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -329,9 +329,9 @@
                     <div class= post-intro-tags >
     
     
-        <a class="post-tag" href="javascript:void(0);" data-tags="Note">Note</a>
-    
         <a class="post-tag" href="javascript:void(0);" data-tags="Android">Android</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="Note">Note</a>
     
 </div>
 
@@ -548,7 +548,7 @@
 <ul>
 <li><strong>action</strong> action 的匹配规则是 Intent 中的 action 必须能够和过滤规则中的 action 字符串值完全一致。一个过滤规则中可以有多个 action，那么只要 Intent 中的 action 能够和过滤规则中的任何一个 action 相同即可匹配成功。</li>
 <li><strong>category</strong> category 的匹配规则是如果 Intent 中含有 category ，那么所有的 category 都必须和过滤规则中的其中的一个 category 相同。和 action 不同的是如果 Intent 中没有 ccategory 这个Intent仍然可以匹配成功，但是一旦有就必须全部匹配。</li>
-<li><strong>data</strong> data 的数据格式比较复杂，自行了解。data 的匹配规则也和 action 类似，它也要求 Intent 中必须含有 data 数据，并且 data 数据能够完全匹配过滤规则中的某一个 data </li>
+<li><strong>data</strong> data 的数据格式比较复杂，自行了解。data 的匹配规则也和 action 类似，它也要求 Intent 中必须含有 data 数据，并且 data 数据能够完全匹配过滤规则中的某一个 data</li>
 </ul>
 <p>我们试图通过 Intent 去启动一个 Activity 的时候可以通过 PakcageManager 或者 Intent 的resolveActivity 方法来查找是否有匹配的 Activity。另外PackageManger 还提供了 queryIntentActivities 方法。</p>
 
@@ -1047,6 +1047,14 @@
         
         
         
+        
+        
+        
+        
+        
+        
+        
+        
     
     
     
@@ -1274,6 +1282,26 @@
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
         
+            <span class="sidebar-tag-name" data-tags="生活">
+                <span class="iconfont-archer">&#xe606;</span>
+                生活
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Android">
+                <span class="iconfont-archer">&#xe606;</span>
+                Android
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="基础">
+                <span class="iconfont-archer">&#xe606;</span>
+                基础
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Booklet">
+                <span class="iconfont-archer">&#xe606;</span>
+                Booklet
+            </span>
+        
             <span class="sidebar-tag-name" data-tags="Note">
                 <span class="iconfont-archer">&#xe606;</span>
                 Note
@@ -1289,11 +1317,6 @@
                 HTTP
             </span>
         
-            <span class="sidebar-tag-name" data-tags="Android">
-                <span class="iconfont-archer">&#xe606;</span>
-                Android
-            </span>
-        
             <span class="sidebar-tag-name" data-tags="Flutter">
                 <span class="iconfont-archer">&#xe606;</span>
                 Flutter
@@ -1307,21 +1330,6 @@
             <span class="sidebar-tag-name" data-tags="Dart">
                 <span class="iconfont-archer">&#xe606;</span>
                 Dart
-            </span>
-        
-            <span class="sidebar-tag-name" data-tags="基础">
-                <span class="iconfont-archer">&#xe606;</span>
-                基础
-            </span>
-        
-            <span class="sidebar-tag-name" data-tags="生活">
-                <span class="iconfont-archer">&#xe606;</span>
-                生活
-            </span>
-        
-            <span class="sidebar-tag-name" data-tags="Booklet">
-                <span class="iconfont-archer">&#xe606;</span>
-                Booklet
             </span>
         
             <span class="sidebar-tag-name" data-tags="RecyclerView">

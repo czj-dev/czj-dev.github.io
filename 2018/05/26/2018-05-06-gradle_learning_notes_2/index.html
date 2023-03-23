@@ -511,7 +511,7 @@
 <p>每个项目和任务都提供了 setter 和 getter 方法来访问属性,你可以读取和修改这些属性值.我们还可以自定义属性。例如我们常见的在<code>build.gradle</code>中通过 <code>ext</code> 命名空间来添加一些熟悉和配置:</p>
 <figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">ext&#123;</span><br><span class="line">  myOptions=<span class="number">123</span></span><br><span class="line">&#125;</span><br><span class="line">ext.kotlin_version=<span class="string">&quot;1.2.12&quot;</span></span><br><span class="line">ext.version=[</span><br><span class="line">    <span class="string">&quot;supportVersion&quot;</span>:<span class="number">26</span></span><br><span class="line">    <span class="string">&quot;compileVersion&quot;</span>:<span class="number">26.0</span><span class="number">.1</span></span><br><span class="line">]</span><br></pre></td></tr></table></figure>
 
-<p>也可以在 /.gradle 路径或者项目根目录下的 gradle.properties 文件来定义属性,然后通过 project 实例来访问。</p>
+<p>也可以在 &#x2F;.gradle 路径或者项目根目录下的 gradle.properties 文件来定义属性,然后通过 project 实例来访问。</p>
 <figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//gradle.properties</span></span><br><span class="line">exampleProp = oneValue</span><br><span class="line"></span><br><span class="line"><span class="comment">//build.gradle</span></span><br><span class="line"><span class="keyword">assert</span> project.exampleProp == <span class="string">&quot;oneValue&quot;</span></span><br></pre></td></tr></table></figure>
 
 <h3 id="Task"><a href="#Task" class="headerlink" title="Task"></a>Task</h3><p>Gradle 中的 Task 有两个基本概念——动作与依赖。一个动作就是任务需要执行的工作，可以简单到打印出 hello world，也可以复杂到编译整个项目输出 apk；而依赖则是一个任务的输入可能依赖于另一个任务的输出或者初始化时，这样就可以让一个 project 的构建工作分解成若干 task，分工明确。任务同样的有相对应的接口 <code>org.gradle.api.Task</code>:</p>
@@ -1084,6 +1084,14 @@
         
         
         
+        
+        
+        
+        
+        
+        
+        
+        
     
     
     
@@ -1311,6 +1319,26 @@
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
         
+            <span class="sidebar-tag-name" data-tags="生活">
+                <span class="iconfont-archer">&#xe606;</span>
+                生活
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Android">
+                <span class="iconfont-archer">&#xe606;</span>
+                Android
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="基础">
+                <span class="iconfont-archer">&#xe606;</span>
+                基础
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Booklet">
+                <span class="iconfont-archer">&#xe606;</span>
+                Booklet
+            </span>
+        
             <span class="sidebar-tag-name" data-tags="Note">
                 <span class="iconfont-archer">&#xe606;</span>
                 Note
@@ -1326,11 +1354,6 @@
                 HTTP
             </span>
         
-            <span class="sidebar-tag-name" data-tags="Android">
-                <span class="iconfont-archer">&#xe606;</span>
-                Android
-            </span>
-        
             <span class="sidebar-tag-name" data-tags="Flutter">
                 <span class="iconfont-archer">&#xe606;</span>
                 Flutter
@@ -1344,21 +1367,6 @@
             <span class="sidebar-tag-name" data-tags="Dart">
                 <span class="iconfont-archer">&#xe606;</span>
                 Dart
-            </span>
-        
-            <span class="sidebar-tag-name" data-tags="基础">
-                <span class="iconfont-archer">&#xe606;</span>
-                基础
-            </span>
-        
-            <span class="sidebar-tag-name" data-tags="生活">
-                <span class="iconfont-archer">&#xe606;</span>
-                生活
-            </span>
-        
-            <span class="sidebar-tag-name" data-tags="Booklet">
-                <span class="iconfont-archer">&#xe606;</span>
-                Booklet
             </span>
         
             <span class="sidebar-tag-name" data-tags="RecyclerView">

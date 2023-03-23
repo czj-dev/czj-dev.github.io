@@ -499,22 +499,22 @@
         <p>这篇文章主要是复习 Android 开发艺术探索的第 10 章和 第 11 章，整理了 Android 中关于线程的知识点。</p>
 <h2 id="ThreadLoacal"><a href="#ThreadLoacal" class="headerlink" title="ThreadLoacal"></a>ThreadLoacal</h2><p>ThreadLocal 是一个线程内部的数据存储类，通过它可以在指定的线程中存储数据，数据存储以后，只有在指定线程中可以获取到存储的数据，对于其他线程来说则无法获取到数据。</p>
 <p>ThreadLoacal 的另一个使用场景是复杂逻辑下的对象传递，例如监听器，有些时候一个线程中的任务过于复杂，这可能表现为函数调用栈比较深以及入口的多样性，在这种情况下使用 ThreadLocal 可以让监听器作为线程内的全局对象存在，只要在当前线程，就可以通过 get 方法获取到监听器。</p>
-<p>ThreadLocal 在不同的对象操作的都只是当前线程的容器对象，因此在不同线程访问同一个 ThreadLocal 的 set 和 get 方法，它们对于 ThreadLocal 所做的读/写操作仅限于各自线程的内部。</p>
+<p>ThreadLocal 在不同的对象操作的都只是当前线程的容器对象，因此在不同线程访问同一个 ThreadLocal 的 set 和 get 方法，它们对于 ThreadLocal 所做的读&#x2F;写操作仅限于各自线程的内部。</p>
 <p>在 Handle 中是用 ThreadLocal 来存储 Lopper，使得各个线程的消息队列都是独立的。至于主线程， 单独使用了一个全局静态变量来存储，保证可以在子线程获取到主线程的 Lopper 从而能够将消息加入到主线程的消息队列中处理。</p>
 <h2 id="AsyncTask"><a href="#AsyncTask" class="headerlink" title="AsyncTask"></a>AsyncTask</h2><p>AsyncTask 是一种轻量级的异步任务类，它可以在线程池中执行后台任务，然后执行了的进度和最终传递给主线程并在主线程更新 UI。从实现上来说，AsyncTask 是 Thread 和 handle 的封装，通过 AsyncTask 可以更方便的更新 UI ，但是 AsyncTask 并不设和进行特别耗时的后台任务，对于特别耗时的任务来说，建议使用线程池。</p>
 <p>###AsyncTask 的工作原理</p>
 <p>从 <code>execute</code> 方法分析可以得出，在 AsyncTask 在执行的 <code>execute</code> 方法时，系统会把 Params 参数封装成一个 FutureTask 对象，FutureTask 是一个并发类，这里它充当了 Runnable 的作用。然后将 FutureTask 交给 SerialExecutor 的 excute 方法执行，它会将 FutureTask 放入 mTask 这个队列中，如果这个时候没有活动的 AsyncTask 任务，那么它就直接调用 scheduleNext() 方法把这个任务放入 threadPoolExecutor 这个线程池执行任务，任务执行完成后又会继续调用 scheduleNext 方法来执行下一个任务，直至所有的任务都执行完毕，所以 AsyncTask 默认是一个串行执行的（3.0 及以上），如果想要 3.0 以上执行，那么可以采用 AyncTask 的 excuteOnExecutor 方法，它接受一个线程池并将任务直接放入线程池中执行，可以跳过 excute 方法的排队步骤。</p>
 <p>当 任务执行完成后会调用 postResult 通过 InternalHandler 发送一个消息，将结果发送回主线程并回调 onPostEvexute 方法。这里的 Handle 是静态的，这也就意味着 AsyncTask 的实例 必须在主线程中创建。</p>
 <h2 id="HandlerThread"><a href="#HandlerThread" class="headerlink" title="HandlerThread"></a>HandlerThread</h2><p>我们平时想在子线程中创建使用 Handler 的时候，会在 Thread 的 run 方法使用 Looper.prepare() 来创建 Looper 并通过 Looper.loop() 开启消息循环，最后再创建和使用 Handler ，这样 Handler 就能正常工作了。而 Android 系统的 HandlerThread 本身就自己完成了这类工作， 并且更加的完善和规范，例如它获取 Looper 的时候考虑到了线程活跃:</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> Looper <span class="title">getLooper</span><span class="params">()</span> </span>&#123;</span><br><span class="line">      <span class="keyword">if</span> (!isAlive()) &#123;</span><br><span class="line">          <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="comment">// If the thread has been started, wait until the looper has been created.</span></span><br><span class="line">      <span class="keyword">synchronized</span> (<span class="keyword">this</span>) &#123;</span><br><span class="line">          <span class="keyword">while</span> (isAlive() &amp;&amp; mLooper == <span class="keyword">null</span>) &#123;</span><br><span class="line">              <span class="keyword">try</span> &#123;</span><br><span class="line">                  wait();</span><br><span class="line">              &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">              &#125;</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span> mLooper;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Looper <span class="title function_">getLooper</span><span class="params">()</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (!isAlive()) &#123;</span><br><span class="line">          <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="comment">// If the thread has been started, wait until the looper has been created.</span></span><br><span class="line">      <span class="keyword">synchronized</span> (<span class="built_in">this</span>) &#123;</span><br><span class="line">          <span class="keyword">while</span> (isAlive() &amp;&amp; mLooper == <span class="literal">null</span>) &#123;</span><br><span class="line">              <span class="keyword">try</span> &#123;</span><br><span class="line">                  wait();</span><br><span class="line">              &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">              &#125;</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span> mLooper;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
 
 <p>提供了<code>quit</code> 和<code>quitSafely</code> 在任务执行的时候结束当前线程的执行，养成良好的编程习惯。 HandlerThread 的具体实践就是 IntentService 这个接下来讲。</p>
 <h2 id="IntentService"><a href="#IntentService" class="headerlink" title="IntentService"></a>IntentService</h2><p>IntentService 是一个特殊的 Service ，主要是用于执行后台的耗时任务，当任务执行完毕后它会自动停止，同时由于它是 Service 的原因 这导致它的优先级别普通的 Thread 要高很多，这让它不容易被系统杀死。</p>
 <p>IntentService 中封装了 HandlerThread 和 Handler ，会在 onCreate 时创建一个 HandlerThread 并使用 HandlerThread 的 looper 来创建 Handler 。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">()</span> </span>&#123;</span><br><span class="line">...</span><br><span class="line">      <span class="keyword">super</span>.onCreate();</span><br><span class="line">      HandlerThread thread = <span class="keyword">new</span> HandlerThread(<span class="string">&quot;IntentService[&quot;</span> + mName + <span class="string">&quot;]&quot;</span>);</span><br><span class="line">      thread.start();</span><br><span class="line"></span><br><span class="line">      mServiceLooper = thread.getLooper();</span><br><span class="line">      mServiceHandler = <span class="keyword">new</span> ServiceHandler(mServiceLooper);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onCreate</span><span class="params">()</span> &#123;</span><br><span class="line">...</span><br><span class="line">      <span class="built_in">super</span>.onCreate();</span><br><span class="line">      <span class="type">HandlerThread</span> <span class="variable">thread</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">HandlerThread</span>(<span class="string">&quot;IntentService[&quot;</span> + mName + <span class="string">&quot;]&quot;</span>);</span><br><span class="line">      thread.start();</span><br><span class="line"></span><br><span class="line">      mServiceLooper = thread.getLooper();</span><br><span class="line">      mServiceHandler = <span class="keyword">new</span> <span class="title class_">ServiceHandler</span>(mServiceLooper);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
 
 <p>IntentService 每次被启动的时候会调用 onStartCommand ，onStartCommand 有调用了 onStart ，onStart 方法会通过 mServiceHandler 发送一个消息，将 startId 和 启动 service 的 Intent 对象发送出去，由 onHandlerIntent 方法来处理。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">   <span class="meta">@Override</span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">onStartCommand</span><span class="params">(<span class="meta">@Nullable</span> Intent intent, <span class="keyword">int</span> flags, <span class="keyword">int</span> startId)</span> </span>&#123;</span><br><span class="line">       onStart(intent, startId);</span><br><span class="line">       <span class="keyword">return</span> mRedelivery ? START_REDELIVER_INTENT : START_NOT_STICKY;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onStart</span><span class="params">(<span class="meta">@Nullable</span> Intent intent, <span class="keyword">int</span> startId)</span> </span>&#123;</span><br><span class="line">       Message msg = mServiceHandler.obtainMessage();</span><br><span class="line">       msg.arg1 = startId;</span><br><span class="line">       msg.obj = intent;</span><br><span class="line">       mServiceHandler.sendMessage(msg);</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">ServiceHandler</span> <span class="keyword">extends</span> <span class="title">Handler</span> </span>&#123;</span><br><span class="line">       <span class="function"><span class="keyword">public</span> <span class="title">ServiceHandler</span><span class="params">(Looper looper)</span> </span>&#123;</span><br><span class="line">           <span class="keyword">super</span>(looper);</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       <span class="meta">@Override</span></span><br><span class="line">       <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleMessage</span><span class="params">(Message msg)</span> </span>&#123;</span><br><span class="line">           onHandleIntent((Intent)msg.obj);</span><br><span class="line">           stopSelf(msg.arg1);</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">   <span class="meta">@Override</span></span><br><span class="line">   <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">onStartCommand</span><span class="params">(<span class="meta">@Nullable</span> Intent intent, <span class="type">int</span> flags, <span class="type">int</span> startId)</span> &#123;</span><br><span class="line">       onStart(intent, startId);</span><br><span class="line">       <span class="keyword">return</span> mRedelivery ? START_REDELIVER_INTENT : START_NOT_STICKY;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line">   <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onStart</span><span class="params">(<span class="meta">@Nullable</span> Intent intent, <span class="type">int</span> startId)</span> &#123;</span><br><span class="line">       <span class="type">Message</span> <span class="variable">msg</span> <span class="operator">=</span> mServiceHandler.obtainMessage();</span><br><span class="line">       msg.arg1 = startId;</span><br><span class="line">       msg.obj = intent;</span><br><span class="line">       mServiceHandler.sendMessage(msg);</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">ServiceHandler</span> <span class="keyword">extends</span> <span class="title class_">Handler</span> &#123;</span><br><span class="line">       <span class="keyword">public</span> <span class="title function_">ServiceHandler</span><span class="params">(Looper looper)</span> &#123;</span><br><span class="line">           <span class="built_in">super</span>(looper);</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       <span class="meta">@Override</span></span><br><span class="line">       <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">handleMessage</span><span class="params">(Message msg)</span> &#123;</span><br><span class="line">           onHandleIntent((Intent)msg.obj);</span><br><span class="line">           stopSelf(msg.arg1);</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
 
 <p>onHandlerIntent 执行完毕后会调用 stopSelf（startId） 来尝试结束服务，stopSelf（startId）会判断最近启动次数是否和 startId 一致，如果不一致则说明还有未处理的消息，那么就等待消息处理完毕。否则就立刻停止服务。所以，如果我们在同一时间 startService 一个 IntentService 它们仍是一个实例在处理，任务则是串行处理的。</p>
 <h2 id="线程池"><a href="#线程池" class="headerlink" title="线程池"></a>线程池</h2><p>线程池的好处：</p>
@@ -545,7 +545,7 @@
 <h4 id="ScheduledThreadPool"><a href="#ScheduledThreadPool" class="headerlink" title="ScheduledThreadPool"></a>ScheduledThreadPool</h4><p>它的核心线程数量是固定的，非核心线程数量没有限制，并且当非核心线程闲置的时候会被立刻回收。这类线程池主要执行定时任务和固定周期的重复任务。</p>
 <h4 id="SingleThreadExecutor"><a href="#SingleThreadExecutor" class="headerlink" title="SingleThreadExecutor"></a>SingleThreadExecutor</h4><p>这个线程池内部只有一个核心线程，它确保所有的任务都在同一个线程中按顺序执行，使得任务不需要处理线程同步的问题。</p>
 <p>除了 Excutors 提供的线程实现，我们也可以根据实际需要灵活地配置线程池，比如之前的 AsyncTask 它内部的线程池实现:</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">        ThreadPoolExecutor threadPoolExecutor = <span class="keyword">new</span> ThreadPoolExecutor(</span><br><span class="line">                CORE_POOL_SIZE, MAXIMUM_POOL_SIZE, KEEP_ALIVE_SECONDS, TimeUnit.SECONDS,</span><br><span class="line">                sPoolWorkQueue, sThreadFactory);</span><br><span class="line">        threadPoolExecutor.allowCoreThreadTimeOut(<span class="keyword">true</span>);</span><br><span class="line"><span class="comment">// CORE_POOL_SIZE = Math.max(2, Math.min(CPU_COUNT - 1, 4));  核心线程数量</span></span><br><span class="line"><span class="comment">// MAXIMUM_POOL_SIZE= CPU_COUNT * 2 + 1;  最大线程数量</span></span><br><span class="line"><span class="comment">// KEEP_ALIVE_SECONDS = 30 超时时间</span></span><br><span class="line"><span class="comment">// sPoolWorkQueue = new LinkedBlockingQueue&lt;Runnable&gt;(128); 容量为 128 的队列</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">        <span class="type">ThreadPoolExecutor</span> <span class="variable">threadPoolExecutor</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ThreadPoolExecutor</span>(</span><br><span class="line">                CORE_POOL_SIZE, MAXIMUM_POOL_SIZE, KEEP_ALIVE_SECONDS, TimeUnit.SECONDS,</span><br><span class="line">                sPoolWorkQueue, sThreadFactory);</span><br><span class="line">        threadPoolExecutor.allowCoreThreadTimeOut(<span class="literal">true</span>);</span><br><span class="line"><span class="comment">// CORE_POOL_SIZE = Math.max(2, Math.min(CPU_COUNT - 1, 4));  核心线程数量</span></span><br><span class="line"><span class="comment">// MAXIMUM_POOL_SIZE= CPU_COUNT * 2 + 1;  最大线程数量</span></span><br><span class="line"><span class="comment">// KEEP_ALIVE_SECONDS = 30 超时时间</span></span><br><span class="line"><span class="comment">// sPoolWorkQueue = new LinkedBlockingQueue&lt;Runnable&gt;(128); 容量为 128 的队列</span></span><br></pre></td></tr></table></figure>
 
     </article>
     <!-- license -->
@@ -1042,6 +1042,14 @@
         
         
         
+        
+        
+        
+        
+        
+        
+        
+        
     
     
     
@@ -1269,6 +1277,26 @@
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
         
+            <span class="sidebar-tag-name" data-tags="生活">
+                <span class="iconfont-archer">&#xe606;</span>
+                生活
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Android">
+                <span class="iconfont-archer">&#xe606;</span>
+                Android
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="基础">
+                <span class="iconfont-archer">&#xe606;</span>
+                基础
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Booklet">
+                <span class="iconfont-archer">&#xe606;</span>
+                Booklet
+            </span>
+        
             <span class="sidebar-tag-name" data-tags="Note">
                 <span class="iconfont-archer">&#xe606;</span>
                 Note
@@ -1284,11 +1312,6 @@
                 HTTP
             </span>
         
-            <span class="sidebar-tag-name" data-tags="Android">
-                <span class="iconfont-archer">&#xe606;</span>
-                Android
-            </span>
-        
             <span class="sidebar-tag-name" data-tags="Flutter">
                 <span class="iconfont-archer">&#xe606;</span>
                 Flutter
@@ -1302,21 +1325,6 @@
             <span class="sidebar-tag-name" data-tags="Dart">
                 <span class="iconfont-archer">&#xe606;</span>
                 Dart
-            </span>
-        
-            <span class="sidebar-tag-name" data-tags="基础">
-                <span class="iconfont-archer">&#xe606;</span>
-                基础
-            </span>
-        
-            <span class="sidebar-tag-name" data-tags="生活">
-                <span class="iconfont-archer">&#xe606;</span>
-                生活
-            </span>
-        
-            <span class="sidebar-tag-name" data-tags="Booklet">
-                <span class="iconfont-archer">&#xe606;</span>
-                Booklet
             </span>
         
             <span class="sidebar-tag-name" data-tags="RecyclerView">
