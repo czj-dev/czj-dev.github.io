@@ -500,9 +500,9 @@
 <p>Android 系统虽然是基于 Linux 2.6 内核开发的开源操作系统，但是 Android 系统对 Linux 的内存管理系统进行了优化，Linux 系统会在进程活动停止后就结束该进程，而 Android 系统则将这些进程都保留在内存中（即使你是退出该程序而不是 Home 键，任然会保留空置进程），这些保留在内存里的进程通常不会影响整体系统的运行，并且当用户再次激活这些进程时，提升了进程的启动速度和保留了状态。</p>
 <h4 id="内存分配"><a href="#内存分配" class="headerlink" title="内存分配"></a>内存分配</h4><p>Android 系统会对每个进程的 Dalvik 设置了严格的 Heap 使用限制，如果应用达到内存限制容量后仍然继续申请内存就会触发内存溢出错误。你可以通过 <code>getMemoryClass()</code> 查询可以使用的 Heap 大小，它会以 M 为单位返回。在非常特殊的场景你可以通过设置 <code>largetHeap</code>属性为 <code>true</code> 到 Application 标签来申请大尺寸内存。但是系统不一定会调整分配。这种情况你更应该去解决内存使用过大的问题而不是依赖它</p>
 <blockquote>
-<p>// 1、通过 ActivityManager 获取<br>ActivityManager activityManager=(ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE);<br>activityManager.getMemoryClass();<br>activityManager.getLargeMemoryClass();</p>
-<p>// 2、通过 Runtime 获取<br>Runtime rt = Runtime.getRuntime();<br>rt.getFreeMemory();<br>rt.getMaxMemory();<br>rt.getTotalMemroy();</p>
-<p>// 注意：ActivityManager.getMemroyInfo()，这个方法不是用来获取 dalvik 内存的，这是获取系统总内存的，我们设置缓存大小时，一般不以它有依据；</p>
+<p>&#x2F;&#x2F; 1、通过 ActivityManager 获取<br>ActivityManager activityManager&#x3D;(ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE);<br>activityManager.getMemoryClass();<br>activityManager.getLargeMemoryClass();</p>
+<p>&#x2F;&#x2F; 2、通过 Runtime 获取<br>Runtime rt &#x3D; Runtime.getRuntime();<br>rt.getFreeMemory();<br>rt.getMaxMemory();<br>rt.getTotalMemroy();</p>
+<p>&#x2F;&#x2F; 注意：ActivityManager.getMemroyInfo()，这个方法不是用来获取 dalvik 内存的，这是获取系统总内存的，我们设置缓存大小时，一般不以它有依据；</p>
 </blockquote>
 <p>当系统需要更多内存时候，垃圾处理器会进行内存回收机制。Android 系统会根据进程的优先级和最少使用次数等因素来关闭进程回收内存。它们按优先级排序为：前台进程、可见进程、次要服务、后台进程、内容供应节点、和空进程。</p>
 <h4 id="管理内存"><a href="#管理内存" class="headerlink" title="管理内存"></a>管理内存</h4><ol>
@@ -515,11 +515,11 @@
 <li><strong>合理的使用 Bitmap</strong>。图片资源算是 Android 里的内存消耗大户了，3.0 以后虽然不用手动释放内存，但是在加载图片的时候应该按需加载来节省内存。裁剪至合适的尺寸，当图片是高分辨率且不需要时因尽可能的压缩它。</li>
 <li><strong>合理的创建使用 UI 布局</strong>。减少页面的绘制层级（通过开发者工具来检测），避免在 onDraw 里创建对象。</li>
 <li><strong>使用优化过的容器类</strong>。Android 提供了一系列的优化的容器，如 SparseArray、ArrayMap 等容器，它们在数据量较少的情况下（0~1000 数量级，SparseArray 使用二分查找来定位 index，且避免了对 key 的自动装箱）比 HashMap 更加高效和减少内存使用。</li>
-<li><strong>避免使用枚举</strong>。单个枚举的内存占用是静态常量的 13 倍，使用注解库内的 StringDef/IntDef 或者静态常量来代替注解。</li>
+<li><strong>避免使用枚举</strong>。单个枚举的内存占用是静态常量的 13 倍，使用注解库内的 StringDef&#x2F;IntDef 或者静态常量来代替注解。</li>
 <li><strong>使用缓存</strong>。对数据进行合理的缓存来避免短时间内大量创建对象造成内存抖动。</li>
 </ol>
 <h4 id="常见的内存泄露"><a href="#常见的内存泄露" class="headerlink" title="常见的内存泄露"></a>常见的内存泄露</h4><ul>
-<li><p>静态变量/容器持有 Activity 实例</p>
+<li><p>静态变量&#x2F;容器持有 Activity 实例</p>
 </li>
 <li><p>Handler 内存泄露</p>
 </li>
@@ -1031,6 +1031,14 @@
         
         
         
+        
+        
+        
+        
+        
+        
+        
+        
     
     
     
@@ -1258,6 +1266,26 @@
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
         
+            <span class="sidebar-tag-name" data-tags="生活">
+                <span class="iconfont-archer">&#xe606;</span>
+                生活
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Android">
+                <span class="iconfont-archer">&#xe606;</span>
+                Android
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="基础">
+                <span class="iconfont-archer">&#xe606;</span>
+                基础
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Booklet">
+                <span class="iconfont-archer">&#xe606;</span>
+                Booklet
+            </span>
+        
             <span class="sidebar-tag-name" data-tags="Note">
                 <span class="iconfont-archer">&#xe606;</span>
                 Note
@@ -1273,11 +1301,6 @@
                 HTTP
             </span>
         
-            <span class="sidebar-tag-name" data-tags="Android">
-                <span class="iconfont-archer">&#xe606;</span>
-                Android
-            </span>
-        
             <span class="sidebar-tag-name" data-tags="Flutter">
                 <span class="iconfont-archer">&#xe606;</span>
                 Flutter
@@ -1291,21 +1314,6 @@
             <span class="sidebar-tag-name" data-tags="Dart">
                 <span class="iconfont-archer">&#xe606;</span>
                 Dart
-            </span>
-        
-            <span class="sidebar-tag-name" data-tags="基础">
-                <span class="iconfont-archer">&#xe606;</span>
-                基础
-            </span>
-        
-            <span class="sidebar-tag-name" data-tags="生活">
-                <span class="iconfont-archer">&#xe606;</span>
-                生活
-            </span>
-        
-            <span class="sidebar-tag-name" data-tags="Booklet">
-                <span class="iconfont-archer">&#xe606;</span>
-                Booklet
             </span>
         
             <span class="sidebar-tag-name" data-tags="RecyclerView">
