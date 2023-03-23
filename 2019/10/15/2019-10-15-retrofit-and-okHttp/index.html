@@ -545,14 +545,14 @@
 <li><strong>协议层</strong> 协议层用来具体化 Http1、Http2、Https 以及 WebSocket 等协议在网络通信中具体实现和交互，让开发者只需要关注网络请求和响应本身</li>
 <li><strong>连接层</strong> 连接层用来管理网络请求的线程池连接池复用，任务调度</li>
 <li><strong>缓存处理</strong> 对支持的 HTTP 响应和请求做缓存和复用，优化网络质量</li>
-<li><strong>I/O 处理</strong> 磁盘缓存、网络 IO 的具体操作都是依赖于此，它的具体工作是由 <code>Okio</code> 框架来完成的</li>
+<li><strong>I&#x2F;O 处理</strong> 磁盘缓存、网络 IO 的具体操作都是依赖于此，它的具体工作是由 <code>Okio</code> 框架来完成的</li>
 <li><strong>拦截器</strong> 从图中也可以看出<code>Interceptor</code> 是贯穿整个 OkHttp 的核心，它以责任链的模式将整个流程优雅的分发处理，是整个 OkHttp 的重中之重。</li>
 </ul>
 <p>接下来我们按照一个网络请求在 OkHttp 中的流程来解析了解 OkHttp 的内部设计是怎么样的</p>
 <img src="https://blog.piasy.com/img/201607/okhttp_full_process.png" alt="网络请求经过" style="zoom:60%;" />
 
 <p><code>OkHttpClient</code> 即 OkHttp 框架的使用入口，本身通过 <code>Builrder</code> 模式可以灵活配置非常多的参数, 具体的内部我们就不做赘述了，我们直接来看一个网络请求是怎么发起的：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">String <span class="title">run</span><span class="params">(String url)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">  OkHttpClient client = <span class="keyword">new</span> OkHttpClient();</span><br><span class="line">  Request request = <span class="keyword">new</span> Request.Builder()</span><br><span class="line">      .url(url)</span><br><span class="line">      .build();</span><br><span class="line"></span><br><span class="line">  Response response = client.newCall(request).execute();</span><br><span class="line">  <span class="keyword">return</span> response.body().string();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">String <span class="title function_">run</span><span class="params">(String url)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">  <span class="type">OkHttpClient</span> <span class="variable">client</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">OkHttpClient</span>();</span><br><span class="line">  <span class="type">Request</span> <span class="variable">request</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Request</span>.Builder()</span><br><span class="line">      .url(url)</span><br><span class="line">      .build();</span><br><span class="line"></span><br><span class="line">  <span class="type">Response</span> <span class="variable">response</span> <span class="operator">=</span> client.newCall(request).execute();</span><br><span class="line">  <span class="keyword">return</span> response.body().string();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>我们通过 <code>reuqest</code> 构建一个 HTTP 请求，通过 client 的 <code>newCall</code> 去创建一个 <code>call</code> 然后直接 <code>execute</code> 发起一个同步的网络请求。这也与我们上边的流程图所展示的一致，接下里我们就看看 <code>newCall</code> 里面有什么东西吧。</p>
 <h4 id="RealCall"><a href="#RealCall" class="headerlink" title="RealCall"></a>RealCall</h4><p><img src="https://s2.ax1x.com/2019/10/14/KSeaHH.png" alt="RealCall constructor"></p>
@@ -587,7 +587,7 @@
 <h5 id="ConnectInterceptor"><a href="#ConnectInterceptor" class="headerlink" title="ConnectInterceptor"></a><strong>ConnectInterceptor</strong></h5><p>ConnectIntercetpor 则是负责 HTTP 连接创建、复用与分配。算是我们需要了解的重难点了，<del>敲黑板，记笔记</del>。</p>
 <p><img src="https://s2.ax1x.com/2019/10/14/KSfZuR.png" alt="connectIntercetpor"></p>
 <p>从上图中我们得知几个关键的对象 <code>StreamAllocation</code>、<code>HttpCodec</code>、<code>RealConnection</code> 。</p>
-<p>StreamAllocation 是 <code>HttpCodec</code> 和 <code>RealConnection</code> 的载体，它在 RetryAndFollowUpIntercetpor 中创建，通过 <code>newStream</code> 方法中去申请分配一个 <code>RealConnection</code> ，<code>RealConnection</code> 代表的就是一个可用的 TCP/IP 连接。那么连接池是如何运作的，又是如何拿到一条可用的连接呢，我们从 <code>newStream</code> 去看:</p>
+<p>StreamAllocation 是 <code>HttpCodec</code> 和 <code>RealConnection</code> 的载体，它在 RetryAndFollowUpIntercetpor 中创建，通过 <code>newStream</code> 方法中去申请分配一个 <code>RealConnection</code> ，<code>RealConnection</code> 代表的就是一个可用的 TCP&#x2F;IP 连接。那么连接池是如何运作的，又是如何拿到一条可用的连接呢，我们从 <code>newStream</code> 去看:</p>
 <p><img src="https://s2.ax1x.com/2019/10/14/KSqEFA.md.png" alt="newStream"></p>
 <p><code>newStream</code> 整个流程的实际代码还是挺长的，我们节选了部分并只关注高亮部分来讲解。</p>
 <ul>
@@ -596,7 +596,7 @@
 <li><code>findConnection()</code> 先尝试 44 行的 <code>Internal.instance.get(connectionPool,address,this,null)</code> 取出连接， <code>Internal.instance</code> 的实例是在 OkHttpClient 创建的匿名类对象，<code>get()</code> 方法只是调用 <code>ConnectionPool</code> 的<code>get</code> 方法。<code>ConnectionPool</code> 顾名思义就是我们的连接池的实现了，这个稍后再细讲。</li>
 <li>如果连接池里没有可用的连接。那么就会重新创建一个 <code>RealConnection</code> 并去执行 TCP 握手，然后将它加入到 <code>connectionPool</code> 中。至此一个寻找可用的 <code>conncetion</code> 的步骤就完成了。</li>
 </ul>
-<p>找到可用的连接后，接下来通过<code>newCodec</code> 创建一个 <code>HttpCode</code> 实例， <code>HttpCode</code>是对 HTTP 协议操作的抽象，有两个实现：<code>Http1Codec</code> 和 <code>Http2Codec</code>，顾名思义，它们分别对应 HTTP/1.1 和 HTTP/2 版本的实现。</p>
+<p>找到可用的连接后，接下来通过<code>newCodec</code> 创建一个 <code>HttpCode</code> 实例， <code>HttpCode</code>是对 HTTP 协议操作的抽象，有两个实现：<code>Http1Codec</code> 和 <code>Http2Codec</code>，顾名思义，它们分别对应 HTTP&#x2F;1.1 和 HTTP&#x2F;2 版本的实现。</p>
 <p>管道连接、协议实现这些都准备完毕后，<code>ConnectInterceptor</code> 的职责也就完成了。下面先回过头来看看 Connection 的核心 <code>ConnectionPool</code> ，它负责了对连接池的复用维护管理。对外它只暴露的简单的 <code>get</code>、<code>put</code> 方法，内里的实现机制又是如何的呢</p>
 <p><strong>ConnectionPool</strong></p>
 <p><img src="https://s2.ax1x.com/2019/10/14/Kp9rDI.png" alt="connectionPool"></p>
@@ -624,20 +624,20 @@
 <p><img src="https://s2.ax1x.com/2019/10/15/K9cHyR.md.png" alt="execute 和 enqueue"></p>
 <p>我们可以看到两者在使用调度器上有些许差别。</p>
 <ul>
-<li> <code>execute()</code> 在调用<code>Dispatcher</code> 时使用的是 <code>Dispatcher .executed()</code> 来执行然后在 <code>finally</code> 后调用<code>finished</code> 结束流程。</li>
+<li><code>execute()</code> 在调用<code>Dispatcher</code> 时使用的是 <code>Dispatcher .executed()</code> 来执行然后在 <code>finally</code> 后调用<code>finished</code> 结束流程。</li>
 <li>而 <code>enqueue()</code> 则调用了 <code>enqueue</code> 将自己添加进入调度器，且包装了一个 <code>AsyncCall</code> ，<code>AsyncCall</code> 继承了 <code>NamedRunnable</code> 它是一个<code>Runnable</code> 在<code>run()</code> 方法被执行后会触发 <code>execute()</code> 方法，而另一个主要方法 <code>executeOn</code> 则是将自己添加到传入的线程池执行，两者环环相扣。<code>AsyncCall</code> 中 <code>execute()</code> 的方法操作与同步请求 <code>execute()</code>内的代码逻辑大同小异。具体原因我们去看看 <code>Dispatcher</code> 的具体实现 ：</li>
 </ul>
 <p><img src="https://s2.ax1x.com/2019/10/15/K9202Q.md.png" alt="Dispatcher"></p>
 <p>可以看到 <code>Dispatcher</code>维护着三个双向队列</p>
 <ol>
-<li> 预备异步队列 <code>readyAsyncCalls</code> 一些还没有被放入线程池执行的任务会先放到之类</li>
-<li> 运行异步队列 <code>runningAsyncCalls</code> 一些已经在执行中的任务在这里管理</li>
-<li> 运行同步队列 <code>runningSyncCalls</code> 已经执行的同步网络任务在这里管理</li>
+<li>预备异步队列 <code>readyAsyncCalls</code> 一些还没有被放入线程池执行的任务会先放到之类</li>
+<li>运行异步队列 <code>runningAsyncCalls</code> 一些已经在执行中的任务在这里管理</li>
+<li>运行同步队列 <code>runningSyncCalls</code> 已经执行的同步网络任务在这里管理</li>
 </ol>
 <p><strong>Dispatcher维护了一个懒加载的线程池 <code>executorService</code>，线程池没有核心线程，非核心线程最大数量很大，比较适合执行大量的耗时较少的任务。最大的并发请求数量限制为了 60。每个主机的最大请求数量限制为 5。所有的异步任务都是在这个线程池中执行的.</strong></p>
 <p>同步请求 <code>execute</code> 的入口也是 <code>excute</code> 方法，出口则是 <code>finished</code>。我们观察它仅仅只是运行的收扔进队列，结束后被 remove 移出，起到管理作用。没有放入线程池总，也就是说 <strong><code>execute</code> 的执行环境为发起同步请求的线程，这也是为什么我们在 UI 线程中调用同步请求会触发 <code>NetworkOnMainThread</code> 的根本原因</strong></p>
 <p>异步请求 <code>enqueue</code> 会将方法放入 <code>readyAsyncCalls</code> 然后执行 <code>PromoteAndExcute</code> 方法，它会将<code>readyAsyncCalls</code> 中的任务放到 <code>runningAsyncCalls</code> 中，然后调用每个任务的 <code>executeOn</code> 将线程池 <code>excutorServier</code> 传递给他们调用。线程池会执行开始执行任务而后又触发每个 <code>AsyncCall</code> 的 <code>execute</code> 方法执行网络请求，这时网络请求运行的环境就位于线程池内了，之后结果会通过<code>enqueue</code> 传递的 <code>responseCallback</code> 回调到发起线程。</p>
-<p>到这里整个 OkHttp 的请求流程我们就解析完毕了。其中一些例如缓存策略并没有细致的展开，还有 HttpCode 的具体实现，它是如何对 TCP/IP 网络请求的抽象的。但已经对 OkHttp 建立了一个大致的脉络，由 0 跨越到了 1 ，对整个请求流程有了一定了解。再次不由得再次佩服框架的开发者，设计了如此精美强大的网络请求开源方案。</p>
+<p>到这里整个 OkHttp 的请求流程我们就解析完毕了。其中一些例如缓存策略并没有细致的展开，还有 HttpCode 的具体实现，它是如何对 TCP&#x2F;IP 网络请求的抽象的。但已经对 OkHttp 建立了一个大致的脉络，由 0 跨越到了 1 ，对整个请求流程有了一定了解。再次不由得再次佩服框架的开发者，设计了如此精美强大的网络请求开源方案。</p>
 <h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>从 Retorfit 分析到 OkHttp ，我们了解调用的 Api 是如何循序渐进的从一两行的代码变为一整个完整 HTTP 请求，之后又是怎么将网络响应便捷的转换为我们需要结果。体验了程序设计之美。也希望以后的开发过程中可以学以致用，将这些知识真正的纳为己用。</p>
 
     </article>
@@ -1135,6 +1135,14 @@
         
         
         
+        
+        
+        
+        
+        
+        
+        
+        
     
     
     
@@ -1362,6 +1370,26 @@
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
         
+            <span class="sidebar-tag-name" data-tags="生活">
+                <span class="iconfont-archer">&#xe606;</span>
+                生活
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Android">
+                <span class="iconfont-archer">&#xe606;</span>
+                Android
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="基础">
+                <span class="iconfont-archer">&#xe606;</span>
+                基础
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Booklet">
+                <span class="iconfont-archer">&#xe606;</span>
+                Booklet
+            </span>
+        
             <span class="sidebar-tag-name" data-tags="Note">
                 <span class="iconfont-archer">&#xe606;</span>
                 Note
@@ -1377,11 +1405,6 @@
                 HTTP
             </span>
         
-            <span class="sidebar-tag-name" data-tags="Android">
-                <span class="iconfont-archer">&#xe606;</span>
-                Android
-            </span>
-        
             <span class="sidebar-tag-name" data-tags="Flutter">
                 <span class="iconfont-archer">&#xe606;</span>
                 Flutter
@@ -1395,21 +1418,6 @@
             <span class="sidebar-tag-name" data-tags="Dart">
                 <span class="iconfont-archer">&#xe606;</span>
                 Dart
-            </span>
-        
-            <span class="sidebar-tag-name" data-tags="基础">
-                <span class="iconfont-archer">&#xe606;</span>
-                基础
-            </span>
-        
-            <span class="sidebar-tag-name" data-tags="生活">
-                <span class="iconfont-archer">&#xe606;</span>
-                生活
-            </span>
-        
-            <span class="sidebar-tag-name" data-tags="Booklet">
-                <span class="iconfont-archer">&#xe606;</span>
-                Booklet
             </span>
         
             <span class="sidebar-tag-name" data-tags="RecyclerView">
