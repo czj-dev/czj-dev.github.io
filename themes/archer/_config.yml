@@ -26,7 +26,7 @@ social:
   v2ex: 
   bilibili: 
   linkedin: 
-  steam: https://steamcommunity.com/id/Mr9527/
+  steam: https://steamcommunity.com/id/NutcrackerX
   others: 
   rss: 
 # friends
@@ -95,7 +95,7 @@ about_intro_height: 50
 # Blog float button theme ('default' or 'rounded')
 float_button_theme: default
 # Blog read progress color ('default' for black or 'feature' for feature-color)
-read_progress_color: default
+read_progress_color: feature
 # Blog post banner theme ('default' or 'clean')
 post_banner_theme: default
 # Display profile avatar's border
@@ -187,7 +187,7 @@ outdated_threshold:
   specify_article: false
 # Mermaid Chart: https://github.com/knsv/mermaid
 mermaid:
-  enable: false
+  enable: true
   # Version number '8' is for the latest '8.x' version of Mermaid.
   version: 8.11.0
   theme: dark
@@ -196,7 +196,7 @@ mermaid:
 # LaTeX Math Equations Support
 math:
   mathjax:
-    enable: false
+    enable: true
     # Specified version number no less than '3.0.0', or you need to modify the CDN link manually.
     # Version number '3' is for the latest '3.x' version of MathJax.
     version: 3.2.0
@@ -209,7 +209,7 @@ math:
 # Based on https://github.com/typekit/webfontloader
 # Please read README.md to enable this option correctly.
 custom_font:
-  enable: false
+  enable: true
   # Font name, use ':' to select font weight and font style
   name: 'Noto Sans SC:n3,n4,n5,n7'
   # Font CDN url

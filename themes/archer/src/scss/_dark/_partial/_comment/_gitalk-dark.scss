@@ -7,6 +7,14 @@ $gt-color-btn: #ffffff;
     color: $post-content-color-dark;
   }
 
+  textarea,
+  .gt-header-preview *,
+  .gt-comment-content *,
+  .gt-action *,
+  .gt-version {
+    color: #333;
+  }
+
   a {
     color: $gt-color-main !important;
     &:hover {
@@ -40,6 +48,9 @@ $gt-color-btn: #ffffff;
       &:hover {
         background-color: darken($gt-color-btn, 5%) !important;
         border-color: $gt-color-main-lighter !important;
+      }
+      .gt-btn-text {
+        color: $gt-color-main !important;
       }
     }
     &-public {

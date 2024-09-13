@@ -1,6 +1,5 @@
 import AnchorJS from 'anchor-js'
 import toc from './toc'
-import archerUtil from './util'
 import './fontawsome'
 
 const init = function () {
@@ -12,7 +11,7 @@ const init = function () {
 
   if (bgRegResult.length < 2) {
     console.error(
-      "Error while loading site intro image. Please check image's url."
+      "Error while loading site intro image. Please check image's url.",
     )
     console.log(bgRegResult)
   } else {
@@ -34,27 +33,22 @@ const init = function () {
       $('.footer').removeClass('footer-unloaded')
       $('.loading').remove()
 
-      // Jump to url hash location if exit
-      const currentHash = window.location.hash
-      window.location.hash = archerUtil.getWindowHash()
-      window.location.hash = currentHash
+      // Init anchors
+      // https://www.bryanbraun.com/anchorjs/
+      const anchors = new AnchorJS()
+      anchors.options = {
+        placement: 'right',
+        class: 'anchorjs-archer',
+      }
+      anchors.add()
 
       // As headers' absolute offset-y can be queried properly
       // after remove container's `container-unloaded` class,
       // so we should init toc here for better performance.
       toc()
     },
-    false
+    false,
   )
-
-  // Init anchors
-  // https://www.bryanbraun.com/anchorjs/
-  const anchors = new AnchorJS()
-  anchors.options = {
-    placement: 'right',
-    class: 'anchorjs-archer',
-  }
-  anchors.add()
 }
 
 export default init

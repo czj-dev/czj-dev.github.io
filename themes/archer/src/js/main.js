@@ -1,44 +1,38 @@
-import init from './init'
-import { scroll } from './scroll'
-import './initSidebar'
-import { initMobile } from './mobile'
-import InitSidebarLink from './tag'
-import fancybox from './fancybox'
+import Package from '../../package.json'
 
-// print custom info
+import init from './init'
+// import initMobile from './mobile'
+import initTheme from './theme'
+import initImage from './image'
+import initScroll from './scroll'
+import initSidebar from './initSidebar'
+import initDonate from './donate'
+
+// print console info
 const logStyle =
   'color: #fff; background: #f75357; padding: 1px; border-radius: 5px;'
-console.info('%c 🎯 hexo-theme-archer ⬇️ ', logStyle)
-console.info('%c 🏷 Version: 1.6.4 ', logStyle)
-console.info('%c 📅 Version date: 20210811 ', logStyle)
-console.info('%c 📦 https://github.com/fi3ework/hexo-theme-archer ', logStyle)
+console.info(`%c 🎯 ${Package.name} ⬇️ `, logStyle)
+console.info(`%c 🏷 Version: ${Package.version} `, logStyle)
+console.info(`%c 📅 Version date: ${Package.versionDate} `, logStyle)
+console.info(`%c 📦 ${Package.homepage} `, logStyle)
 
-window.addEventListener('load', function (event) {
-  console.log('All resources finished loading!')
-})
-
-// init site base
+// site base
 init()
 
-// init mobile
-initMobile()
+// optimizations for mobile device
+// initMobile()
+
+// sidebar
+initSidebar()
+
+// theme
+initTheme()
+
+// init image with fancybox
+initImage()
 
 // scroll event
-scroll()
+initScroll()
 
-// init sidebar link
-const metas = new InitSidebarLink()
-metas.addTab({
-  metaName: 'tags',
-  labelsContainer: '.sidebar-tags-name',
-  postsContainer: '.sidebar-tags-list',
-})
-
-metas.addTab({
-  metaName: 'categories',
-  labelsContainer: '.sidebar-categories-name',
-  postsContainer: '.sidebar-categories-list',
-})
-
-// fancybox
-fancybox()
+// donate
+initDonate()
