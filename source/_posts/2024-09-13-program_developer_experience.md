@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "《程序员修炼之道》"
+title: "《程序员修炼之道》阅读笔记"
 subtitle: "读书笔记"
 date: 2024-09-13 15:25:00
 author: "rank"
