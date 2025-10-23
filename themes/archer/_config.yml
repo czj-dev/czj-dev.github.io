@@ -35,7 +35,7 @@ friends:
   # friendB: //www.google.com
 about:
   enable: true
-  image: '/intro/about-bg.jpg'
+  image: '/img/about-bg.jpg'
 # Search for website
 search:
   enable: false
