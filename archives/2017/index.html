@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="cn">
+    <!-- title -->
+<!-- keywords -->
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="Nutcracker">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="Nutcracker">
+        <meta name="keywords" content="Android,Live,Nutcracker">
+    <meta name="description" content="">
+    <meta property="og:type" content="website">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="https://czj-dev.github.io/archives/2017/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:locale">
+<meta property="article:author" content="Nutcracker">
+<meta name="twitter:card" content="summary">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="icon" href="/assets/favicon.ico">
+    <title>Base Station</title>
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+    (function (w) {
+        'use strict'
+        // rel=preload support test
+        if (!w.loadCSS) {
+            w.loadCSS = function () {}
+        }
+        // define on the loadCSS obj
+        var rp = (loadCSS.relpreload = {})
+        // rel=preload feature support test
+        // runs once and returns a function for compat purposes
+        rp.support = (function () {
+            var ret
+            try {
+                ret = w.document.createElement('link').relList.supports('preload')
+            } catch (e) {
+                ret = false
+            }
+            return function () {
+                return ret
+            }
+        })()
+
+        // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+        // then change that media back to its intended value on load
+        rp.bindMediaToggle = function (link) {
+            // remember existing media attr for ultimate state, or default to 'all'
+            var finalMedia = link.media || 'all'
+
+            function enableStylesheet() {
+                link.media = finalMedia
+            }
+
+            // bind load handlers to enable media
+            if (link.addEventListener) {
+                link.addEventListener('load', enableStylesheet)
+            } else if (link.attachEvent) {
+                link.attachEvent('onload', enableStylesheet)
+            }
+
+            // Set rel and non-applicable media type to start an async request
+            // note: timeout allows this to happen async to let rendering continue in IE
+            setTimeout(function () {
+                link.rel = 'stylesheet'
+                link.media = 'only x'
+            })
+            // also enable media after 3 seconds,
+            // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+            setTimeout(enableStylesheet, 3000)
+        }
+
+        // loop through link elements in DOM
+        rp.poly = function () {
+            // double check this to prevent external calls from running
+            if (rp.support()) {
+                return
+            }
+            var links = w.document.getElementsByTagName('link')
+            for (var i = 0; i < links.length; i++) {
+                var link = links[i]
+                // qualify links to those with rel=preload and as=style attrs
+                if (
+                    link.rel === 'preload' &&
+                    link.getAttribute('as') === 'style' &&
+                    !link.getAttribute('data-loadcss')
+                ) {
+                    // prevent rerunning on link
+                    link.setAttribute('data-loadcss', true)
+                    // bind listeners to toggle media back
+                    rp.bindMediaToggle(link)
+                }
+            }
+        }
+
+        // if unsupported, run the polyfill
+        if (!rp.support()) {
+            // run once at least
+            rp.poly()
+
+            // rerun poly on an interval until onload
+            var run = w.setInterval(rp.poly, 500)
+            if (w.addEventListener) {
+                w.addEventListener('load', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            } else if (w.attachEvent) {
+                w.attachEvent('onload', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            }
+        }
+
+        // commonjs
+        if (typeof exports !== 'undefined') {
+            exports.loadCSS = loadCSS
+        } else {
+            w.loadCSS = loadCSS
+        }
+    })(typeof global !== 'undefined' ? global : this)
+</script>
+
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .footer-fixed-btn,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(
+            -45deg,
+            #444 0,
+            #444 80px,
+            #333 80px,
+            #333 160px
+        );
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+</style>
+
+    <link id="stylesheet-fancybox" rel="preload" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link id="stylesheet-base" rel="preload" href="/css/style.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link id="stylesheet-mobile" rel="preload" href="/css/mobile.css" as="style" onload="this.onload=null;this.rel='stylesheet';this.media='screen and (max-width: 960px)'">
+    <link id="stylesheet-theme-dark" rel="preload" href="/css/dark.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <!-- 自定义样式 -->
+    <link rel="stylesheet" href="/css/custom.css">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js" as="script">
+    <link rel="preload" href="/font/Oswald-Regular.ttf" as="font" crossorigin>
+    <link rel="preload" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" as="font" crossorigin>
+    <!-- algolia -->
+    <!-- 百度统计  -->
+    <!-- 谷歌统计  -->
+    <!-- Google tag (gtag.js) -->
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ == undefined) {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js" />')
+        }
+    </script>
+        <!-- header -->
+        <header class="header header-mobile">
+    <!-- top read progress line -->
+    <div class="header-element">
+        <div class="read-progress read-progress-feature"></div>
+    </div>
+    <!-- sidebar menu button -->
+    <div class="header-element">
+        <div class="header-sidebar-menu">
+            <div style="padding-left: 1px;">&#xe775;</div>
+        </div>
+    </div>
+    <!-- header actions -->
+    <div class="header-actions">
+        <!-- theme mode switch button -->
+        <span class="header-theme-btn header-element">
+            <i class="fas fa-adjust"></i>
+        </span>
+        <!-- back to home page text -->
+        <span class="home-link header-element">
+            <a href="/">Base Station</a>
+        </span>
+    </div>
+    <!-- toggle banner -->
+    <div class="banner">
+        <div class="blog-title header-element">
+            <a href="/">Base Station</a>
+        </div>
+        <div class="post-title header-element">
+            <a href="#" class="post-name"></a>
+        </div>
+    </div>
+</header>
+
+        <!-- fixed footer -->
+        <footer class="footer-fixed">
+    <!-- donate button -->
+
+    <!-- back to top button -->
+    <div class="footer-fixed-btn footer-fixed-btn--hidden back-top">
+        <div>&#xe639;</div>
+    </div>
+</footer>
+
+        <!-- wrapper -->
+        <div class="wrapper">
+            <div class="site-intro" style="">
+    <!-- 主页  -->
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+        </p>
+        <!-- 文章页 meta -->
+    </div>
+</div>
+
+            <script>
+  // get user agent
+  function getBrowserVersions() {
+    var u = window.navigator.userAgent
+    return {
+      userAgent: u,
+      trident: u.indexOf('Trident') > -1, //IE内核
+      presto: u.indexOf('Presto') > -1, //opera内核
+      webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+      gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+      mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+      ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+      android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+      iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+      iPad: u.indexOf('iPad') > -1, //是否为iPad
+      webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+      weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+      uc: u.indexOf('UCBrowser') > -1, //是否为android下的UC浏览器
+    }
+  }
+  var browser = {
+    versions: getBrowserVersions(),
+  }
+  console.log('userAgent: ' + browser.versions.userAgent)
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded')
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document
+        .getElementsByClassName('intro-title')[0]
+        .classList.add('intro-fade-in')
+      document
+        .getElementsByClassName('intro-subtitle')[0]
+        .classList.add('intro-fade-in')
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in')
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb() {
+    if (browser.versions.uc) {
+      console.log('UCBrowser')
+      fontLoaded()
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular'],
+        },
+        loading: function () {
+          // 所有字体开始加载
+          // console.log('font loading');
+        },
+        active: function () {
+          // 所有字体已渲染
+          fontLoaded()
+        },
+        inactive: function () {
+          // 字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout')
+          fontLoaded()
+        },
+        timeout: 5000, // Set the timeout to two seconds
+      })
+    }
+  }
+
+  function asyncErr() {
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document,
+      t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0]
+    o.src = u
+    if (cb) {
+      o.addEventListener(
+        'load',
+        function (e) {
+          cb(null, e)
+        },
+        false
+      )
+    }
+    if (err) {
+      o.addEventListener(
+        'error',
+        function (e) {
+          err(null, e)
+        },
+        false
+      )
+    }
+    s.parentNode.insertBefore(o, s)
+  }
+
+  var asyncLoadWithFallBack = function (arr, success, reject) {
+    var currReject = function () {
+      reject()
+      arr.shift()
+      if (arr.length) async(arr[0], success, currReject)
+    }
+
+    async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack(
+    [
+      'https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js',
+      'https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js',
+      "/lib/webfontloader.min.js",
+    ],
+    asyncCb,
+    asyncErr
+  )
+</script>
+
+            <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" alt="loading">
+            <div class="container container-unloaded">
+                <main class="main index-page">
+            
+        <article class="index-post">
+            <a class="abstract-title" href="/2017/05/19/2017-05-19-android_databinding/">
+                <span class="abstract-title-text">Data Binding学习笔记</span>
+            </a>
+            <div class="abstract-content">
+                前言DataBinding 出来很久了，不过现在连 MVP 都没有大规模被使用，别说写法用法更颠覆性的 DatatBinding 这样的了。但 DataBinding 这种面向 MVVM 的编程思想前端的使用已经非常普遍了，且确实给开发带来很大的便利。所以还是有必要学习和了解。
+什么是 DataBinding?简单的来说 DataBinding 是 Google 在 Android 上的一种 MVVM 的实现。MVVM 是Model-View-ViewModel的简写，它是 MVP(Model-View-Persenter) 模式与 WPF 结合的应用方式发展演变过来的一种新型架构。而 ...
+            </div>
+            <!-- read more -->
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2024/09/13">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/05/19</span>
+                </div>
+                <!-- tags -->
+                    <div class="abstract-tags" >
+        <a class="post-tag" href="javascript:void(0);" data-tags="Android">Android</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="Booklet">Booklet</a>
+</div>
+
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+            
+        <article class="index-post">
+            <a class="abstract-title" href="/2017/03/08/2017-03-08-adapter/">
+                <span class="abstract-title-text">适配器模式与外观模式</span>
+            </a>
+            <div class="abstract-content">
+                
+如果你浪费了自己的年龄，那是挺可悲的。因为你的青春只能持续一点儿时间——很短的一点儿时间。 —— 王尔德
+
+前言今天学习的设计模式为适配器模式和外观模式，至于为什么两个一起学，因为书上是这样的。至于为什么书上是这样的，就一起来回顾吧。
+正文适配器模式（adapter）**适配器模式(Adapter)**在 Android 中真是不能再常见了，因为我们所用到的很多控件都需要编写适配器给控件提供数据源，例如: ListView、RecyclerView、spinner等待呢个，至于为什么这些控件要使用适配器模式却一直不求甚解，今天就来好好思考一下。
+还记得第一节课的Duck吗，我们可以通过...
+            </div>
+            <!-- read more -->
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2024/09/13">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/03/08</span>
+                </div>
+                <!-- tags -->
+                    <div class="abstract-tags" >
+        <a class="post-tag" href="javascript:void(0);" data-tags="基础">基础</a>
+</div>
+
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+            
+        <article class="index-post">
+            <a class="abstract-title" href="/2017/02/20/2017-02-20-factory/">
+                <span class="abstract-title-text">工厂模式(factory Pettern)</span>
+            </a>
+            <div class="abstract-content">
+                前言一看日期吓一跳，已经一周多没有写笔记了。除了懒之外还是懒….其实之前认真思考过，是否应该花大量的时间去排版笔记去写 bolg，想想还是应该写下去，除了给予自己反馈增加自己的动力确实能让自己学习到的东西再梳理一遍增加知识在脑袋里的存储时间。
+正文工厂模式无论是在平时开发还是各种源码中都经常出现的，它细分为三种 :
+
+简单工厂
+工厂方法
+抽象工厂
+
+虽然分类较多，不过具体的作用都是将对象创建的过程封装起来，以便将代码从具体类解耦。重点介绍较为复杂的抽象工厂，简单工厂和工厂发方法我们应该在平时都经常用到，很容易理解。
+简单工厂那么我们先来实现一个小目标吧，比如说，开一个 🍕 披萨店！
+披...
+            </div>
+            <!-- read more -->
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2024/09/13">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/02/20</span>
+                </div>
+                <!-- tags -->
+                    <div class="abstract-tags" >
+        <a class="post-tag" href="javascript:void(0);" data-tags="基础">基础</a>
+</div>
+
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+            
+        <article class="index-post">
+            <a class="abstract-title" href="/2017/02/08/2017-02-08-decorator/">
+                <span class="abstract-title-text">装饰者模式(Decorator)</span>
+            </a>
+            <div class="abstract-content">
+                
+your internal mediocrity is the moment when you lost the faith of being excellent
+
+前言又到了学习 Head First 的时间了，今天大名鼎鼎的星巴兹咖啡找到我们，让我们帮忙更新他们的订单系统,他们现在的订单系统是这样的：
+看起来还好不是吗，简单清晰。所有的饮料都继承Beverage，具体的饮料用cost()来计算价格description来描述。但是他们遇到了一个问题，购买咖啡时候，也可以要求在其中加入各种调料，例如 : milk(牛奶)、Soy(豆浆)、Mocha(摩卡)等等。最后会更具加入的不同调...
+            </div>
+            <!-- read more -->
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2024/09/13">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/02/08</span>
+                </div>
+                <!-- tags -->
+                    <div class="abstract-tags" >
+        <a class="post-tag" href="javascript:void(0);" data-tags="基础">基础</a>
+</div>
+
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+            
+        <article class="index-post">
+            <a class="abstract-title" href="/2017/02/07/2017-02-07-observer/">
+                <span class="abstract-title-text">观察者模式(Observer Pettern)</span>
+            </a>
+            <div class="abstract-content">
+                
+在对象之间定义一对多的依赖，这样一来，当一个对象改变状态，依赖它的对象都会收到通知，并自动更新
+
+代码实现观察者模式应该是Java和Android中用到的非常多的一个设计模式了，Java还提供了Observer相关的实现类，它们在java.util.*下，但它的Observable是个实现类，我们使用时需要继承它,这样并不方便我们的使用， 今天我们就参照书籍和相关类自己实现一个传统的观察者模式。
+上一次我们公司通过策略模式(StrategyPattern)来实现了一个暂时完美的产品“Bird”。公司已经步入了正轨，名气也逐渐大了起来，气象站的老板Just找到我们想让我们帮它做一款气象站...
+            </div>
+            <!-- read more -->
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2024/09/13">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/02/07</span>
+                </div>
+                <!-- tags -->
+                    <div class="abstract-tags" >
+        <a class="post-tag" href="javascript:void(0);" data-tags="基础">基础</a>
+</div>
+
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+            
+        <article class="index-post">
+            <a class="abstract-title" href="/2017/02/06/2017-02-06-annotation/">
+                <span class="abstract-title-text">Android自定义注解</span>
+            </a>
+            <div class="abstract-content">
+                [TOC]
+原注解原注解的作用就是负责注解其他注解，Java5.0提供了四种meta-annotation,用来提供annotation类型的说明。
+java.lang.annotation
+
+@Target
+@Retention
+@Document
+@inhrited
+
+@Target作用 :  用于描述注解的使用范围
+ElementType取值 :  
+
+CONSTRUCTOR :  用于描述构造器
+FIELD : 用于描述域
+LOCAL_VARIABLE  :  用于描述局部变量
+METHOD :  用于描述方法
+PACKAGE :  用于描述包
+PARAMETER :  用于描述...
+            </div>
+            <!-- read more -->
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2024/09/13">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/02/06</span>
+                </div>
+                <!-- tags -->
+                    <div class="abstract-tags" >
+        <a class="post-tag" href="javascript:void(0);" data-tags="Android">Android</a>
+</div>
+
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+            
+        <article class="index-post">
+            <a class="abstract-title" href="/2017/02/04/2017-02-04-Strategy/">
+                <span class="abstract-title-text">策略模式(Strategy Pettern)</span>
+            </a>
+            <div class="abstract-content">
+                前言今年的读书计划正式开张了，其实过年的时候就把书单中的《了不起的盖茨比》给阅读完了，但是看完如猪八戒吃人参果——不知啥滋味。只知道大概的故事情节，书中华丽的词藻、作品的艺术和主题并不能完全体会，更别说写一些阅读后的观感了。抽空肯定是要重新阅读几遍的，所以就不把它当作已读书籍了。
+正式的阅读是从今天开始了，准备学习技术方面的书籍，但也先来点轻松的，就是这本《Head First 设计模式》。之前看过《Head First Java》书中内容通俗易懂，生动有趣是本入门的好书，设计模式呢是和那本书一起买的，买了也有些时候了，但是从学校到工作都是各种地方吃灰的角色，一直不能静下心来实践，感到十...
+            </div>
+            <!-- read more -->
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2024/09/13">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/02/04</span>
+                </div>
+                <!-- tags -->
+                    <div class="abstract-tags" >
+        <a class="post-tag" href="javascript:void(0);" data-tags="基础">基础</a>
+</div>
+
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+            
+        <article class="index-post">
+            <a class="abstract-title" href="/2017/01/24/2017-01-24-rxjava_learning_notes/">
+                <span class="abstract-title-text">RxAndroid学习笔记</span>
+            </a>
+            <div class="abstract-content">
+                
+万物始于微而后成,始于无而后生
+
+前言RxJava在项目中早就开始使用了，但是一直都是结合Retrofit来做一些简单的数据处理，和异步操作。用到操作符并不不多且对RxJava没有很清晰的概念，所以想写一篇文章将学习和用到的东西总结一下。本文并不是RxJava的理解与教学，网上这类优秀的文章已经很多了。更多的是介绍开发中需要注意的细节，和RxJava2.X的迭代。
+正文使用RxJavaRxAndorid是RxJava在Android上的一个扩展，它让我们更方便的在UI和子线程中切换。所以在日常开发中，我们一般两个库都要依赖。
+123//jcentercompile &#x27;io.r...
+            </div>
+            <!-- read more -->
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2024/09/13">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/01/24</span>
+                </div>
+                <!-- tags -->
+                    <div class="abstract-tags" >
+        <a class="post-tag" href="javascript:void(0);" data-tags="Android">Android</a>
+</div>
+
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+            
+        <article class="index-post">
+            <a class="abstract-title" href="/2017/01/23/2017-01-23-new_start/">
+                <span class="abstract-title-text">Hello Blog</span>
+            </a>
+            <div class="abstract-content">
+                
+A new start
+
+前言年底的几天公司比较轻松，想到郭神之前发过一篇使用hexo+GithubPages搭建博客的文章，就想尝试一下。就搭建了一个以 next 为主题的 blog。非常的小清新，但总感觉不够精(zhuang)细(bi)，随即又花功夫去找了别的主题。看到了黄玄的博客感觉看的非常舒适，虽然并不是hexo而是jekll构建意味着要重头再来，但秉着美即使正义的观念还是重新做了，最后就有了现在博客的样式。在此感谢黄玄的开源，感兴趣的可以去 start 一下。
+正文搭建博客的目前除了开阔新视野、尝试一下新东西，也是想要在新的一年有一个新的开始。虽然今年的我依然是个弱鸡
+
+但在...
+            </div>
+            <!-- read more -->
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2024/09/13">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/01/23</span>
+                </div>
+                <!-- tags -->
+                    <div class="abstract-tags" >
+        <a class="post-tag" href="javascript:void(0);" data-tags="生活">生活</a>
+</div>
+
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    <!-- paginator  -->
+</main>
+
+                <!-- profile -->
+            </div>
+            <footer class="footer footer-unloaded">
+    <!-- social  -->
+        <div class="social">
+                            <a href="mailto:mrchenzhaojun@gmail.com" class="iconfont-archer email" title="email" ></a>
+                <a href="//github.com/czj-dev" class="iconfont-archer github" target="_blank" title="github"></a>
+                <a href="https://www.zhihu.com/people/chen-zhao-jun-27" class="iconfont-archer zhihu" target="_blank" title="zhihu"></a>
+                <a href="https://steamcommunity.com/id/NutcrackerX" class="iconfont-archer steam" target="_blank" title="steam"></a>
+
+        </div>
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- website approve for Chinese user -->
+    <!-- 不蒜子  -->
+        <div class="busuanzi-container">
+                <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+        </div>
+</footer>
+
+        </div>
+        <!-- toc -->
+        <!-- sidebar -->
+        <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+        <div class="sidebar-panel-archives">
+    <!-- 在 ejs 中将 archive 按照时间排序 -->
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 27
+        </div>
+        <!-- search  -->
+    </div>
+    <div class="post-archive">
+            <div class="archive-year"> 2024 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/13</span>
+            <a class="archive-post-title" href="/2024/09/13/2024-09-13-program_developer_experience/">《程序员修炼之道》</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2023 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/22</span>
+            <a class="archive-post-title" href="/2023/02/22/2023-02-20-android_preload_review/">Android 列表预加载分析</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2021 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/24</span>
+            <a class="archive-post-title" href="/2021/03/24/2021-03-25-thinking/">庸碌</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2020 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/22</span>
+            <a class="archive-post-title" href="/2020/05/22/2020-05-22-note_wiki_widget/">官方文档的重要性</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/11</span>
+            <a class="archive-post-title" href="/2020/05/11/2020-05-11-flutter_depth/">Flutter 深入探索</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/30</span>
+            <a class="archive-post-title" href="/2020/04/30/2020-04-30-dart_basic/">Dart 实践（一）</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/29</span>
+            <a class="archive-post-title" href="/2020/04/29/2020-04-29-book_read_01/">《精进：如何成为一个很厉害的人》阅读笔记 01</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2020/04/27/2020-04-27-flutter_application/">Flutter 实践</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2019 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/15</span>
+            <a class="archive-post-title" href="/2019/10/15/2019-10-15-retrofit-and-okHttp/">Retrofit与OkHttp源码解析</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/11</span>
+            <a class="archive-post-title" href="/2019/10/11/2019-10-11-HTTP_The_Definitive_Guide/">HTTP 权威指南阅读笔记（一）</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2018 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/26</span>
+            <a class="archive-post-title" href="/2018/05/26/2018-05-06-gradle_learning_notes_2/">Gradle的架构和api</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/28</span>
+            <a class="archive-post-title" href="/2018/04/28/2018-05-26-gradle_learning_notes_1/">Gradle的基础概念</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/19</span>
+            <a class="archive-post-title" href="/2018/04/19/2018-04-19-memory_management/">Android 内存管理机制</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/01</span>
+            <a class="archive-post-title" href="/2018/04/01/2018-04-04-andorid_thread/">Android 的线程和线程池</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/25</span>
+            <a class="archive-post-title" href="/2018/03/25/2018-03-25-andorid_view_working_principle/">Android View 工作原理</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/19</span>
+            <a class="archive-post-title" href="/2018/03/19/2018-03-19-andorid_view_event/">Android View 事件体系</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/18</span>
+            <a class="archive-post-title" href="/2018/03/18/2018-03-18-andorid_ipc/">Android IPC 机制</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/15</span>
+            <a class="archive-post-title" href="/2018/03/15/2018-03-15-andorid_exploration_book_read_01/">Android 艺术开发探索笔记</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2017 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/19</span>
+            <a class="archive-post-title" href="/2017/05/19/2017-05-19-android_databinding/">Data Binding学习笔记</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/08</span>
+            <a class="archive-post-title" href="/2017/03/08/2017-03-08-adapter/">适配器模式与外观模式</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/20</span>
+            <a class="archive-post-title" href="/2017/02/20/2017-02-20-factory/">工厂模式(factory Pettern)</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/08</span>
+            <a class="archive-post-title" href="/2017/02/08/2017-02-08-decorator/">装饰者模式(Decorator)</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/07</span>
+            <a class="archive-post-title" href="/2017/02/07/2017-02-07-observer/">观察者模式(Observer Pettern)</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/06</span>
+            <a class="archive-post-title" href="/2017/02/06/2017-02-06-annotation/">Android自定义注解</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/04</span>
+            <a class="archive-post-title" href="/2017/02/04/2017-02-04-Strategy/">策略模式(Strategy Pettern)</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/24</span>
+            <a class="archive-post-title" href="/2017/01/24/2017-01-24-rxjava_learning_notes/">RxAndroid学习笔记</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/23</span>
+            <a class="archive-post-title" href="/2017/01/23/2017-01-23-new_start/">Hello Blog</a>
+        </li>
+            </ul>
+    </div>
+</div>
+
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+            <span class="sidebar-tag-name" data-tags="生活">
+                <span class="iconfont-archer">&#xe606;</span>
+                生活
+            </span>
+            <span class="sidebar-tag-name" data-tags="Android">
+                <span class="iconfont-archer">&#xe606;</span>
+                Android
+            </span>
+            <span class="sidebar-tag-name" data-tags="基础">
+                <span class="iconfont-archer">&#xe606;</span>
+                基础
+            </span>
+            <span class="sidebar-tag-name" data-tags="Booklet">
+                <span class="iconfont-archer">&#xe606;</span>
+                Booklet
+            </span>
+            <span class="sidebar-tag-name" data-tags="Note">
+                <span class="iconfont-archer">&#xe606;</span>
+                Note
+            </span>
+            <span class="sidebar-tag-name" data-tags="Gradle">
+                <span class="iconfont-archer">&#xe606;</span>
+                Gradle
+            </span>
+            <span class="sidebar-tag-name" data-tags="Flutter">
+                <span class="iconfont-archer">&#xe606;</span>
+                Flutter
+            </span>
+            <span class="sidebar-tag-name" data-tags="Dart">
+                <span class="iconfont-archer">&#xe606;</span>
+                Dart
+            </span>
+            <span class="sidebar-tag-name" data-tags="Book">
+                <span class="iconfont-archer">&#xe606;</span>
+                Book
+            </span>
+            <span class="sidebar-tag-name" data-tags="RecyclerView">
+                <span class="iconfont-archer">&#xe606;</span>
+                RecyclerView
+            </span>
+            <span class="sidebar-tag-name" data-tags="HTTP">
+                <span class="iconfont-archer">&#xe606;</span>
+                HTTP
+            </span>
+            <span class="sidebar-tag-name" data-tags="方法论">
+                <span class="iconfont-archer">&#xe606;</span>
+                方法论
+            </span>
+            <span class="sidebar-tag-name" data-tags="读书笔记">
+                <span class="iconfont-archer">&#xe606;</span>
+                读书笔记
+            </span>
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+        缺失模块，请参考主题文档进行安装配置：https://github.com/fi3ework/hexo-theme-archer#%E5%AE%89%E8%A3%85%E4%B8%BB%E9%A2%98
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+
+    </div>
+</div>
+
+        <!-- site-meta -->
+        <script>
+    var siteMetaRoot = "/"
+    if (siteMetaRoot === "undefined") {
+        siteMetaRoot = '/'
+    }
+    var siteMeta = {
+        url: "https://czj-dev.github.io",
+        root: siteMetaRoot,
+        author: "Nutcracker"
+    }
+</script>
+
+        <!-- import experimental options here -->
+        <!-- Custom Font -->
+    <!-- Check browser compatibility of CSS variables -->
+    <script>
+        if (browserSupportCSSVariables === undefined) {
+            var browserSupportCSSVariables = window.CSS && window.CSS.supports && window.CSS.supports('--a', 0);
+        }
+    </script>
+    <script>
+        if (browserSupportCSSVariables) {
+            var customFontName = 'Noto Sans SC:n3,n4,n5,n7'
+            var customFontUrl = 'https://fonts.googleapis.cnpmjs.org/css2?family=Noto+Sans+SC:wght@300;400;500;700&amp;display=swap'
+            if (!customFontName) {
+                console.log('Custom font name is not set or read failed');
+            }
+            if (!customFontUrl) {
+                console.log('Custom font url is not set or read failed');
+            }
+        } else {
+            console.error('Current browser doesn\'t support custom font.')
+        }
+    </script>
+    <script src="/scripts/customFontLoader.js" defer></script>
+
+        <!-- main func -->
+        <script src="/scripts/main.js"></script>
+        <!-- fancybox -->
+        <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.umd.js" onload="window.Fancybox.bind('[data-fancybox]')" defer></script>
+        <!-- algolia -->
+        <!-- busuanzi -->
+            <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+        <!-- async load share.js -->
+        <!-- mermaid -->
+    </body>
+</html>

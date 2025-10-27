@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="cn">
+    <!-- title -->
+<!-- keywords -->
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="Nutcracker">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="Nutcracker">
+        <meta name="keywords" content="Android,Live,Nutcracker">
+    <meta name="description" content="">
+    <meta name="description" content="前言DataBinding 出来很久了，不过现在连 MVP 都没有大规模被使用，别说写法用法更颠覆性的 DatatBinding 这样的了。但 DataBinding 这种面向 MVVM 的编程思想前端的使用已经非常普遍了，且确实给开发带来很大的便利。所以还是有必要学习和了解。 什么是 DataBinding?简单的来说 DataBinding 是 Google 在 Android 上的一种 MV">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Data Binding学习笔记">
+<meta property="og:url" content="https://czj-dev.github.io/2017/05/19/2017-05-19-android_databinding/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="前言DataBinding 出来很久了，不过现在连 MVP 都没有大规模被使用，别说写法用法更颠覆性的 DatatBinding 这样的了。但 DataBinding 这种面向 MVVM 的编程思想前端的使用已经非常普遍了，且确实给开发带来很大的便利。所以还是有必要学习和了解。 什么是 DataBinding?简单的来说 DataBinding 是 Google 在 Android 上的一种 MV">
+<meta property="og:locale">
+<meta property="og:image" content="http://www.cyxqd.com/wp-content/uploads/2014/10/nmwentill.jpg">
+<meta property="og:image" content="https://pic3.zhimg.com/079482e5b8748e2e566e9e4eba82e456_b.png">
+<meta property="article:published_time" content="2017-05-19T08:03:00.000Z">
+<meta property="article:modified_time" content="2024-09-13T03:38:13.727Z">
+<meta property="article:author" content="Nutcracker">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="Booklet">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://www.cyxqd.com/wp-content/uploads/2014/10/nmwentill.jpg">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="icon" href="/assets/favicon.ico">
+    <title>Data Binding学习笔记 · Base Station</title>
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+    (function (w) {
+        'use strict'
+        // rel=preload support test
+        if (!w.loadCSS) {
+            w.loadCSS = function () {}
+        }
+        // define on the loadCSS obj
+        var rp = (loadCSS.relpreload = {})
+        // rel=preload feature support test
+        // runs once and returns a function for compat purposes
+        rp.support = (function () {
+            var ret
+            try {
+                ret = w.document.createElement('link').relList.supports('preload')
+            } catch (e) {
+                ret = false
+            }
+            return function () {
+                return ret
+            }
+        })()
+
+        // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+        // then change that media back to its intended value on load
+        rp.bindMediaToggle = function (link) {
+            // remember existing media attr for ultimate state, or default to 'all'
+            var finalMedia = link.media || 'all'
+
+            function enableStylesheet() {
+                link.media = finalMedia
+            }
+
+            // bind load handlers to enable media
+            if (link.addEventListener) {
+                link.addEventListener('load', enableStylesheet)
+            } else if (link.attachEvent) {
+                link.attachEvent('onload', enableStylesheet)
+            }
+
+            // Set rel and non-applicable media type to start an async request
+            // note: timeout allows this to happen async to let rendering continue in IE
+            setTimeout(function () {
+                link.rel = 'stylesheet'
+                link.media = 'only x'
+            })
+            // also enable media after 3 seconds,
+            // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+            setTimeout(enableStylesheet, 3000)
+        }
+
+        // loop through link elements in DOM
+        rp.poly = function () {
+            // double check this to prevent external calls from running
+            if (rp.support()) {
+                return
+            }
+            var links = w.document.getElementsByTagName('link')
+            for (var i = 0; i < links.length; i++) {
+                var link = links[i]
+                // qualify links to those with rel=preload and as=style attrs
+                if (
+                    link.rel === 'preload' &&
+                    link.getAttribute('as') === 'style' &&
+                    !link.getAttribute('data-loadcss')
+                ) {
+                    // prevent rerunning on link
+                    link.setAttribute('data-loadcss', true)
+                    // bind listeners to toggle media back
+                    rp.bindMediaToggle(link)
+                }
+            }
+        }
+
+        // if unsupported, run the polyfill
+        if (!rp.support()) {
+            // run once at least
+            rp.poly()
+
+            // rerun poly on an interval until onload
+            var run = w.setInterval(rp.poly, 500)
+            if (w.addEventListener) {
+                w.addEventListener('load', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            } else if (w.attachEvent) {
+                w.attachEvent('onload', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            }
+        }
+
+        // commonjs
+        if (typeof exports !== 'undefined') {
+            exports.loadCSS = loadCSS
+        } else {
+            w.loadCSS = loadCSS
+        }
+    })(typeof global !== 'undefined' ? global : this)
+</script>
+
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .footer-fixed-btn,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(
+            -45deg,
+            #444 0,
+            #444 80px,
+            #333 80px,
+            #333 160px
+        );
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+</style>
+
+    <link id="stylesheet-fancybox" rel="preload" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link id="stylesheet-base" rel="preload" href="/css/style.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link id="stylesheet-mobile" rel="preload" href="/css/mobile.css" as="style" onload="this.onload=null;this.rel='stylesheet';this.media='screen and (max-width: 960px)'">
+    <link id="stylesheet-theme-dark" rel="preload" href="/css/dark.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <!-- 自定义样式 -->
+    <link rel="stylesheet" href="/css/custom.css">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js" as="script">
+    <link rel="preload" href="/font/Oswald-Regular.ttf" as="font" crossorigin>
+    <link rel="preload" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" as="font" crossorigin>
+    <!-- algolia -->
+    <!-- 百度统计  -->
+    <!-- 谷歌统计  -->
+    <!-- Google tag (gtag.js) -->
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ == undefined) {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js" />')
+        }
+    </script>
+        <body class="post-body">
+        <!-- header -->
+        <header class="header header-mobile">
+    <!-- top read progress line -->
+    <div class="header-element">
+        <div class="read-progress read-progress-feature"></div>
+    </div>
+    <!-- sidebar menu button -->
+    <div class="header-element">
+        <div class="header-sidebar-menu">
+            <div style="padding-left: 1px;">&#xe775;</div>
+        </div>
+    </div>
+    <!-- header actions -->
+    <div class="header-actions">
+        <!-- theme mode switch button -->
+        <span class="header-theme-btn header-element">
+            <i class="fas fa-adjust"></i>
+        </span>
+        <!-- back to home page text -->
+        <span class="home-link header-element">
+            <a href="/">Base Station</a>
+        </span>
+    </div>
+    <!-- toggle banner -->
+    <div class="banner">
+        <div class="blog-title header-element">
+            <a href="/">Base Station</a>
+        </div>
+        <div class="post-title header-element">
+            <a href="#" class="post-name">Data Binding学习笔记</a>
+        </div>
+    </div>
+</header>
+
+        <!-- fixed footer -->
+        <footer class="footer-fixed">
+    <!-- donate button -->
+
+    <!-- back to top button -->
+    <div class="footer-fixed-btn footer-fixed-btn--hidden back-top">
+        <div>&#xe639;</div>
+    </div>
+</footer>
+
+        <!-- wrapper -->
+        <div class="wrapper">
+            <div class="site-intro" style="    height:50vh;
+">
+    <!-- 主页  -->
+    <!-- 404页  -->
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/img/post-bg-alitrip.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+                Data Binding学习笔记
+            <!-- 404 -->
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+                    从零开始的Booklet(一)
+            <!-- 404 -->
+        </p>
+        <!-- 文章页 meta -->
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                    <div class="post-intro-tags" >
+        <a class="post-tag" href="javascript:void(0);" data-tags="Android">Android</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="Booklet">Booklet</a>
+</div>
+
+                <!-- 文章字数统计 -->
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">2.7k</span>阅读时长: <span class="post-count reading-time">11 min</span></span>
+                    </div>
+                <div class="post-intro-meta">
+                    <!-- 撰写日期 -->
+                    <span class="iconfont-archer post-intro-calander">&#xe676;</span>
+                    <span class="post-intro-time">2017/05/19</span>
+                    <!-- busuanzi -->
+                        <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                            <span class="iconfont-archer post-intro-busuanzi">&#xe602;</span>
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    <!-- 文章分享 -->
+                    <span class="share-wrapper">
+                        <span class="iconfont-archer share-icon">&#xe71d;</span>
+                        <span class="share-text">Share</span>
+                        <ul class="share-list">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+    </div>
+</div>
+
+            <script>
+  // get user agent
+  function getBrowserVersions() {
+    var u = window.navigator.userAgent
+    return {
+      userAgent: u,
+      trident: u.indexOf('Trident') > -1, //IE内核
+      presto: u.indexOf('Presto') > -1, //opera内核
+      webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+      gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+      mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+      ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+      android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+      iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+      iPad: u.indexOf('iPad') > -1, //是否为iPad
+      webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+      weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+      uc: u.indexOf('UCBrowser') > -1, //是否为android下的UC浏览器
+    }
+  }
+  var browser = {
+    versions: getBrowserVersions(),
+  }
+  console.log('userAgent: ' + browser.versions.userAgent)
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded')
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document
+        .getElementsByClassName('intro-title')[0]
+        .classList.add('intro-fade-in')
+      document
+        .getElementsByClassName('intro-subtitle')[0]
+        .classList.add('intro-fade-in')
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in')
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb() {
+    if (browser.versions.uc) {
+      console.log('UCBrowser')
+      fontLoaded()
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular'],
+        },
+        loading: function () {
+          // 所有字体开始加载
+          // console.log('font loading');
+        },
+        active: function () {
+          // 所有字体已渲染
+          fontLoaded()
+        },
+        inactive: function () {
+          // 字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout')
+          fontLoaded()
+        },
+        timeout: 5000, // Set the timeout to two seconds
+      })
+    }
+  }
+
+  function asyncErr() {
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document,
+      t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0]
+    o.src = u
+    if (cb) {
+      o.addEventListener(
+        'load',
+        function (e) {
+          cb(null, e)
+        },
+        false
+      )
+    }
+    if (err) {
+      o.addEventListener(
+        'error',
+        function (e) {
+          err(null, e)
+        },
+        false
+      )
+    }
+    s.parentNode.insertBefore(o, s)
+  }
+
+  var asyncLoadWithFallBack = function (arr, success, reject) {
+    var currReject = function () {
+      reject()
+      arr.shift()
+      if (arr.length) async(arr[0], success, currReject)
+    }
+
+    async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack(
+    [
+      'https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js',
+      'https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js',
+      "/lib/webfontloader.min.js",
+    ],
+    asyncCb,
+    asyncErr
+  )
+</script>
+
+            <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" alt="loading">
+            <div class="container container-unloaded">
+                <main class="main post-page">
+    <article class="article-entry">
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>DataBinding 出来很久了，不过现在连 MVP 都没有大规模被使用，别说写法用法更颠覆性的 DatatBinding 这样的了。但 DataBinding 这种面向 MVVM 的编程思想前端的使用已经非常普遍了，且确实给开发带来很大的便利。所以还是有必要学习和了解。</p>
+<h2 id="什么是-DataBinding"><a href="#什么是-DataBinding" class="headerlink" title="什么是 DataBinding?"></a>什么是 DataBinding?</h2><p>简单的来说 DataBinding 是 Google 在 Android 上的一种 MVVM 的实现。MVVM 是<code>Model-View-ViewModel</code>的简写，它是 MVP(Model-View-Persenter) 模式与 WPF 结合的应用方式发展演变过来的一种新型架构。而 WPF 主要带来的特性就是<strong>数据绑定</strong>，这也是 Data Binding 所实现的功能。</p>
+<p><img src="http://www.cyxqd.com/wp-content/uploads/2014/10/nmwentill.jpg"></p>
+<h2 id="数据绑定"><a href="#数据绑定" class="headerlink" title="数据绑定"></a>数据绑定</h2><p>数据绑定分为<strong>单项绑定</strong>和<strong>双向绑定</strong>;单向绑定就是将视图上的控件的属性绑定到一个对象的某个属性的方法，当对象的属性发生变化时直接影响到控件上；双向绑定的话就是可以互相影响——例如我们将<code>User</code>类的<code>name</code>属性绑定到<code>TextView</code>的<code>setText</code>属性上，这样当我们修改 name 的值时 setText 值也发生相应的改变，无需我们自己去 setText 更新属性。Data Binding 不仅可以帮我们在 Android 上实现这一机制，还为此附带了很多便利，减少了很多工具代码的编写。</p>
+<ul>
+<li><strong>项目更加解耦，各个组件的依赖性进一步降低，增加可复用性</strong></li>
+</ul>
+<ul>
+<li><strong>去掉 Activities&amp;Fragment 内的大部分 UI 代码</strong>，例如<code>onClickListener</code>、<code>setText</code>、<code>findViewById</code>等</li>
+<li><strong>xml 的功能增强</strong>。xml 不再只是声明 UI 的界面，还起到数据的绑定，赋值，逻辑判断等功能。</li>
+<li><strong>性能提高，减少 view id 的定义</strong>。由于数据绑定直接在 xml 产生，所以不用绞尽脑汁的其大量的名称且在绑定的时候就一次性的通过 gruop 将 view 全部获取，比单个<code>findViewById</code>更加的迅速。</li>
+</ul>
+<h2 id="搭建环境"><a href="#搭建环境" class="headerlink" title="搭建环境"></a>搭建环境</h2><p>Data Binding 在 Android Studio 1.3 版本&amp;Gradle1.5 后就内置在 IDE 中了，我们只需要在<code>gradle.project</code>中<code>Android</code>模块下声明开启 Data Binding 即可</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">android&#123;</span><br><span class="line">  ...</span><br><span class="line">    dataBinding&#123;</span><br><span class="line">      enabled=<span class="literal">true</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="基础使用"><a href="#基础使用" class="headerlink" title="基础使用"></a>基础使用</h2><h3 id="编写-View"><a href="#编写-View" class="headerlink" title="编写 View"></a>编写 View</h3><p>数据绑定需要在 xml 中声明各种关系，也可以写一些简单的运算。声明一个 data Binding Layout 只需要在原来的 layout xml 文件基础加一个标签即可:</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">layout</span>&gt;</span></span><br><span class="line">//...rootView</span><br><span class="line"><span class="tag">&lt;/<span class="name">layout</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>这样在编译时，修改后即可搜索到布局生成的对应的*Binding 类。生成的规则默认是通过 xml 的文件名生成，例如<code>activity_main.xml</code>就会对应生成为<code>ActivityMainBinding.java</code>的文件。当然我们也可以指定自定生成的文件名称，需要在<code>layout</code>标签下加入<code>data</code>标签并指定<code>class</code>属性即可(生成 LoginBinding.java)，除此之外<code>data</code>也是我们声明变量的地方，稍后再详细介绍。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">data</span> <span class="attr">class</span>=<span class="string">&quot;login&quot;</span>&gt;</span></span><br><span class="line">....</span><br><span class="line"><span class="tag">&lt;/<span class="name">data</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>我们来编写一个简单的登录界面:</p>
+<p>先使用<code>variable</code>绑定我们所需要的对象。<code>type</code>为该对象的地址,<code>name</code>则随意命名。这里我们声明了一个<code>Action</code>和<code>Presenter</code>,<code>Action</code>用于绑定数据，<code>Presenter</code>则用来绑定一些事件和做逻辑处理。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">layout</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">data</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">variable</span></span></span><br><span class="line"><span class="tag">            <span class="attr">name</span>=<span class="string">&quot;presenter&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">type</span>=<span class="string">&quot;com.example.qhfax.databindingexample.presenter.MainPresenter&quot;</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">variable</span></span></span><br><span class="line"><span class="tag">            <span class="attr">name</span>=<span class="string">&quot;action&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">type</span>=<span class="string">&quot;com.example.qhfax.databindingexample.bean.Action&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">data</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  //...rootView</span><br><span class="line">  <span class="tag">&lt;/<span class="name">layout</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>声明好对象后，我们就开始将对象绑定到数据源上。在 Data Binding 中，我们绑定数据需要使用<code>@&#123;code&#125;</code>书写，向插件声明这是一个表达式。这里我们将<code>name</code>属性绑定到<code>TextView</code>的<code>setText</code>上。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">TextView</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_width</span>=<span class="string">&quot;63dp&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_height</span>=<span class="string">&quot;wrap_content&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_marginLeft</span>=<span class="string">&quot;8dp&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_marginRight</span>=<span class="string">&quot;8dp&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_marginTop</span>=<span class="string">&quot;60dp&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:gravity</span>=<span class="string">&quot;center&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:text</span>=<span class="string">&quot;@&#123;action.name&#125;&quot;</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>之后在 Activity 中我们需要使用<code>DataBindingUtil</code>获取<code>ActivityMainDataBinding</code>的实例</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ActivityMainDataBinding mMainBind=DataBindingUtil.setContentView(<span class="built_in">this</span>,R.layout.activity_main);</span><br></pre></td></tr></table></figure>
+
+<p>然后去绑定对象</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Action</span> <span class="variable">action</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Action</span>();</span><br><span class="line">action.setName(<span class="string">&quot;用户名：&quot;</span>);</span><br><span class="line">mMainBind.setAction(action)</span><br><span class="line">mMainBind.setPersenter(persenter);</span><br></pre></td></tr></table></figure>
+
+<p>运行后就可以发现<code>TextView</code>就直接被赋值啦。</p>
+<h3 id="绑定的原理"><a href="#绑定的原理" class="headerlink" title="绑定的原理"></a>绑定的原理</h3><p>嗯….我们可以先观察一下目前的流程是怎么走下来的；</p>
+<ol>
+<li><p>在<code>xml</code>文件中绑定控件，然后插件会根据<code>layout</code>生成对应的实体类。通过 DataBindingUtli 来构建对应的 Bind 实例，查看 DataBindingUtil 的代码会发现的工作实现十分简单，将属性和 view 集合传递给我们的 DataBinding:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//查找到布局ViewGruop</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;T <span class="keyword">extends</span> <span class="title class_">ViewDataBinding</span>&gt; T <span class="title function_">setContentView</span><span class="params">(Activity activity, <span class="type">int</span> layoutId,</span></span><br><span class="line"><span class="params">            DataBindingComponent bindingComponent)</span> &#123;</span><br><span class="line">        activity.setContentView(layoutId);</span><br><span class="line">        <span class="type">View</span> <span class="variable">decorView</span> <span class="operator">=</span> activity.getWindow().getDecorView();</span><br><span class="line">        <span class="type">ViewGroup</span> <span class="variable">contentView</span> <span class="operator">=</span> (ViewGroup) decorView.findViewById(android.R.id.content);</span><br><span class="line">        <span class="keyword">return</span> bindToAddedViews(bindingComponent, contentView, <span class="number">0</span>, layoutId);</span><br><span class="line"><span class="comment">//遍历所有的View然后调用ViewDataBinding.Bind方法将数据传给我们的实体类`ActivityMainDataBinding`</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> &lt;T <span class="keyword">extends</span> <span class="title class_">ViewDataBinding</span>&gt; T <span class="title function_">bindToAddedViews</span><span class="params">(DataBindingComponent 			component, ViewGroup parent, <span class="type">int</span> startChildren, <span class="type">int</span> layoutId)</span> &#123;</span><br><span class="line">    <span class="keyword">final</span> <span class="type">int</span> <span class="variable">endChildren</span> <span class="operator">=</span> parent.getChildCount();</span><br><span class="line">    <span class="keyword">final</span> <span class="type">int</span> <span class="variable">childrenAdded</span> <span class="operator">=</span> endChildren - startChildren;</span><br><span class="line">    <span class="keyword">if</span> (childrenAdded == <span class="number">1</span>) &#123;</span><br><span class="line">        <span class="keyword">final</span> <span class="type">View</span> <span class="variable">childView</span> <span class="operator">=</span> parent.getChildAt(endChildren - <span class="number">1</span>);</span><br><span class="line">        <span class="keyword">return</span> bind(component, childView, layoutId);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">final</span> View[] children = <span class="keyword">new</span> <span class="title class_">View</span>[childrenAdded];</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; childrenAdded; i++) &#123;</span><br><span class="line">            children[i] = parent.getChildAt(i + startChildren);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> bind(component, children, layoutId);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​</p>
+</li>
+<li><p>通过 Bind 实例绑定数据源，关联控件发生改变。那么数据绑定与刷新又是如何发生的呢？在源码中我们可以发现最终应该是调用了<code>ActivityMainBinding</code>的<code>executeBindings()</code>方法来执行控件刷新的，源码并不复杂。</p>
+</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">executeBindings</span><span class="params">()</span> &#123;</span><br><span class="line">  <span class="comment">//dirtyFlags的作用主要是通过位运算来判断控件的数据源对象是否被绑定，这里我们就不关心具体实现。</span></span><br><span class="line">       <span class="type">long</span> <span class="variable">dirtyFlags</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">       <span class="keyword">synchronized</span>(<span class="built_in">this</span>) &#123;</span><br><span class="line">           dirtyFlags = mDirtyFlags;</span><br><span class="line">           mDirtyFlags = <span class="number">0</span>;</span><br><span class="line">       &#125;</span><br><span class="line">  		com.example.qhfax.databindingexample.bean.<span class="type">Action</span> <span class="variable">action</span> <span class="operator">=</span> mAction;</span><br><span class="line">  		java.lang.<span class="type">String</span> <span class="variable">actionName</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line"> 		 <span class="keyword">if</span> ((dirtyFlags &amp; <span class="number">0x6L</span>) != <span class="number">0</span>) &#123;</span><br><span class="line">               <span class="keyword">if</span> (action != <span class="literal">null</span>) &#123;</span><br><span class="line">                   <span class="comment">// read action.name</span></span><br><span class="line">                   actionName = action.getName();</span><br><span class="line">               &#125;</span><br><span class="line">     	  &#125;</span><br><span class="line">   <span class="keyword">if</span> ((dirtyFlags &amp; <span class="number">0x6L</span>) != <span class="number">0</span>) &#123;</span><br><span class="line">     <span class="comment">// 将我们的textView传递到bindAdapter中进行赋值，由于我们没有给TextView声明ID所有名称是由插件自己生成的名称。</span></span><br><span class="line">    android.databinding.adapters.TextViewBindingAdapter.setText(<span class="built_in">this</span>.mboundView2, actionName);</span><br><span class="line">     &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以见看出代码十分的简洁，功能实现都在适配器中进行，这样可以保证情况再复杂代码的可阅读性和适配性也不会层级递增。<code>TextViewBindingAdapter.setText</code>方法也就是让<code>mboundView2</code>调用<code>setText</code>方法显示<code>actionName</code>的值，至于 Adapter 的整体的具体实现等到自定义 Adapter 时候我们再解析。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@BindingAdapter(&quot;android:text&quot;)</span></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">setText</span><span class="params">(TextView view, CharSequence text)</span> &#123;</span><br><span class="line">      <span class="keyword">final</span> <span class="type">CharSequence</span> <span class="variable">oldText</span> <span class="operator">=</span> view.getText();</span><br><span class="line">      <span class="keyword">if</span> (text == oldText || (text == <span class="literal">null</span> &amp;&amp; oldText.length() == <span class="number">0</span>)) &#123;</span><br><span class="line">      <span class="comment">//....各种约束判断</span></span><br><span class="line">      &#125;</span><br><span class="line">      view.setText(text);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="真正的单向绑定"><a href="#真正的单向绑定" class="headerlink" title="真正的单向绑定"></a>真正的单向绑定</h3><p>如果你也在写 Example 就会发现一个问题，当<code>Action</code>绑定后，后续<code>Action</code>的改变并不会让 UI 更新即 Observable(观察者模式)并没有实现。这显然不是我们想要达到的目的。</p>
+<p><img src="https://pic3.zhimg.com/079482e5b8748e2e566e9e4eba82e456_b.png"></p>
+<p>在 Data Binding 想要一个 View Model 被控件订阅就需要它继承<code>BaseObservable</code>，这样当<code>Action</code>每次改变的时候我们就通知控件数据被改变了，然后控件自己调用相关属性的方法去更新数据。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Action</span> <span class="keyword">extends</span> <span class="title class_">BaseObservable</span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">  <span class="comment">//通过在get方法上Bindable注解让BR生成对应的flag，确定如何刷新name值</span></span><br><span class="line">    <span class="meta">@Bindable</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getName</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setName</span><span class="params">(String name)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.name = name;</span><br><span class="line">      <span class="comment">//当我们改变值刷新UI，notifyChange()是通知所有订阅者，即使用了actino类中任意绑定了属性都会受到刷新的命令；notifyPropertyChanged()就很明显是通过flag进行单独刷新。</span></span><br><span class="line">       <span class="comment">//notifyChange();</span></span><br><span class="line">        notifyPropertyChanged(BR.name);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果 View Model 已经有继承父类我们也可以通过对绑定的属性单独的声明 Observable。DataBinding 提供了除了基础类型外还有 ObservableParcalable 与 ObservableField 来解决大多数场景遇到的对象属性。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Action</span> &#123;</span><br><span class="line">  <span class="keyword">private</span> ObservableField&lt;String&gt; name =<span class="keyword">new</span> <span class="title class_">ObservableField</span>&lt;&gt;();</span><br><span class="line">  <span class="keyword">private</span> <span class="type">ObservableInt</span> <span class="variable">age</span> <span class="operator">=</span><span class="keyword">new</span> <span class="title class_">ObservableInt</span>();</span><br><span class="line"></span><br><span class="line">  <span class="comment">//这样做的弊端是我们无法直接访问到属性值，需要通过Observable的get/set方法</span></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setName</span><span class="params">(String name)</span>&#123;</span><br><span class="line">    <span class="built_in">this</span>.name.set(name);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">public</span> String <span class="title function_">getName</span><span class="params">()</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">this</span>.name.get();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样的话，当我们运行时候控件和数据的联系就建立起来了，更新<code>name</code>的同时 TextView 的<code>text</code>也会同时发生变化。</p>
+<p>数据源一定要写个实体类吗，那么不是需要成吨的 bean ? 我们可以通过 ObservableArrayMap 和 ObservableArrayList 来创建观察者和需要观察的数据。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ObservableArrayMap&lt;String,Object&gt; action = <span class="keyword">new</span> <span class="title class_">ObseravbleArryMap</span>&lt;&gt;();</span><br><span class="line">action.put(<span class="string">&quot;name&quot;</span>,<span class="string">&quot;just&quot;</span>);</span><br><span class="line">action.put(<span class="string">&quot;password&quot;</span>,<span class="string">&quot;gbk&quot;</span>)</span><br><span class="line"><span class="type">ObservableArryList</span> <span class="variable">list</span> <span class="operator">=</span><span class="keyword">new</span> <span class="title class_">ObservableArryList</span>&lt;&gt;();</span><br><span class="line">list.add(<span class="string">&quot;first&quot;</span>);</span><br><span class="line">list.add(<span class="string">&quot;second&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>在 xml 中我们通过 key 和 index 访问他们</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">variable</span> <span class="attr">name</span>=<span class="string">&quot;action&quot;</span></span></span><br><span class="line"><span class="tag">          <span class="attr">type</span>=<span class="string">&quot;android.databinding.ObserableMap&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">variable</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">ariable</span> <span class="attr">name</span>=<span class="string">&quot;user&quot;</span></span></span><br><span class="line"><span class="tag">         <span class="attr">type</span>=<span class="string">&quot;android.databing.ObservableList&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">ariable</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">TextView</span></span></span><br><span class="line"><span class="tag">          <span class="attr">android:text</span>=<span class="string">&quot;@&#123;action[&quot;</span><span class="attr">name</span>&quot;]&quot;</span></span><br><span class="line"><span class="tag">          <span class="attr">android:layout_width</span>=<span class="string">&quot;wrap_content&quot;</span></span></span><br><span class="line"><span class="tag">          <span class="attr">android:layout_height</span>=<span class="string">&quot;wrap_content&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">TextView</span></span></span><br><span class="line"><span class="tag">          <span class="attr">android:text</span>=<span class="string">&quot;@&#123;user[1]&quot;</span></span></span><br><span class="line"><span class="tag">          <span class="attr">android:layout_width</span>=<span class="string">&quot;wrap_content&quot;</span></span></span><br><span class="line"><span class="tag">          <span class="attr">android:layout_height</span>=<span class="string">&quot;wrap_content&quot;</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="事件绑定"><a href="#事件绑定" class="headerlink" title="事件绑定"></a>事件绑定</h3><p>我们除了可以绑定 View 各种属性外，我们也可以在 xml 中直接绑定事件，而不用通过 View 转发。</p>
+<p>我们在 Presenter 中创建一个监听文本的方法，然后在 xml 中设置<code>onTextChanged</code>属性，方法名必须和对应的 listener 对应.</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">EditText</span></span></span><br><span class="line"><span class="tag">  <span class="attr">android:layout_width</span>=<span class="string">&quot;wrap_content&quot;</span></span></span><br><span class="line"><span class="tag">  <span class="attr">android:layout_height</span>=<span class="string">&quot;wrap_content&quot;</span></span></span><br><span class="line"><span class="tag">  <span class="attr">android:onTextChanged</span>=<span class="string">&quot;@&#123;presenter::onTextChanged&#125;&quot;</span></span></span><br><span class="line"><span class="tag">  /&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>将 Presenter 绑定在 Activity 上后，就可以接受到 EditText 的改变了</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Presenter</span>&#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onTextChanged</span><span class="params">(charSequence s,in start ,<span class="type">int</span> before,<span class="type">int</span> count)</span>&#123;</span><br><span class="line">    mView.show(s.toString())</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="表达式"><a href="#表达式" class="headerlink" title="表达式"></a>表达式</h3><p>在 xml 中的 dataBinding 表达式支持 Java 中的大部分语法，具体如下：</p>
+<ul>
+<li>算数 <code>+-*/%</code></li>
+<li>字符串合并<code>+</code></li>
+<li>逻辑运算 <code>&amp;&amp;||</code></li>
+<li>二元<code>&amp;|^</code></li>
+<li>一元<code>+-!~</code></li>
+<li>位移<code>&gt;&gt; &gt;&gt;&gt; &gt;&gt;</code></li>
+<li>比较<code>== &gt; &lt;&gt; = &lt;=</code></li>
+<li>instanceof 操作符</li>
+<li>Grouping（）</li>
+<li>文字</li>
+<li>Cast 类型转换</li>
+<li>方法调用</li>
+<li>属性访问</li>
+<li>数组访问</li>
+<li>三目运算符<code>？：</code></li>
+</ul>
+<p>尚不支持<code>super</code>、<code>this</code>、<code>new</code>、以及显示的泛型调用。</p>
+<p>同时由于在表达式在字符串中声明的，一些特殊字符的转义也是不可避免的。</p>
+<table>
+<thead>
+<tr>
+<th align="center">结果</th>
+<th align="center">转义字符</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">空格</td>
+<td align="center"><code>&amp;nbsp;</code></td>
+</tr>
+<tr>
+<td align="center">&lt;</td>
+<td align="center"><code>&amp;t;</code></td>
+</tr>
+<tr>
+<td align="center">&gt;</td>
+<td align="center"><code>&amp;gt;</code></td>
+</tr>
+<tr>
+<td align="center">&amp;</td>
+<td align="center"><code>&amp;amp;</code></td>
+</tr>
+<tr>
+<td align="center">“</td>
+<td align="center"><code>&amp;quot;</code></td>
+</tr>
+<tr>
+<td align="center">&#96;</td>
+<td align="center"><code>&amp;apos;</code></td>
+</tr>
+<tr>
+<td align="center">x</td>
+<td align="center"><code>&amp;divide</code></td>
+</tr>
+</tbody></table>
+<p>除此 java 的这些语法支持外还有一些特殊的支持。</p>
+<ul>
+<li><p>空合并运算符——使用<code>??</code>来连接两个式子，如果左边的式子为空就取右边的。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">android:text=&quot;@&#123;user.name??user.realName&#125;&quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>直接访问资源文件——可以通过&#96;@resource&#x2F;name 的形式访问资源文件来直接使用</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">android:text=&quot;@&#123;@String/name(name)&#125;&quot;</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span> <span class="attr">name</span>=<span class="string">&quot;name&quot;</span>&gt;</span>我的名字是%s<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="include"><a href="#include" class="headerlink" title="include"></a>include</h3><p>在使用 include 布局时候需要将该布局使用的数据通过<code>bind:xxx=@&#123;&#125;</code>传递进去，并在布局中进行二次绑定。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">include</span> <span class="attr">layout</span>=<span class="string">&quot;@layout/empty&quot;</span> <span class="attr">bind:info</span>=<span class="string">&quot;@&#123;info&#125;&quot;</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+
+    </article>
+    <!-- license -->
+        <div class="license-wrapper">
+            <p>原文作者：<a href="https://czj-dev.github.io">Nutcracker</a>
+            <p>原文链接：<a href="https://czj-dev.github.io/2017/05/19/2017-05-19-android_databinding/">https://czj-dev.github.io/2017/05/19/2017-05-19-android_databinding/</a>
+            <p>发表日期：<a href="https://czj-dev.github.io/2017/05/19/2017-05-19-android_databinding/">May 19th 2017, 4:03:00 pm</a>
+            <p>更新日期：<a href="https://czj-dev.github.io/2017/05/19/2017-05-19-android_databinding/">September 13th 2024, 11:38:13 am</a>
+            <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    <!-- paginator -->
+    <ul class="post-paginator">
+        <li class="next">
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2018/03/15/2018-03-15-andorid_exploration_book_read_01/" title="Android 艺术开发探索笔记">
+                    <div class="nextTitle">Android 艺术开发探索笔记</div>
+                </a>
+        </li>
+        <li class="previous">
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2017/03/08/2017-03-08-adapter/" title="适配器模式与外观模式">
+                    <div class="prevTitle">适配器模式与外观模式</div>
+                </a>
+        </li>
+    </ul>
+    <!-- comment -->
+        <div class="post-comment">
+            <!-- 来必力 City 版安装代码 -->
+
+            
+            
+            
+            <!-- utteranc评论 -->
+
+            <!-- partial('_partial/comment/changyan') -->
+            <!--PC版-->
+
+            
+                <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+    <div id="comment"></div>
+    <script>
+        new Valine({
+            el: '#comment',
+            notify:false,
+            verify:false,
+            appId: "IiPsw8Ob4JVxOMx3gayw548j-gzGzoHsz",
+            appKey: "0mXzTUSWpgkGqAO5TN7XfdtN",
+            placeholder: "",
+            path:window.location.pathname,
+            avatar:'mm'
+        });
+    </script>
+
+            
+        </div>
+    <!-- timeliness note -->
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+    <!-- Mathjax -->
+</main>
+
+                <!-- profile -->
+            </div>
+            <footer class="footer footer-unloaded">
+    <!-- social  -->
+        <div class="social">
+                            <a href="mailto:mrchenzhaojun@gmail.com" class="iconfont-archer email" title="email" ></a>
+                <a href="//github.com/czj-dev" class="iconfont-archer github" target="_blank" title="github"></a>
+                <a href="https://www.zhihu.com/people/chen-zhao-jun-27" class="iconfont-archer zhihu" target="_blank" title="zhihu"></a>
+                <a href="https://steamcommunity.com/id/NutcrackerX" class="iconfont-archer steam" target="_blank" title="steam"></a>
+
+        </div>
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- website approve for Chinese user -->
+    <!-- 不蒜子  -->
+        <div class="busuanzi-container">
+                <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+        </div>
+</footer>
+
+        </div>
+        <!-- toc -->
+            <div class="toc-wrapper toc-wrapper-loding" style=    top:50vh;
+>
+                <div class="toc-catalog">
+                    <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+                </div>
+                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF-DataBinding"><span class="toc-number">2.</span> <span class="toc-text">什么是 DataBinding?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E7%BB%91%E5%AE%9A"><span class="toc-number">3.</span> <span class="toc-text">数据绑定</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83"><span class="toc-number">4.</span> <span class="toc-text">搭建环境</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E7%A1%80%E4%BD%BF%E7%94%A8"><span class="toc-number">5.</span> <span class="toc-text">基础使用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%96%E5%86%99-View"><span class="toc-number">5.1.</span> <span class="toc-text">编写 View</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%91%E5%AE%9A%E7%9A%84%E5%8E%9F%E7%90%86"><span class="toc-number">5.2.</span> <span class="toc-text">绑定的原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9C%9F%E6%AD%A3%E7%9A%84%E5%8D%95%E5%90%91%E7%BB%91%E5%AE%9A"><span class="toc-number">5.3.</span> <span class="toc-text">真正的单向绑定</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8B%E4%BB%B6%E7%BB%91%E5%AE%9A"><span class="toc-number">5.4.</span> <span class="toc-text">事件绑定</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="toc-number">5.5.</span> <span class="toc-text">表达式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#include"><span class="toc-number">5.6.</span> <span class="toc-text">include</span></a></li></ol></li></ol>
+            </div>
+        <!-- sidebar -->
+        <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+        <div class="sidebar-panel-archives">
+    <!-- 在 ejs 中将 archive 按照时间排序 -->
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 27
+        </div>
+        <!-- search  -->
+    </div>
+    <div class="post-archive">
+            <div class="archive-year"> 2024 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/13</span>
+            <a class="archive-post-title" href="/2024/09/13/2024-09-13-program_developer_experience/">《程序员修炼之道》</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2023 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/22</span>
+            <a class="archive-post-title" href="/2023/02/22/2023-02-20-android_preload_review/">Android 列表预加载分析</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2021 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/24</span>
+            <a class="archive-post-title" href="/2021/03/24/2021-03-25-thinking/">庸碌</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2020 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/22</span>
+            <a class="archive-post-title" href="/2020/05/22/2020-05-22-note_wiki_widget/">官方文档的重要性</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/11</span>
+            <a class="archive-post-title" href="/2020/05/11/2020-05-11-flutter_depth/">Flutter 深入探索</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/30</span>
+            <a class="archive-post-title" href="/2020/04/30/2020-04-30-dart_basic/">Dart 实践（一）</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/29</span>
+            <a class="archive-post-title" href="/2020/04/29/2020-04-29-book_read_01/">《精进：如何成为一个很厉害的人》阅读笔记 01</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2020/04/27/2020-04-27-flutter_application/">Flutter 实践</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2019 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/15</span>
+            <a class="archive-post-title" href="/2019/10/15/2019-10-15-retrofit-and-okHttp/">Retrofit与OkHttp源码解析</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/11</span>
+            <a class="archive-post-title" href="/2019/10/11/2019-10-11-HTTP_The_Definitive_Guide/">HTTP 权威指南阅读笔记（一）</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2018 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/26</span>
+            <a class="archive-post-title" href="/2018/05/26/2018-05-06-gradle_learning_notes_2/">Gradle的架构和api</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/28</span>
+            <a class="archive-post-title" href="/2018/04/28/2018-05-26-gradle_learning_notes_1/">Gradle的基础概念</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/19</span>
+            <a class="archive-post-title" href="/2018/04/19/2018-04-19-memory_management/">Android 内存管理机制</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/01</span>
+            <a class="archive-post-title" href="/2018/04/01/2018-04-04-andorid_thread/">Android 的线程和线程池</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/25</span>
+            <a class="archive-post-title" href="/2018/03/25/2018-03-25-andorid_view_working_principle/">Android View 工作原理</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/19</span>
+            <a class="archive-post-title" href="/2018/03/19/2018-03-19-andorid_view_event/">Android View 事件体系</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/18</span>
+            <a class="archive-post-title" href="/2018/03/18/2018-03-18-andorid_ipc/">Android IPC 机制</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/15</span>
+            <a class="archive-post-title" href="/2018/03/15/2018-03-15-andorid_exploration_book_read_01/">Android 艺术开发探索笔记</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2017 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/19</span>
+            <a class="archive-post-title" href="/2017/05/19/2017-05-19-android_databinding/">Data Binding学习笔记</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/08</span>
+            <a class="archive-post-title" href="/2017/03/08/2017-03-08-adapter/">适配器模式与外观模式</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/20</span>
+            <a class="archive-post-title" href="/2017/02/20/2017-02-20-factory/">工厂模式(factory Pettern)</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/08</span>
+            <a class="archive-post-title" href="/2017/02/08/2017-02-08-decorator/">装饰者模式(Decorator)</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/07</span>
+            <a class="archive-post-title" href="/2017/02/07/2017-02-07-observer/">观察者模式(Observer Pettern)</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/06</span>
+            <a class="archive-post-title" href="/2017/02/06/2017-02-06-annotation/">Android自定义注解</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/04</span>
+            <a class="archive-post-title" href="/2017/02/04/2017-02-04-Strategy/">策略模式(Strategy Pettern)</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/24</span>
+            <a class="archive-post-title" href="/2017/01/24/2017-01-24-rxjava_learning_notes/">RxAndroid学习笔记</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/23</span>
+            <a class="archive-post-title" href="/2017/01/23/2017-01-23-new_start/">Hello Blog</a>
+        </li>
+            </ul>
+    </div>
+</div>
+
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+            <span class="sidebar-tag-name" data-tags="生活">
+                <span class="iconfont-archer">&#xe606;</span>
+                生活
+            </span>
+            <span class="sidebar-tag-name" data-tags="Android">
+                <span class="iconfont-archer">&#xe606;</span>
+                Android
+            </span>
+            <span class="sidebar-tag-name" data-tags="基础">
+                <span class="iconfont-archer">&#xe606;</span>
+                基础
+            </span>
+            <span class="sidebar-tag-name" data-tags="Booklet">
+                <span class="iconfont-archer">&#xe606;</span>
+                Booklet
+            </span>
+            <span class="sidebar-tag-name" data-tags="Note">
+                <span class="iconfont-archer">&#xe606;</span>
+                Note
+            </span>
+            <span class="sidebar-tag-name" data-tags="Gradle">
+                <span class="iconfont-archer">&#xe606;</span>
+                Gradle
+            </span>
+            <span class="sidebar-tag-name" data-tags="Flutter">
+                <span class="iconfont-archer">&#xe606;</span>
+                Flutter
+            </span>
+            <span class="sidebar-tag-name" data-tags="Dart">
+                <span class="iconfont-archer">&#xe606;</span>
+                Dart
+            </span>
+            <span class="sidebar-tag-name" data-tags="Book">
+                <span class="iconfont-archer">&#xe606;</span>
+                Book
+            </span>
+            <span class="sidebar-tag-name" data-tags="RecyclerView">
+                <span class="iconfont-archer">&#xe606;</span>
+                RecyclerView
+            </span>
+            <span class="sidebar-tag-name" data-tags="HTTP">
+                <span class="iconfont-archer">&#xe606;</span>
+                HTTP
+            </span>
+            <span class="sidebar-tag-name" data-tags="方法论">
+                <span class="iconfont-archer">&#xe606;</span>
+                方法论
+            </span>
+            <span class="sidebar-tag-name" data-tags="读书笔记">
+                <span class="iconfont-archer">&#xe606;</span>
+                读书笔记
+            </span>
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+        缺失模块，请参考主题文档进行安装配置：https://github.com/fi3ework/hexo-theme-archer#%E5%AE%89%E8%A3%85%E4%B8%BB%E9%A2%98
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+
+    </div>
+</div>
+
+        <!-- site-meta -->
+        <script>
+    var siteMetaRoot = "/"
+    if (siteMetaRoot === "undefined") {
+        siteMetaRoot = '/'
+    }
+    var siteMeta = {
+        url: "https://czj-dev.github.io",
+        root: siteMetaRoot,
+        author: "Nutcracker"
+    }
+</script>
+
+        <!-- import experimental options here -->
+        <!-- Custom Font -->
+    <!-- Check browser compatibility of CSS variables -->
+    <script>
+        if (browserSupportCSSVariables === undefined) {
+            var browserSupportCSSVariables = window.CSS && window.CSS.supports && window.CSS.supports('--a', 0);
+        }
+    </script>
+    <script>
+        if (browserSupportCSSVariables) {
+            var customFontName = 'Noto Sans SC:n3,n4,n5,n7'
+            var customFontUrl = 'https://fonts.googleapis.cnpmjs.org/css2?family=Noto+Sans+SC:wght@300;400;500;700&amp;display=swap'
+            if (!customFontName) {
+                console.log('Custom font name is not set or read failed');
+            }
+            if (!customFontUrl) {
+                console.log('Custom font url is not set or read failed');
+            }
+        } else {
+            console.error('Current browser doesn\'t support custom font.')
+        }
+    </script>
+    <script src="/scripts/customFontLoader.js" defer></script>
+
+        <!-- main func -->
+        <script src="/scripts/main.js"></script>
+        <!-- fancybox -->
+        <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.umd.js" onload="window.Fancybox.bind('[data-fancybox]')" defer></script>
+        <!-- algolia -->
+        <!-- busuanzi -->
+            <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+        <!-- async load share.js -->
+            <script src="/scripts/share.js" async></script>
+        <!-- mermaid -->
+            <script src='https://cdn.jsdelivr.net/npm/mermaid@8.11.0/dist/mermaid.min.js' onload="window.mermaid.initialize({theme: 'dark'})" async></script>
+    </body>
+</html>

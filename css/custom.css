@@ -1,0 +1,9 @@
+/* 自定义样式 - 隐藏about页面标题 */
+.about-page .intro-title {
+    display: none !important;
+}
+
+/* 可选：调整about页面的副标题位置 */
+.about-page .intro-subtitle {
+    margin-top: 0;
+}

@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="cn">
+    <!-- title -->
+<!-- keywords -->
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="Nutcracker">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="Nutcracker">
+        <meta name="keywords" content="Android,Live,Nutcracker">
+    <meta name="description" content="">
+    <meta name="description" content="###activity的生命周期 activity a 启动 activity b 然后返回activity a 再返回到桌面 它们的生命周期是怎样变化的? A onCreate —&gt; A onStart —&gt; A onResume —&gt; 跳转 —&gt; A onPause —&gt; B onCreate —&gt; B onStart —&gt; B onResume —&amp;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android 艺术开发探索笔记">
+<meta property="og:url" content="https://czj-dev.github.io/2018/03/15/2018-03-15-andorid_exploration_book_read_01/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="###activity的生命周期 activity a 启动 activity b 然后返回activity a 再返回到桌面 它们的生命周期是怎样变化的? A onCreate —&gt; A onStart —&gt; A onResume —&gt; 跳转 —&gt; A onPause —&gt; B onCreate —&gt; B onStart —&gt; B onResume —&amp;">
+<meta property="og:locale">
+<meta property="article:published_time" content="2018-03-15T05:30:00.000Z">
+<meta property="article:modified_time" content="2024-09-13T03:38:13.727Z">
+<meta property="article:author" content="Nutcracker">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="Note">
+<meta name="twitter:card" content="summary">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="icon" href="/assets/favicon.ico">
+    <title>Android 艺术开发探索笔记 · Base Station</title>
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+    (function (w) {
+        'use strict'
+        // rel=preload support test
+        if (!w.loadCSS) {
+            w.loadCSS = function () {}
+        }
+        // define on the loadCSS obj
+        var rp = (loadCSS.relpreload = {})
+        // rel=preload feature support test
+        // runs once and returns a function for compat purposes
+        rp.support = (function () {
+            var ret
+            try {
+                ret = w.document.createElement('link').relList.supports('preload')
+            } catch (e) {
+                ret = false
+            }
+            return function () {
+                return ret
+            }
+        })()
+
+        // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+        // then change that media back to its intended value on load
+        rp.bindMediaToggle = function (link) {
+            // remember existing media attr for ultimate state, or default to 'all'
+            var finalMedia = link.media || 'all'
+
+            function enableStylesheet() {
+                link.media = finalMedia
+            }
+
+            // bind load handlers to enable media
+            if (link.addEventListener) {
+                link.addEventListener('load', enableStylesheet)
+            } else if (link.attachEvent) {
+                link.attachEvent('onload', enableStylesheet)
+            }
+
+            // Set rel and non-applicable media type to start an async request
+            // note: timeout allows this to happen async to let rendering continue in IE
+            setTimeout(function () {
+                link.rel = 'stylesheet'
+                link.media = 'only x'
+            })
+            // also enable media after 3 seconds,
+            // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+            setTimeout(enableStylesheet, 3000)
+        }
+
+        // loop through link elements in DOM
+        rp.poly = function () {
+            // double check this to prevent external calls from running
+            if (rp.support()) {
+                return
+            }
+            var links = w.document.getElementsByTagName('link')
+            for (var i = 0; i < links.length; i++) {
+                var link = links[i]
+                // qualify links to those with rel=preload and as=style attrs
+                if (
+                    link.rel === 'preload' &&
+                    link.getAttribute('as') === 'style' &&
+                    !link.getAttribute('data-loadcss')
+                ) {
+                    // prevent rerunning on link
+                    link.setAttribute('data-loadcss', true)
+                    // bind listeners to toggle media back
+                    rp.bindMediaToggle(link)
+                }
+            }
+        }
+
+        // if unsupported, run the polyfill
+        if (!rp.support()) {
+            // run once at least
+            rp.poly()
+
+            // rerun poly on an interval until onload
+            var run = w.setInterval(rp.poly, 500)
+            if (w.addEventListener) {
+                w.addEventListener('load', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            } else if (w.attachEvent) {
+                w.attachEvent('onload', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            }
+        }
+
+        // commonjs
+        if (typeof exports !== 'undefined') {
+            exports.loadCSS = loadCSS
+        } else {
+            w.loadCSS = loadCSS
+        }
+    })(typeof global !== 'undefined' ? global : this)
+</script>
+
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .footer-fixed-btn,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(
+            -45deg,
+            #444 0,
+            #444 80px,
+            #333 80px,
+            #333 160px
+        );
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+</style>
+
+    <link id="stylesheet-fancybox" rel="preload" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link id="stylesheet-base" rel="preload" href="/css/style.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link id="stylesheet-mobile" rel="preload" href="/css/mobile.css" as="style" onload="this.onload=null;this.rel='stylesheet';this.media='screen and (max-width: 960px)'">
+    <link id="stylesheet-theme-dark" rel="preload" href="/css/dark.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <!-- 自定义样式 -->
+    <link rel="stylesheet" href="/css/custom.css">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js" as="script">
+    <link rel="preload" href="/font/Oswald-Regular.ttf" as="font" crossorigin>
+    <link rel="preload" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" as="font" crossorigin>
+    <!-- algolia -->
+    <!-- 百度统计  -->
+    <!-- 谷歌统计  -->
+    <!-- Google tag (gtag.js) -->
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ == undefined) {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js" />')
+        }
+    </script>
+        <body class="post-body">
+        <!-- header -->
+        <header class="header header-mobile">
+    <!-- top read progress line -->
+    <div class="header-element">
+        <div class="read-progress read-progress-feature"></div>
+    </div>
+    <!-- sidebar menu button -->
+    <div class="header-element">
+        <div class="header-sidebar-menu">
+            <div style="padding-left: 1px;">&#xe775;</div>
+        </div>
+    </div>
+    <!-- header actions -->
+    <div class="header-actions">
+        <!-- theme mode switch button -->
+        <span class="header-theme-btn header-element">
+            <i class="fas fa-adjust"></i>
+        </span>
+        <!-- back to home page text -->
+        <span class="home-link header-element">
+            <a href="/">Base Station</a>
+        </span>
+    </div>
+    <!-- toggle banner -->
+    <div class="banner">
+        <div class="blog-title header-element">
+            <a href="/">Base Station</a>
+        </div>
+        <div class="post-title header-element">
+            <a href="#" class="post-name">Android 艺术开发探索笔记</a>
+        </div>
+    </div>
+</header>
+
+        <!-- fixed footer -->
+        <footer class="footer-fixed">
+    <!-- donate button -->
+
+    <!-- back to top button -->
+    <div class="footer-fixed-btn footer-fixed-btn--hidden back-top">
+        <div>&#xe639;</div>
+    </div>
+</footer>
+
+        <!-- wrapper -->
+        <div class="wrapper">
+            <div class="site-intro" style="    height:50vh;
+">
+    <!-- 主页  -->
+    <!-- 404页  -->
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/img/post-bg-android.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+                Android 艺术开发探索笔记
+            <!-- 404 -->
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+                    第一章
+            <!-- 404 -->
+        </p>
+        <!-- 文章页 meta -->
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                    <div class="post-intro-tags" >
+        <a class="post-tag" href="javascript:void(0);" data-tags="Android">Android</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="Note">Note</a>
+</div>
+
+                <!-- 文章字数统计 -->
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">2.5k</span>阅读时长: <span class="post-count reading-time">9 min</span></span>
+                    </div>
+                <div class="post-intro-meta">
+                    <!-- 撰写日期 -->
+                    <span class="iconfont-archer post-intro-calander">&#xe676;</span>
+                    <span class="post-intro-time">2018/03/15</span>
+                    <!-- busuanzi -->
+                        <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                            <span class="iconfont-archer post-intro-busuanzi">&#xe602;</span>
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    <!-- 文章分享 -->
+                    <span class="share-wrapper">
+                        <span class="iconfont-archer share-icon">&#xe71d;</span>
+                        <span class="share-text">Share</span>
+                        <ul class="share-list">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+    </div>
+</div>
+
+            <script>
+  // get user agent
+  function getBrowserVersions() {
+    var u = window.navigator.userAgent
+    return {
+      userAgent: u,
+      trident: u.indexOf('Trident') > -1, //IE内核
+      presto: u.indexOf('Presto') > -1, //opera内核
+      webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+      gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+      mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+      ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+      android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+      iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+      iPad: u.indexOf('iPad') > -1, //是否为iPad
+      webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+      weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+      uc: u.indexOf('UCBrowser') > -1, //是否为android下的UC浏览器
+    }
+  }
+  var browser = {
+    versions: getBrowserVersions(),
+  }
+  console.log('userAgent: ' + browser.versions.userAgent)
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded')
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document
+        .getElementsByClassName('intro-title')[0]
+        .classList.add('intro-fade-in')
+      document
+        .getElementsByClassName('intro-subtitle')[0]
+        .classList.add('intro-fade-in')
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in')
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb() {
+    if (browser.versions.uc) {
+      console.log('UCBrowser')
+      fontLoaded()
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular'],
+        },
+        loading: function () {
+          // 所有字体开始加载
+          // console.log('font loading');
+        },
+        active: function () {
+          // 所有字体已渲染
+          fontLoaded()
+        },
+        inactive: function () {
+          // 字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout')
+          fontLoaded()
+        },
+        timeout: 5000, // Set the timeout to two seconds
+      })
+    }
+  }
+
+  function asyncErr() {
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document,
+      t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0]
+    o.src = u
+    if (cb) {
+      o.addEventListener(
+        'load',
+        function (e) {
+          cb(null, e)
+        },
+        false
+      )
+    }
+    if (err) {
+      o.addEventListener(
+        'error',
+        function (e) {
+          err(null, e)
+        },
+        false
+      )
+    }
+    s.parentNode.insertBefore(o, s)
+  }
+
+  var asyncLoadWithFallBack = function (arr, success, reject) {
+    var currReject = function () {
+      reject()
+      arr.shift()
+      if (arr.length) async(arr[0], success, currReject)
+    }
+
+    async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack(
+    [
+      'https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js',
+      'https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js',
+      "/lib/webfontloader.min.js",
+    ],
+    asyncCb,
+    asyncErr
+  )
+</script>
+
+            <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" alt="loading">
+            <div class="container container-unloaded">
+                <main class="main post-page">
+    <article class="article-entry">
+        <p>###activity的生命周期</p>
+<p>activity a 启动 activity b 然后返回activity a 再返回到桌面 它们的生命周期是怎样变化的?</p>
+<p>A onCreate —&gt; A onStart —&gt; A onResume —&gt; 跳转 —&gt; A onPause —&gt; B onCreate —&gt; B onStart —&gt; B onResume —&gt; A onStop —&gt; 返回 —&gt; B onPsuse —&gt;  A onRestart —&gt;  A onStart —&gt; A onResume —&gt; B onStop —&gt; B onDestroy —&gt; 返回 —&gt; A onPause —&gt; A onStop —&gt; A onDestroy</p>
+<h3 id="异常情况下的生命周期分析"><a href="#异常情况下的生命周期分析" class="headerlink" title="异常情况下的生命周期分析"></a>异常情况下的生命周期分析</h3><p>当 Activity 被异常终止的时候系统会调用 onSaveInstanceState 方法,该方法的调用一定是在 onStop之前,而和 onPause 的调用顺讯则不是一定的;Activity 被重建后系统会把 onSaveInstanceState 方法所保存的 budle 对象存储到 onRestoreInstanceState 和 onCreate 方法,我们在这两个方法中可以开始我们的重建工作.</p>
+<p>onSaveInstanceState 和 onRestoreInstanceState 一定是在Activity被异常销毁的情况下才会被调用,且 onRestoreInstanceState 一单被调用则参数 bundle 一定不为空,而 onCreate 则不一定.</p>
+<h3 id="Activity-的启动模式"><a href="#Activity-的启动模式" class="headerlink" title="Activity 的启动模式"></a>Activity 的启动模式</h3><p>Android 目前有四种启动模式 standard、singleTop、singleTask、singleInstance:</p>
+<ol>
+<li>standard: 模式每次启动 Activity 都会重新创建一个新的实例,不管这个实例是否存在.它的 onCreate  onStart onResume 都会被调用. 这种模式下,谁启动了这个 Activity, 这个 Activity 就会运行在它的那个 Activity 所在的栈.比如 activity A 启动了 Activity B 那么 B 就会进入 Activity 所在的栈中.这就解析了我们为什么通过 ApplicationContext 去启动一个 Standard 模式的Activity 会报 <code>Calling startActivity from outside of an Activity context requires the FLAG_ACTIVITY_NEW_TASK flag .is this really waht you wan?</code> 这是因为 Standard 模式的 Activity 会默认进入启动它的 Activity 的人物栈中,但是非 Activity 类型的 Context 并没有所谓的任务栈. 但我们使用 <code>FLAG_ ACTIVITY_NEW_TASK</code> 这个标记启动 Activity 解决问题时候,其实它是把 Activity 换为 singleTask 启动的.</li>
+<li>singleTop :  栈顶复用模式.当要被启动的 Activity 已经存在任务栈顶,那么就不会创建一个新的实例而是调用栈顶 Activity onNewIntent() 方法.通过它我们可以获得传递数据.此时栈顶 Activity 的 onCreate 不会再被调用;当要启动的 Activity 不存在或者不在任务栈顶那么它就会想 Standard 模式一样重新创建一个实例.</li>
+<li>singleTask: 栈内复用模式.一个 singleTask 模式的 Activity A 被启动时,系统会先寻找是否有 A 想要的任务栈,如果不存在就重新创建一个任务栈,然后创建的 A 实例后把 A 放到栈中.如果存在 A 想要的栈,则要先判断 A 实例是否存在.如果存在则将 A 移动到栈顶并回调到 A 的 onNewIntent 方法,如果不存在则创建 A 的实例并将它压入栈内.举例:<ul>
+<li>如果目前任务栈 S1 内有三个 Activity ABC. .通过 C 启动一个 singleTask 模式的 Activity D,它的目标栈是 S2 .则系统会新建 S2 栈然后创建 Activity D 的实例压入 S2 栈内</li>
+<li>如果目前任务栈中有 ADBC 四个Activity,现在再次启动 Activity D 它的启动模式为 singleTask。那么系统就会将 D 移动到栈顶并回调它的 onNewIntent 方法.且由于 SingleTask 默认具欧 clearTop 的效果,会导致 D 上面的所有 Activity 出栈,最后栈内的情况就为 AD。</li>
+</ul>
+</li>
+<li>singleInstance 单实例模式 . 这是一种加强的 singleTask 模式.具有此种模式的 activity 智能单独存于一个栈中.系统会为它创建一个单独栈.由于栈内复用的特性,后续的请求均不会创建新的Activity,除非这个栈被系统销毁了.</li>
+</ol>
+<h3 id="Activity的任务栈"><a href="#Activity的任务栈" class="headerlink" title="Activity的任务栈"></a>Activity的任务栈</h3><p>Android 的任务栈(Task),它是一个栈结构,具有后进先出的特性,用于存放我们的 Activity 组件.</p>
+<ul>
+<li>Android 系统通过 task 管理每个 Activity ,并决定哪个 Activity 与用户交互,只有栈顶的 Activity 才可以和用户交互.  </li>
+<li>需要注意的是,一个 App 中可能不止一个任务栈.一个 task 的Activity 可以来自不同的 App.</li>
+<li>除了之前说的启动模式可以影响 Activity 和 task 的运行状态之外,还可以通过 manifests 理定制属性 和 Intent 的 Flags 来影响.</li>
+<li>任务栈分为前台任务栈和后台任务栈,后台任务栈中的 Activity 位于暂停状态,用户可以通过切换将后台任务再次调到前台</li>
+</ul>
+<h4 id="Task-相关属性"><a href="#Task-相关属性" class="headerlink" title="Task 相关属性"></a>Task 相关属性</h4><p>每一个 Activity 都有一个参数 <code>taskAffinity</code> 标示了这个Activity 启动所需要任务栈的名称,默认情况下所有 Activity 所需要的任务栈的名称都是该应用的包名我们可以通过 <code>taskAffinity</code> 属性来指定启动 Activity 所需要的任务栈. <code>taskAffinity</code> 特点如下:</p>
+<ul>
+<li><p>taskAffinity 属性的值不能和当前应用的包名相同,非则无效.</p>
+</li>
+<li><p>taskAfinity 的命名规范和应用包名类似必须要使用<code>.</code>来间隔</p>
+</li>
+<li><p>taskAfinity 主要结合 singleTask 或者 allTaskReparenting使用,其他情况没有什么意义</p>
+</li>
+</ul>
+<p><strong>和 singleTask 结合使用</strong>.启动 Activity 时候系统将它运行在名字和 TaskAffinity 相同的任务栈中 应用场景:</p>
+<blockquote>
+<p>假如现在有这么一个需求,我们的客户端app正处于后台运行，此时我们因为某些需要，让微信调用自己客户端app的某个页面，用户完成相关操作后，我们不做任何处理，按下回退或者当前Activity.finish()，页面都会停留在自己的客户端（此时我们的app回退栈不为空），这显然不符合逻辑的，用户体验也是相当出问题的。我们要求是，回退必须回到微信客户端,而且要保证不杀死自己的app.这时候我们的处理方案就是，设置当前被调起Activity的属性为：<code>LaunchMode=&quot;&quot;SingleTask&quot;taskAffinity=&quot;com.tencent.mm&quot;</code> 其中com.tencent.mm是借助于工具找到的微信包名，就是把自己的Activity放到微信默认的Task栈里面，这样回退时就会遵循“Task只要有Activity一定从本Task剩余Activity回退”的原则，不会回到自己的客户端；而且也不会影响自己客户端本来的Activity和Task逻辑。</p>
+</blockquote>
+<p><strong>和 allowTaskReparenting 结合使用</strong>; allowTaskReparenting 主要作用是应用的迁移,即从一个 task 迁移到另一个 task.当一个应用 A 启动了应用 B 某个 Activity 后,如果这个这个 Activity 的 allowTaskReparenting 属性为“true ”的话. 那么当应用 B 被切换到前台启动的时候这个 Activity 就会从应用 A 的任务栈转移到应用B的任务栈中.应用场景</p>
+<blockquote>
+<p>一个e-mail应用消息包含一个网页链接，点击这个链接将出发一个activity来显示这个页面，虽然这个activity是浏览器应用定义的，但是activity由于e-mail应用程序加载的，所以在这个时候该activity也属于e-mail这个task。如果e-mail应用切换到后台，浏览器在下次打开时由于allowTaskReparenting值为true，此时浏览器就会显示该activity而不显示浏览器主界面，同时actvity也将从e-mail的任务栈迁移到浏览器的任务栈，下次打开e-买了时并不会再显示该activity </p>
+</blockquote>
+<h4 id="Activity-的-Flags"><a href="#Activity-的-Flags" class="headerlink" title="Activity 的 Flags"></a>Activity 的 Flags</h4><p>Activity的标记位功能有很多,有的可以影响 Activity 的运行状态,有得可以指定启动模式.大部分情况下我们不需要为 Activity 指定标记位.列举一些常用的标记位.</p>
+<h4 id="FLAG-ACTIVITY-NEW-TASK"><a href="#FLAG-ACTIVITY-NEW-TASK" class="headerlink" title="FLAG_ACTIVITY_NEW_TASK"></a>FLAG_ACTIVITY_NEW_TASK</h4><p>这个标记的作用是为 Activity 指定 singleTask 启动模式</p>
+<h4 id="FLAG-ACTIVITY-SINGLE-TOP"><a href="#FLAG-ACTIVITY-SINGLE-TOP" class="headerlink" title="FLAG_ACTIVITY_SINGLE_TOP"></a>FLAG_ACTIVITY_SINGLE_TOP</h4><p>这个标记的作用是为 Activity 指定 singleTop 启动模式</p>
+<h4 id="FLAG-ACTIVITY-CLEAR-TOP"><a href="#FLAG-ACTIVITY-CLEAR-TOP" class="headerlink" title="FLAG_ACTIVITY_CLEAR_TOP"></a>FLAG_ACTIVITY_CLEAR_TOP</h4><p>具有此标记位的 Activity ,当它启动时候.如果它已经在栈内存在,它为singleTask 模式时候位于它上面的所有Activity 都会出栈,如果它为 standard 模式启动,那么它连同它之上的所有Activity都会出栈,系统会创建新的 Activity 压入栈.</p>
+<h4 id="FLAG-ACTIVITY-EXCLUDE-FROM-RECENTS"><a href="#FLAG-ACTIVITY-EXCLUDE-FROM-RECENTS" class="headerlink" title="FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS"></a>FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS</h4><p>这个标记的 Activity 不会出现在历史 Activity 的列表中,它等同与 Activity 的 <code>android:excludeFromRecents=true</code>的属性</p>
+<h4 id="intentFilter-的匹配规则"><a href="#intentFilter-的匹配规则" class="headerlink" title="intentFilter 的匹配规则"></a>intentFilter 的匹配规则</h4><p>当Intent不明确指用调用组件,采用隐式调用时,需要 Intent 能够匹配目标组件的 IntentFilter 中所设置的过滤信息,如果不匹配将无法启动目标 Activity. Intent 中的过滤信息有 Action 、category、data。为了匹配过滤列表中的 action、category、data 信息，否则匹配失败。一个过滤列表中的 action、category、data 信息，否则匹配失败。一个过滤列表中的 action、category和 data 可以有多个。同一类别的信息共同约束当前类别的匹配过程。只有一个Intent 同时匹配所有类别，才能成功启动目标 Activity。一个 Activity 中可以有多个 intent-filter，一个 Intent 只要能匹配任何一组 Intent-filter 即可成功启动对应的 Activity。各标签过滤规则：</p>
+<ul>
+<li><strong>action</strong> action 的匹配规则是 Intent 中的 action 必须能够和过滤规则中的 action 字符串值完全一致。一个过滤规则中可以有多个 action，那么只要 Intent 中的 action 能够和过滤规则中的任何一个 action 相同即可匹配成功。</li>
+<li><strong>category</strong> category 的匹配规则是如果 Intent 中含有 category ，那么所有的 category 都必须和过滤规则中的其中的一个 category 相同。和 action 不同的是如果 Intent 中没有 ccategory 这个Intent仍然可以匹配成功，但是一旦有就必须全部匹配。</li>
+<li><strong>data</strong> data 的数据格式比较复杂，自行了解。data 的匹配规则也和 action 类似，它也要求 Intent 中必须含有 data 数据，并且 data 数据能够完全匹配过滤规则中的某一个 data</li>
+</ul>
+<p>我们试图通过 Intent 去启动一个 Activity 的时候可以通过 PakcageManager 或者 Intent 的resolveActivity 方法来查找是否有匹配的 Activity。另外PackageManger 还提供了 queryIntentActivities 方法。</p>
+
+    </article>
+    <!-- license -->
+        <div class="license-wrapper">
+            <p>原文作者：<a href="https://czj-dev.github.io">Nutcracker</a>
+            <p>原文链接：<a href="https://czj-dev.github.io/2018/03/15/2018-03-15-andorid_exploration_book_read_01/">https://czj-dev.github.io/2018/03/15/2018-03-15-andorid_exploration_book_read_01/</a>
+            <p>发表日期：<a href="https://czj-dev.github.io/2018/03/15/2018-03-15-andorid_exploration_book_read_01/">March 15th 2018, 1:30:00 pm</a>
+            <p>更新日期：<a href="https://czj-dev.github.io/2018/03/15/2018-03-15-andorid_exploration_book_read_01/">September 13th 2024, 11:38:13 am</a>
+            <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    <!-- paginator -->
+    <ul class="post-paginator">
+        <li class="next">
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2018/03/18/2018-03-18-andorid_ipc/" title="Android IPC 机制">
+                    <div class="nextTitle">Android IPC 机制</div>
+                </a>
+        </li>
+        <li class="previous">
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2017/05/19/2017-05-19-android_databinding/" title="Data Binding学习笔记">
+                    <div class="prevTitle">Data Binding学习笔记</div>
+                </a>
+        </li>
+    </ul>
+    <!-- comment -->
+        <div class="post-comment">
+            <!-- 来必力 City 版安装代码 -->
+
+            
+            
+            
+            <!-- utteranc评论 -->
+
+            <!-- partial('_partial/comment/changyan') -->
+            <!--PC版-->
+
+            
+                <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+    <div id="comment"></div>
+    <script>
+        new Valine({
+            el: '#comment',
+            notify:false,
+            verify:false,
+            appId: "IiPsw8Ob4JVxOMx3gayw548j-gzGzoHsz",
+            appKey: "0mXzTUSWpgkGqAO5TN7XfdtN",
+            placeholder: "",
+            path:window.location.pathname,
+            avatar:'mm'
+        });
+    </script>
+
+            
+        </div>
+    <!-- timeliness note -->
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+    <!-- Mathjax -->
+</main>
+
+                <!-- profile -->
+            </div>
+            <footer class="footer footer-unloaded">
+    <!-- social  -->
+        <div class="social">
+                            <a href="mailto:mrchenzhaojun@gmail.com" class="iconfont-archer email" title="email" ></a>
+                <a href="//github.com/czj-dev" class="iconfont-archer github" target="_blank" title="github"></a>
+                <a href="https://www.zhihu.com/people/chen-zhao-jun-27" class="iconfont-archer zhihu" target="_blank" title="zhihu"></a>
+                <a href="https://steamcommunity.com/id/NutcrackerX" class="iconfont-archer steam" target="_blank" title="steam"></a>
+
+        </div>
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- website approve for Chinese user -->
+    <!-- 不蒜子  -->
+        <div class="busuanzi-container">
+                <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+        </div>
+</footer>
+
+        </div>
+        <!-- toc -->
+            <div class="toc-wrapper toc-wrapper-loding" style=    top:50vh;
+>
+                <div class="toc-catalog">
+                    <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+                </div>
+                <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%82%E5%B8%B8%E6%83%85%E5%86%B5%E4%B8%8B%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E5%88%86%E6%9E%90"><span class="toc-number">1.</span> <span class="toc-text">异常情况下的生命周期分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Activity-%E7%9A%84%E5%90%AF%E5%8A%A8%E6%A8%A1%E5%BC%8F"><span class="toc-number">2.</span> <span class="toc-text">Activity 的启动模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Activity%E7%9A%84%E4%BB%BB%E5%8A%A1%E6%A0%88"><span class="toc-number">3.</span> <span class="toc-text">Activity的任务栈</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Task-%E7%9B%B8%E5%85%B3%E5%B1%9E%E6%80%A7"><span class="toc-number">3.1.</span> <span class="toc-text">Task 相关属性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Activity-%E7%9A%84-Flags"><span class="toc-number">3.2.</span> <span class="toc-text">Activity 的 Flags</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#FLAG-ACTIVITY-NEW-TASK"><span class="toc-number">3.3.</span> <span class="toc-text">FLAG_ACTIVITY_NEW_TASK</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#FLAG-ACTIVITY-SINGLE-TOP"><span class="toc-number">3.4.</span> <span class="toc-text">FLAG_ACTIVITY_SINGLE_TOP</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#FLAG-ACTIVITY-CLEAR-TOP"><span class="toc-number">3.5.</span> <span class="toc-text">FLAG_ACTIVITY_CLEAR_TOP</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#FLAG-ACTIVITY-EXCLUDE-FROM-RECENTS"><span class="toc-number">3.6.</span> <span class="toc-text">FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#intentFilter-%E7%9A%84%E5%8C%B9%E9%85%8D%E8%A7%84%E5%88%99"><span class="toc-number">3.7.</span> <span class="toc-text">intentFilter 的匹配规则</span></a></li></ol></li></ol>
+            </div>
+        <!-- sidebar -->
+        <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+        <div class="sidebar-panel-archives">
+    <!-- 在 ejs 中将 archive 按照时间排序 -->
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 27
+        </div>
+        <!-- search  -->
+    </div>
+    <div class="post-archive">
+            <div class="archive-year"> 2024 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/13</span>
+            <a class="archive-post-title" href="/2024/09/13/2024-09-13-program_developer_experience/">《程序员修炼之道》</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2023 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/22</span>
+            <a class="archive-post-title" href="/2023/02/22/2023-02-20-android_preload_review/">Android 列表预加载分析</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2021 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/24</span>
+            <a class="archive-post-title" href="/2021/03/24/2021-03-25-thinking/">庸碌</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2020 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/22</span>
+            <a class="archive-post-title" href="/2020/05/22/2020-05-22-note_wiki_widget/">官方文档的重要性</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/11</span>
+            <a class="archive-post-title" href="/2020/05/11/2020-05-11-flutter_depth/">Flutter 深入探索</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/30</span>
+            <a class="archive-post-title" href="/2020/04/30/2020-04-30-dart_basic/">Dart 实践（一）</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/29</span>
+            <a class="archive-post-title" href="/2020/04/29/2020-04-29-book_read_01/">《精进：如何成为一个很厉害的人》阅读笔记 01</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2020/04/27/2020-04-27-flutter_application/">Flutter 实践</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2019 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/15</span>
+            <a class="archive-post-title" href="/2019/10/15/2019-10-15-retrofit-and-okHttp/">Retrofit与OkHttp源码解析</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/11</span>
+            <a class="archive-post-title" href="/2019/10/11/2019-10-11-HTTP_The_Definitive_Guide/">HTTP 权威指南阅读笔记（一）</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2018 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/26</span>
+            <a class="archive-post-title" href="/2018/05/26/2018-05-06-gradle_learning_notes_2/">Gradle的架构和api</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/28</span>
+            <a class="archive-post-title" href="/2018/04/28/2018-05-26-gradle_learning_notes_1/">Gradle的基础概念</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/19</span>
+            <a class="archive-post-title" href="/2018/04/19/2018-04-19-memory_management/">Android 内存管理机制</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/01</span>
+            <a class="archive-post-title" href="/2018/04/01/2018-04-04-andorid_thread/">Android 的线程和线程池</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/25</span>
+            <a class="archive-post-title" href="/2018/03/25/2018-03-25-andorid_view_working_principle/">Android View 工作原理</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/19</span>
+            <a class="archive-post-title" href="/2018/03/19/2018-03-19-andorid_view_event/">Android View 事件体系</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/18</span>
+            <a class="archive-post-title" href="/2018/03/18/2018-03-18-andorid_ipc/">Android IPC 机制</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/15</span>
+            <a class="archive-post-title" href="/2018/03/15/2018-03-15-andorid_exploration_book_read_01/">Android 艺术开发探索笔记</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2017 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/19</span>
+            <a class="archive-post-title" href="/2017/05/19/2017-05-19-android_databinding/">Data Binding学习笔记</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/08</span>
+            <a class="archive-post-title" href="/2017/03/08/2017-03-08-adapter/">适配器模式与外观模式</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/20</span>
+            <a class="archive-post-title" href="/2017/02/20/2017-02-20-factory/">工厂模式(factory Pettern)</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/08</span>
+            <a class="archive-post-title" href="/2017/02/08/2017-02-08-decorator/">装饰者模式(Decorator)</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/07</span>
+            <a class="archive-post-title" href="/2017/02/07/2017-02-07-observer/">观察者模式(Observer Pettern)</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/06</span>
+            <a class="archive-post-title" href="/2017/02/06/2017-02-06-annotation/">Android自定义注解</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/04</span>
+            <a class="archive-post-title" href="/2017/02/04/2017-02-04-Strategy/">策略模式(Strategy Pettern)</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/24</span>
+            <a class="archive-post-title" href="/2017/01/24/2017-01-24-rxjava_learning_notes/">RxAndroid学习笔记</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/23</span>
+            <a class="archive-post-title" href="/2017/01/23/2017-01-23-new_start/">Hello Blog</a>
+        </li>
+            </ul>
+    </div>
+</div>
+
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+            <span class="sidebar-tag-name" data-tags="生活">
+                <span class="iconfont-archer">&#xe606;</span>
+                生活
+            </span>
+            <span class="sidebar-tag-name" data-tags="Android">
+                <span class="iconfont-archer">&#xe606;</span>
+                Android
+            </span>
+            <span class="sidebar-tag-name" data-tags="基础">
+                <span class="iconfont-archer">&#xe606;</span>
+                基础
+            </span>
+            <span class="sidebar-tag-name" data-tags="Booklet">
+                <span class="iconfont-archer">&#xe606;</span>
+                Booklet
+            </span>
+            <span class="sidebar-tag-name" data-tags="Note">
+                <span class="iconfont-archer">&#xe606;</span>
+                Note
+            </span>
+            <span class="sidebar-tag-name" data-tags="Gradle">
+                <span class="iconfont-archer">&#xe606;</span>
+                Gradle
+            </span>
+            <span class="sidebar-tag-name" data-tags="Flutter">
+                <span class="iconfont-archer">&#xe606;</span>
+                Flutter
+            </span>
+            <span class="sidebar-tag-name" data-tags="Dart">
+                <span class="iconfont-archer">&#xe606;</span>
+                Dart
+            </span>
+            <span class="sidebar-tag-name" data-tags="Book">
+                <span class="iconfont-archer">&#xe606;</span>
+                Book
+            </span>
+            <span class="sidebar-tag-name" data-tags="RecyclerView">
+                <span class="iconfont-archer">&#xe606;</span>
+                RecyclerView
+            </span>
+            <span class="sidebar-tag-name" data-tags="HTTP">
+                <span class="iconfont-archer">&#xe606;</span>
+                HTTP
+            </span>
+            <span class="sidebar-tag-name" data-tags="方法论">
+                <span class="iconfont-archer">&#xe606;</span>
+                方法论
+            </span>
+            <span class="sidebar-tag-name" data-tags="读书笔记">
+                <span class="iconfont-archer">&#xe606;</span>
+                读书笔记
+            </span>
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+        缺失模块，请参考主题文档进行安装配置：https://github.com/fi3ework/hexo-theme-archer#%E5%AE%89%E8%A3%85%E4%B8%BB%E9%A2%98
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+
+    </div>
+</div>
+
+        <!-- site-meta -->
+        <script>
+    var siteMetaRoot = "/"
+    if (siteMetaRoot === "undefined") {
+        siteMetaRoot = '/'
+    }
+    var siteMeta = {
+        url: "https://czj-dev.github.io",
+        root: siteMetaRoot,
+        author: "Nutcracker"
+    }
+</script>
+
+        <!-- import experimental options here -->
+        <!-- Custom Font -->
+    <!-- Check browser compatibility of CSS variables -->
+    <script>
+        if (browserSupportCSSVariables === undefined) {
+            var browserSupportCSSVariables = window.CSS && window.CSS.supports && window.CSS.supports('--a', 0);
+        }
+    </script>
+    <script>
+        if (browserSupportCSSVariables) {
+            var customFontName = 'Noto Sans SC:n3,n4,n5,n7'
+            var customFontUrl = 'https://fonts.googleapis.cnpmjs.org/css2?family=Noto+Sans+SC:wght@300;400;500;700&amp;display=swap'
+            if (!customFontName) {
+                console.log('Custom font name is not set or read failed');
+            }
+            if (!customFontUrl) {
+                console.log('Custom font url is not set or read failed');
+            }
+        } else {
+            console.error('Current browser doesn\'t support custom font.')
+        }
+    </script>
+    <script src="/scripts/customFontLoader.js" defer></script>
+
+        <!-- main func -->
+        <script src="/scripts/main.js"></script>
+        <!-- fancybox -->
+        <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.umd.js" onload="window.Fancybox.bind('[data-fancybox]')" defer></script>
+        <!-- algolia -->
+        <!-- busuanzi -->
+            <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+        <!-- async load share.js -->
+            <script src="/scripts/share.js" async></script>
+        <!-- mermaid -->
+            <script src='https://cdn.jsdelivr.net/npm/mermaid@8.11.0/dist/mermaid.min.js' onload="window.mermaid.initialize({theme: 'dark'})" async></script>
+    </body>
+</html>

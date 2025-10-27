@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="cn">
+    <!-- title -->
+<!-- keywords -->
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="Nutcracker">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="Nutcracker">
+        <meta name="keywords" content="Android,Live,Nutcracker">
+    <meta name="description" content="">
+    <meta name="description" content="在对象之间定义一对多的依赖，这样一来，当一个对象改变状态，依赖它的对象都会收到通知，并自动更新  代码实现观察者模式应该是Java和Android中用到的非常多的一个设计模式了，Java还提供了Observer相关的实现类，它们在java.util.*下，但它的Observable是个实现类，我们使用时需要继承它,这样并不方便我们的使用， 今天我们就参照书籍和相关类自己实现一个传统的观察者模式。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="观察者模式(Observer Pettern)">
+<meta property="og:url" content="https://czj-dev.github.io/2017/02/07/2017-02-07-observer/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="在对象之间定义一对多的依赖，这样一来，当一个对象改变状态，依赖它的对象都会收到通知，并自动更新  代码实现观察者模式应该是Java和Android中用到的非常多的一个设计模式了，Java还提供了Observer相关的实现类，它们在java.util.*下，但它的Observable是个实现类，我们使用时需要继承它,这样并不方便我们的使用， 今天我们就参照书籍和相关类自己实现一个传统的观察者模式。">
+<meta property="og:locale">
+<meta property="og:image" content="http://ok6cuokj5.bkt.clouddn.com/observer.png">
+<meta property="article:published_time" content="2017-02-07T11:42:42.000Z">
+<meta property="article:modified_time" content="2024-09-13T03:38:13.726Z">
+<meta property="article:author" content="Nutcracker">
+<meta property="article:tag" content="基础">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://ok6cuokj5.bkt.clouddn.com/observer.png">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="icon" href="/assets/favicon.ico">
+    <title>观察者模式(Observer Pettern) · Base Station</title>
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+    (function (w) {
+        'use strict'
+        // rel=preload support test
+        if (!w.loadCSS) {
+            w.loadCSS = function () {}
+        }
+        // define on the loadCSS obj
+        var rp = (loadCSS.relpreload = {})
+        // rel=preload feature support test
+        // runs once and returns a function for compat purposes
+        rp.support = (function () {
+            var ret
+            try {
+                ret = w.document.createElement('link').relList.supports('preload')
+            } catch (e) {
+                ret = false
+            }
+            return function () {
+                return ret
+            }
+        })()
+
+        // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+        // then change that media back to its intended value on load
+        rp.bindMediaToggle = function (link) {
+            // remember existing media attr for ultimate state, or default to 'all'
+            var finalMedia = link.media || 'all'
+
+            function enableStylesheet() {
+                link.media = finalMedia
+            }
+
+            // bind load handlers to enable media
+            if (link.addEventListener) {
+                link.addEventListener('load', enableStylesheet)
+            } else if (link.attachEvent) {
+                link.attachEvent('onload', enableStylesheet)
+            }
+
+            // Set rel and non-applicable media type to start an async request
+            // note: timeout allows this to happen async to let rendering continue in IE
+            setTimeout(function () {
+                link.rel = 'stylesheet'
+                link.media = 'only x'
+            })
+            // also enable media after 3 seconds,
+            // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+            setTimeout(enableStylesheet, 3000)
+        }
+
+        // loop through link elements in DOM
+        rp.poly = function () {
+            // double check this to prevent external calls from running
+            if (rp.support()) {
+                return
+            }
+            var links = w.document.getElementsByTagName('link')
+            for (var i = 0; i < links.length; i++) {
+                var link = links[i]
+                // qualify links to those with rel=preload and as=style attrs
+                if (
+                    link.rel === 'preload' &&
+                    link.getAttribute('as') === 'style' &&
+                    !link.getAttribute('data-loadcss')
+                ) {
+                    // prevent rerunning on link
+                    link.setAttribute('data-loadcss', true)
+                    // bind listeners to toggle media back
+                    rp.bindMediaToggle(link)
+                }
+            }
+        }
+
+        // if unsupported, run the polyfill
+        if (!rp.support()) {
+            // run once at least
+            rp.poly()
+
+            // rerun poly on an interval until onload
+            var run = w.setInterval(rp.poly, 500)
+            if (w.addEventListener) {
+                w.addEventListener('load', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            } else if (w.attachEvent) {
+                w.attachEvent('onload', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            }
+        }
+
+        // commonjs
+        if (typeof exports !== 'undefined') {
+            exports.loadCSS = loadCSS
+        } else {
+            w.loadCSS = loadCSS
+        }
+    })(typeof global !== 'undefined' ? global : this)
+</script>
+
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .footer-fixed-btn,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(
+            -45deg,
+            #444 0,
+            #444 80px,
+            #333 80px,
+            #333 160px
+        );
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+</style>
+
+    <link id="stylesheet-fancybox" rel="preload" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link id="stylesheet-base" rel="preload" href="/css/style.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link id="stylesheet-mobile" rel="preload" href="/css/mobile.css" as="style" onload="this.onload=null;this.rel='stylesheet';this.media='screen and (max-width: 960px)'">
+    <link id="stylesheet-theme-dark" rel="preload" href="/css/dark.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <!-- 自定义样式 -->
+    <link rel="stylesheet" href="/css/custom.css">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js" as="script">
+    <link rel="preload" href="/font/Oswald-Regular.ttf" as="font" crossorigin>
+    <link rel="preload" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" as="font" crossorigin>
+    <!-- algolia -->
+    <!-- 百度统计  -->
+    <!-- 谷歌统计  -->
+    <!-- Google tag (gtag.js) -->
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ == undefined) {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js" />')
+        }
+    </script>
+        <body class="post-body">
+        <!-- header -->
+        <header class="header header-mobile">
+    <!-- top read progress line -->
+    <div class="header-element">
+        <div class="read-progress read-progress-feature"></div>
+    </div>
+    <!-- sidebar menu button -->
+    <div class="header-element">
+        <div class="header-sidebar-menu">
+            <div style="padding-left: 1px;">&#xe775;</div>
+        </div>
+    </div>
+    <!-- header actions -->
+    <div class="header-actions">
+        <!-- theme mode switch button -->
+        <span class="header-theme-btn header-element">
+            <i class="fas fa-adjust"></i>
+        </span>
+        <!-- back to home page text -->
+        <span class="home-link header-element">
+            <a href="/">Base Station</a>
+        </span>
+    </div>
+    <!-- toggle banner -->
+    <div class="banner">
+        <div class="blog-title header-element">
+            <a href="/">Base Station</a>
+        </div>
+        <div class="post-title header-element">
+            <a href="#" class="post-name">观察者模式(Observer Pettern)</a>
+        </div>
+    </div>
+</header>
+
+        <!-- fixed footer -->
+        <footer class="footer-fixed">
+    <!-- donate button -->
+
+    <!-- back to top button -->
+    <div class="footer-fixed-btn footer-fixed-btn--hidden back-top">
+        <div>&#xe639;</div>
+    </div>
+</footer>
+
+        <!-- wrapper -->
+        <div class="wrapper">
+            <div class="site-intro" style="    height:50vh;
+">
+    <!-- 主页  -->
+    <!-- 404页  -->
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/img/java.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+                观察者模式(Observer Pettern)
+            <!-- 404 -->
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+                    "Head First学习笔记（二）"
+            <!-- 404 -->
+        </p>
+        <!-- 文章页 meta -->
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                    <div class="post-intro-tags" >
+        <a class="post-tag" href="javascript:void(0);" data-tags="基础">基础</a>
+</div>
+
+                <!-- 文章字数统计 -->
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">1.8k</span>阅读时长: <span class="post-count reading-time">7 min</span></span>
+                    </div>
+                <div class="post-intro-meta">
+                    <!-- 撰写日期 -->
+                    <span class="iconfont-archer post-intro-calander">&#xe676;</span>
+                    <span class="post-intro-time">2017/02/07</span>
+                    <!-- busuanzi -->
+                        <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                            <span class="iconfont-archer post-intro-busuanzi">&#xe602;</span>
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    <!-- 文章分享 -->
+                    <span class="share-wrapper">
+                        <span class="iconfont-archer share-icon">&#xe71d;</span>
+                        <span class="share-text">Share</span>
+                        <ul class="share-list">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+    </div>
+</div>
+
+            <script>
+  // get user agent
+  function getBrowserVersions() {
+    var u = window.navigator.userAgent
+    return {
+      userAgent: u,
+      trident: u.indexOf('Trident') > -1, //IE内核
+      presto: u.indexOf('Presto') > -1, //opera内核
+      webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+      gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+      mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+      ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+      android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+      iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+      iPad: u.indexOf('iPad') > -1, //是否为iPad
+      webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+      weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+      uc: u.indexOf('UCBrowser') > -1, //是否为android下的UC浏览器
+    }
+  }
+  var browser = {
+    versions: getBrowserVersions(),
+  }
+  console.log('userAgent: ' + browser.versions.userAgent)
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded')
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document
+        .getElementsByClassName('intro-title')[0]
+        .classList.add('intro-fade-in')
+      document
+        .getElementsByClassName('intro-subtitle')[0]
+        .classList.add('intro-fade-in')
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in')
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb() {
+    if (browser.versions.uc) {
+      console.log('UCBrowser')
+      fontLoaded()
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular'],
+        },
+        loading: function () {
+          // 所有字体开始加载
+          // console.log('font loading');
+        },
+        active: function () {
+          // 所有字体已渲染
+          fontLoaded()
+        },
+        inactive: function () {
+          // 字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout')
+          fontLoaded()
+        },
+        timeout: 5000, // Set the timeout to two seconds
+      })
+    }
+  }
+
+  function asyncErr() {
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document,
+      t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0]
+    o.src = u
+    if (cb) {
+      o.addEventListener(
+        'load',
+        function (e) {
+          cb(null, e)
+        },
+        false
+      )
+    }
+    if (err) {
+      o.addEventListener(
+        'error',
+        function (e) {
+          err(null, e)
+        },
+        false
+      )
+    }
+    s.parentNode.insertBefore(o, s)
+  }
+
+  var asyncLoadWithFallBack = function (arr, success, reject) {
+    var currReject = function () {
+      reject()
+      arr.shift()
+      if (arr.length) async(arr[0], success, currReject)
+    }
+
+    async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack(
+    [
+      'https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js',
+      'https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js',
+      "/lib/webfontloader.min.js",
+    ],
+    asyncCb,
+    asyncErr
+  )
+</script>
+
+            <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" alt="loading">
+            <div class="container container-unloaded">
+                <main class="main post-page">
+    <article class="article-entry">
+        <blockquote>
+<p>在对象之间定义一对多的依赖，这样一来，当一个对象改变状态，依赖它的对象都会收到通知，并自动更新</p>
+</blockquote>
+<h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><p>观察者模式应该是<code>Java</code>和<code>Android</code>中用到的非常多的一个设计模式了，<code>Java</code>还提供了<code>Observer</code>相关的实现类，它们在<code>java.util.*</code>下，但它的<code>Observable</code>是个实现类，我们使用时需要继承它,这样并不方便我们的使用， 今天我们就参照书籍和相关类自己实现一个传统的<code>观察者模式</code>。</p>
+<p>上一次我们公司通过<a target="_blank" rel="noopener" href="https://mr9527.github.io/2017/02/04/%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F(StrategyPattern)/"><strong>策略模式(StrategyPattern)</strong></a>来实现了一个暂时完美的产品“Bird”。公司已经步入了正轨，名气也逐渐大了起来，气象站的老板<strong>Just</strong>找到我们想让我们帮它做一款气象站的应用。</p>
+<p>应用的功能是三块布告板，一块用来显示当天的<strong>temperature(温度)<strong>、</strong>humidity(湿度)<strong>与</strong>pressure(气压)</strong>,另一块用来显示天气预报，最后一块用来显示当前温度的酷热指数(就是天气爽不爽)。当然这只是目前的功能，以后可能会随时增加或移除公告板。</p>
+<h3 id="设计程序"><a href="#设计程序" class="headerlink" title="设计程序"></a>设计程序</h3><p>观察者模式有两个主要的角色 :可观察的对象<code>observable</code>或者也叫做<code>Subject</code>，订阅者<code>observer</code>。当<code>observable</code>发生改变的时候(这里对应的就是天气发生了变化),它会通知所有的<code>observer</code>(布告板),让它们根据情况去做自己的事情(更新显示的数据)。</p>
+<p>气象站的功能和观察者模式非常吻合,小明决定直接参照<code>Java</code>中的<code>Observer</code>来实现:</p>
+<p>记得上一次提起的设计原则——<strong>针对接口编程,而不是针对实现编程</strong>.我们将<code>observer</code>和<code>observable</code>的功能都用接口来声明:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//observable</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">Observable</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">registerObserver</span><span class="params">(Observer observer)</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">removeObserver</span><span class="params">(Observer observer)</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">notifyObserver</span><span class="params">(Object arg)</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//observer</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">Observer</span> &#123;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">update</span><span class="params">(Observable observable,Object arg)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样我们就将<code>observable</code>的注册、注销、和推送与<code>Observer</code>的更新都给抽离出来了减少了耦合增加了扩展性。</p>
+<p>还有一点需要注意的就是我们的<code>observer</code>都一个通用的功能——投影到公告板，这一点在设计原则中也提到了——<strong>找出应用中可能需要变化之处，把它们独立出来，不要和那些不需要变化的代码混在一起。</strong>我们也将这个功能抽离出来。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">DisplayElement</span> &#123;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">display</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>程序设计完了,来看看 UML 图 :</p>
+<p><img src="http://ok6cuokj5.bkt.clouddn.com/observer.png" alt="Observer结构图"></p>
+<p>再来看具体的实现 :</p>
+<h3 id="气象站"><a href="#气象站" class="headerlink" title="气象站"></a>气象站</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">WeatherData</span> <span class="keyword">implements</span> <span class="title class_">Observable</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">float</span> temperature;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">float</span> humidity;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">float</span> pressure;</span><br><span class="line">    <span class="keyword">private</span> List&lt;Observer&gt; observers;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">boolean</span> changed;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">WeatherData</span><span class="params">()</span> &#123;</span><br><span class="line">        observers = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;Observer&gt;();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setWeatherData</span><span class="params">(<span class="type">float</span> temperature, <span class="type">float</span> humidity, <span class="type">float</span> pressure)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.temperature = temperature;</span><br><span class="line">        <span class="built_in">this</span>.humidity = humidity;</span><br><span class="line">        <span class="built_in">this</span>.pressure = pressure;</span><br><span class="line">        measurementsChanged();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">float</span> <span class="title function_">getTemperature</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> temperature;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">float</span> <span class="title function_">getHumidity</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> humidity;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">float</span> <span class="title function_">getPressure</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> pressure;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setChanged</span><span class="params">(<span class="type">boolean</span> changed)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.changed = changed;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">clearChanged</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.changed = <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">measurementsChanged</span><span class="params">()</span> &#123;</span><br><span class="line">        System.err.println(<span class="string">&quot;数据发生了改变&quot;</span>);</span><br><span class="line">        notifyObserver(<span class="literal">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">registerObserver</span><span class="params">(Observer observer)</span> &#123;</span><br><span class="line">        observers.add(observer);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">removeObserver</span><span class="params">(Observer observer)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> observers.indexOf(observer);</span><br><span class="line">        <span class="keyword">if</span> (i &gt;= <span class="number">0</span>) &#123;</span><br><span class="line">            observers.remove(i);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">notifyObserver</span><span class="params">(Object arg)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (!changed) <span class="keyword">return</span>;</span><br><span class="line">        <span class="keyword">for</span> (Observer observer : observers) &#123;</span><br><span class="line">            observer.update(<span class="built_in">this</span>, arg);</span><br><span class="line">        &#125;</span><br><span class="line">        clearChanged();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们在气象站通过一个<code>List</code>来管理订阅者们，当数据发生改变时候去通知它们，可以看到完全是面向对象的方式实现的，<code>observable</code>并不知道也不需要知道它的<code>observer</code>有哪些功能。至于为什么加一个开关<code>changed</code>，是因为这样我们可以更好的控制布告板的显示，我们不能每次发生一点改动就去更新它，那样用户的设备会爆炸的(当然没那么严重),有了这个”开关”我们就可以控制它的频率，比如每隔一段时间发送一次，或者变动较大发送一次。</p>
+<h3 id="天气数据布告板"><a href="#天气数据布告板" class="headerlink" title="天气数据布告板"></a>天气数据布告板</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">CurrentConditionsDisplay</span> <span class="keyword">implements</span> <span class="title class_">Observer</span>, DisplayElement &#123;</span><br><span class="line">    <span class="keyword">private</span> Observable observable;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">CurrentConditionsDisplay</span><span class="params">(Observable observable)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.observable = observable;</span><br><span class="line">        observable.registerObserver(<span class="built_in">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">update</span><span class="params">(Observable observable, Object arg)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.observable = observable;</span><br><span class="line">        display();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">display</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (observable <span class="keyword">instanceof</span> WeatherData) &#123;</span><br><span class="line">            <span class="type">WeatherData</span> <span class="variable">data</span> <span class="operator">=</span> (WeatherData) observable;</span><br><span class="line">            System.err.println(<span class="string">&quot;温度&quot;</span> + data.getTemperature() + <span class="string">&quot;湿度&quot;</span> + data.getHumidity() + <span class="string">&quot;气压&quot;</span> + data.getPressure());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们通过多态来获得<code>observable</code>的信息，然后调用<code>dispaly()</code>来显示布告板。</p>
+<h3 id="天气预报布告板"><a href="#天气预报布告板" class="headerlink" title="天气预报布告板"></a>天气预报布告板</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ForecastDisplay</span> <span class="keyword">implements</span> <span class="title class_">Observer</span>, DisplayElement &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">float</span> <span class="variable">currentPressure</span> <span class="operator">=</span> <span class="number">29.92f</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">float</span> lastPressure;</span><br><span class="line">    <span class="keyword">private</span> Observable weatherData;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">ForecastDisplay</span><span class="params">(Observable weatherData)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.weatherData = weatherData;</span><br><span class="line">        weatherData.registerObserver(<span class="built_in">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">display</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.print(<span class="string">&quot;Forecast: &quot;</span>);</span><br><span class="line">        <span class="keyword">if</span> (currentPressure &gt; lastPressure) &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;Improving weather on the way!&quot;</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (currentPressure == lastPressure) &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;More of the same&quot;</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (currentPressure &lt; lastPressure) &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;Watch out for cooler, rainy weather&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">update</span><span class="params">(Observable observable, Object arg)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (observable <span class="keyword">instanceof</span> WeatherData) &#123;</span><br><span class="line">            lastPressure = currentPressure;</span><br><span class="line">            currentPressure = ((WeatherData) observable).getPressure();</span><br><span class="line">            display();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="酷热指数布告板"><a href="#酷热指数布告板" class="headerlink" title="酷热指数布告板"></a>酷热指数布告板</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ComfortLevelDisplay</span> <span class="keyword">implements</span> <span class="title class_">Observer</span>, DisplayElement &#123;</span><br><span class="line">    <span class="keyword">private</span> Observable observable;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">ComfortLevelDisplay</span><span class="params">(Observable observable)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.observable = observable;</span><br><span class="line">        observable.registerObserver(<span class="built_in">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">update</span><span class="params">(Observable observable, Object arg)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.observable = observable;</span><br><span class="line">        display();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">display</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (observable <span class="keyword">instanceof</span> WeatherData) &#123;</span><br><span class="line">            <span class="type">double</span> <span class="variable">comfortLevel</span> <span class="operator">=</span> getComfortLevel(((WeatherData) observable).getTemperature(), ((WeatherData) observable).getHumidity());</span><br><span class="line">            System.err.println(<span class="string">&quot;酷热指数 :  &quot;</span> + comfortLevel);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">double</span> <span class="title function_">getComfortLevel</span><span class="params">(<span class="type">float</span> t, <span class="type">float</span> rh)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> (<span class="number">16.923</span> + (<span class="number">0.185212</span> * t) + (<span class="number">5.37941</span> * rh) - (<span class="number">0.100254</span> * t * rh)</span><br><span class="line">                + (<span class="number">0.00941695</span> * (t * t)) + (<span class="number">0.00728898</span> * (rh * rh))</span><br><span class="line">                + (<span class="number">0.000345372</span> * (t * t * rh)) - (<span class="number">0.000814971</span> * (t * rh * rh)) +</span><br><span class="line">                (<span class="number">0.0000102102</span> * (t * t * rh * rh)) - (<span class="number">0.000038646</span> * (t * t * t)) + (<span class="number">0.0000291583</span> *</span><br><span class="line">                (rh * rh * rh)) + (<span class="number">0.00000142721</span> * (t * t * t * rh)) +</span><br><span class="line">                (<span class="number">0.000000197483</span> * (t * rh * rh * rh)) - (<span class="number">0.0000000218429</span> * (t * t * t * rh * rh)) +</span><br><span class="line">                <span class="number">0.000000000843296</span> * (t * t * rh * rh * rh)) -</span><br><span class="line">                (<span class="number">0.0000000000481975</span> * (t * t * t * rh * rh * rh));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这一大坨代码就是用来计算”酷热指数的”。至于为什么这么写，你可以问气象局或者百度~。</p>
+<p>最后我们来测试一下:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Main</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] arg)</span> &#123;</span><br><span class="line">        <span class="type">WeatherData</span> <span class="variable">weatherData</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">WeatherData</span>();</span><br><span class="line">        <span class="type">ComfortLevelDisplay</span> <span class="variable">comfortLevelDisplay</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ComfortLevelDisplay</span>(weatherData);</span><br><span class="line">        <span class="type">CurrentConditionsDisplay</span> <span class="variable">currentConditionsDisplay</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">CurrentConditionsDisplay</span>(weatherData);</span><br><span class="line">        <span class="type">ForecastDisplay</span> <span class="variable">forecastDisplay</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ForecastDisplay</span>(weatherData);</span><br><span class="line"></span><br><span class="line">        weatherData.setWeatherData(<span class="number">13</span>, <span class="number">14</span>, <span class="number">15</span>);</span><br><span class="line">        weatherData.setChanged(<span class="literal">true</span>);</span><br><span class="line">        weatherData.setWeatherData(<span class="number">15</span>, <span class="number">16</span>, <span class="number">16</span>);</span><br><span class="line">        weatherData.setWeatherData(<span class="number">13</span>, <span class="number">16</span>, <span class="number">16</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>我们在气象站中更新了三次数据来看看公告板是如何显示的吧 :</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">log: 数据发生了改变</span><br><span class="line">log: 数据发生了改变</span><br><span class="line">酷热指数 :  <span class="number">84.45697418607358</span></span><br><span class="line">温度<span class="number">15.0</span> 湿度<span class="number">16.0</span> 气压<span class="number">16.0</span></span><br><span class="line">Forecast: Watch out <span class="keyword">for</span> cooler, rainy weather</span><br><span class="line">log: 数据发生了改变</span><br></pre></td></tr></table></figure>
+
+<p>是不是和你预期的一样呢,观察者模式在这里就介绍完了。</p>
+<blockquote>
+<p>为交互对象之间的松耦合设计而努力</p>
+</blockquote>
+<h2 id="要点"><a href="#要点" class="headerlink" title="要点"></a>要点</h2><ul>
+<li>观察者模式定义了对象之间一对多的关系。</li>
+<li>主题（也就是可观察者）用一个共同的接口来更新观察者。</li>
+<li>观察者和观察者之间用松耦合方式结合，可观察者不知道观察者的细节，只知道观察者实现了观察者接口。</li>
+<li>使用此模式时，你可以从被观察者处推(pus)或拉(pull)数据(推的方式被认为更”正确”)。</li>
+<li>有多个观察者时，不可以依赖特定的通知次序。</li>
+<li>Java 有多种观察者模式的实现，包括了通用的<code>java.util.Obseravble</code>。</li>
+</ul>
+<p>day day up</p>
+
+    </article>
+    <!-- license -->
+        <div class="license-wrapper">
+            <p>原文作者：<a href="https://czj-dev.github.io">Nutcracker</a>
+            <p>原文链接：<a href="https://czj-dev.github.io/2017/02/07/2017-02-07-observer/">https://czj-dev.github.io/2017/02/07/2017-02-07-observer/</a>
+            <p>发表日期：<a href="https://czj-dev.github.io/2017/02/07/2017-02-07-observer/">February 7th 2017, 7:42:42 pm</a>
+            <p>更新日期：<a href="https://czj-dev.github.io/2017/02/07/2017-02-07-observer/">September 13th 2024, 11:38:13 am</a>
+            <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    <!-- paginator -->
+    <ul class="post-paginator">
+        <li class="next">
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2017/02/08/2017-02-08-decorator/" title="装饰者模式(Decorator)">
+                    <div class="nextTitle">装饰者模式(Decorator)</div>
+                </a>
+        </li>
+        <li class="previous">
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2017/02/06/2017-02-06-annotation/" title="Android自定义注解">
+                    <div class="prevTitle">Android自定义注解</div>
+                </a>
+        </li>
+    </ul>
+    <!-- comment -->
+        <div class="post-comment">
+            <!-- 来必力 City 版安装代码 -->
+
+            
+            
+            
+            <!-- utteranc评论 -->
+
+            <!-- partial('_partial/comment/changyan') -->
+            <!--PC版-->
+
+            
+                <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+    <div id="comment"></div>
+    <script>
+        new Valine({
+            el: '#comment',
+            notify:false,
+            verify:false,
+            appId: "IiPsw8Ob4JVxOMx3gayw548j-gzGzoHsz",
+            appKey: "0mXzTUSWpgkGqAO5TN7XfdtN",
+            placeholder: "",
+            path:window.location.pathname,
+            avatar:'mm'
+        });
+    </script>
+
+            
+        </div>
+    <!-- timeliness note -->
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+    <!-- Mathjax -->
+</main>
+
+                <!-- profile -->
+            </div>
+            <footer class="footer footer-unloaded">
+    <!-- social  -->
+        <div class="social">
+                            <a href="mailto:mrchenzhaojun@gmail.com" class="iconfont-archer email" title="email" ></a>
+                <a href="//github.com/czj-dev" class="iconfont-archer github" target="_blank" title="github"></a>
+                <a href="https://www.zhihu.com/people/chen-zhao-jun-27" class="iconfont-archer zhihu" target="_blank" title="zhihu"></a>
+                <a href="https://steamcommunity.com/id/NutcrackerX" class="iconfont-archer steam" target="_blank" title="steam"></a>
+
+        </div>
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- website approve for Chinese user -->
+    <!-- 不蒜子  -->
+        <div class="busuanzi-container">
+                <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+        </div>
+</footer>
+
+        </div>
+        <!-- toc -->
+            <div class="toc-wrapper toc-wrapper-loding" style=    top:50vh;
+>
+                <div class="toc-catalog">
+                    <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+                </div>
+                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.</span> <span class="toc-text">代码实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%BE%E8%AE%A1%E7%A8%8B%E5%BA%8F"><span class="toc-number">1.1.</span> <span class="toc-text">设计程序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B0%94%E8%B1%A1%E7%AB%99"><span class="toc-number">1.2.</span> <span class="toc-text">气象站</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%A9%E6%B0%94%E6%95%B0%E6%8D%AE%E5%B8%83%E5%91%8A%E6%9D%BF"><span class="toc-number">1.3.</span> <span class="toc-text">天气数据布告板</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%A9%E6%B0%94%E9%A2%84%E6%8A%A5%E5%B8%83%E5%91%8A%E6%9D%BF"><span class="toc-number">1.4.</span> <span class="toc-text">天气预报布告板</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%B7%E7%83%AD%E6%8C%87%E6%95%B0%E5%B8%83%E5%91%8A%E6%9D%BF"><span class="toc-number">1.5.</span> <span class="toc-text">酷热指数布告板</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A6%81%E7%82%B9"><span class="toc-number">2.</span> <span class="toc-text">要点</span></a></li></ol>
+            </div>
+        <!-- sidebar -->
+        <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+        <div class="sidebar-panel-archives">
+    <!-- 在 ejs 中将 archive 按照时间排序 -->
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 27
+        </div>
+        <!-- search  -->
+    </div>
+    <div class="post-archive">
+            <div class="archive-year"> 2024 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/13</span>
+            <a class="archive-post-title" href="/2024/09/13/2024-09-13-program_developer_experience/">《程序员修炼之道》</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2023 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/22</span>
+            <a class="archive-post-title" href="/2023/02/22/2023-02-20-android_preload_review/">Android 列表预加载分析</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2021 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/24</span>
+            <a class="archive-post-title" href="/2021/03/24/2021-03-25-thinking/">庸碌</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2020 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/22</span>
+            <a class="archive-post-title" href="/2020/05/22/2020-05-22-note_wiki_widget/">官方文档的重要性</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/11</span>
+            <a class="archive-post-title" href="/2020/05/11/2020-05-11-flutter_depth/">Flutter 深入探索</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/30</span>
+            <a class="archive-post-title" href="/2020/04/30/2020-04-30-dart_basic/">Dart 实践（一）</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/29</span>
+            <a class="archive-post-title" href="/2020/04/29/2020-04-29-book_read_01/">《精进：如何成为一个很厉害的人》阅读笔记 01</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2020/04/27/2020-04-27-flutter_application/">Flutter 实践</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2019 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/15</span>
+            <a class="archive-post-title" href="/2019/10/15/2019-10-15-retrofit-and-okHttp/">Retrofit与OkHttp源码解析</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/11</span>
+            <a class="archive-post-title" href="/2019/10/11/2019-10-11-HTTP_The_Definitive_Guide/">HTTP 权威指南阅读笔记（一）</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2018 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/26</span>
+            <a class="archive-post-title" href="/2018/05/26/2018-05-06-gradle_learning_notes_2/">Gradle的架构和api</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/28</span>
+            <a class="archive-post-title" href="/2018/04/28/2018-05-26-gradle_learning_notes_1/">Gradle的基础概念</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/19</span>
+            <a class="archive-post-title" href="/2018/04/19/2018-04-19-memory_management/">Android 内存管理机制</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/01</span>
+            <a class="archive-post-title" href="/2018/04/01/2018-04-04-andorid_thread/">Android 的线程和线程池</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/25</span>
+            <a class="archive-post-title" href="/2018/03/25/2018-03-25-andorid_view_working_principle/">Android View 工作原理</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/19</span>
+            <a class="archive-post-title" href="/2018/03/19/2018-03-19-andorid_view_event/">Android View 事件体系</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/18</span>
+            <a class="archive-post-title" href="/2018/03/18/2018-03-18-andorid_ipc/">Android IPC 机制</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/15</span>
+            <a class="archive-post-title" href="/2018/03/15/2018-03-15-andorid_exploration_book_read_01/">Android 艺术开发探索笔记</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2017 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/19</span>
+            <a class="archive-post-title" href="/2017/05/19/2017-05-19-android_databinding/">Data Binding学习笔记</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/08</span>
+            <a class="archive-post-title" href="/2017/03/08/2017-03-08-adapter/">适配器模式与外观模式</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/20</span>
+            <a class="archive-post-title" href="/2017/02/20/2017-02-20-factory/">工厂模式(factory Pettern)</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/08</span>
+            <a class="archive-post-title" href="/2017/02/08/2017-02-08-decorator/">装饰者模式(Decorator)</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/07</span>
+            <a class="archive-post-title" href="/2017/02/07/2017-02-07-observer/">观察者模式(Observer Pettern)</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/06</span>
+            <a class="archive-post-title" href="/2017/02/06/2017-02-06-annotation/">Android自定义注解</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/04</span>
+            <a class="archive-post-title" href="/2017/02/04/2017-02-04-Strategy/">策略模式(Strategy Pettern)</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/24</span>
+            <a class="archive-post-title" href="/2017/01/24/2017-01-24-rxjava_learning_notes/">RxAndroid学习笔记</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/23</span>
+            <a class="archive-post-title" href="/2017/01/23/2017-01-23-new_start/">Hello Blog</a>
+        </li>
+            </ul>
+    </div>
+</div>
+
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+            <span class="sidebar-tag-name" data-tags="生活">
+                <span class="iconfont-archer">&#xe606;</span>
+                生活
+            </span>
+            <span class="sidebar-tag-name" data-tags="Android">
+                <span class="iconfont-archer">&#xe606;</span>
+                Android
+            </span>
+            <span class="sidebar-tag-name" data-tags="基础">
+                <span class="iconfont-archer">&#xe606;</span>
+                基础
+            </span>
+            <span class="sidebar-tag-name" data-tags="Booklet">
+                <span class="iconfont-archer">&#xe606;</span>
+                Booklet
+            </span>
+            <span class="sidebar-tag-name" data-tags="Note">
+                <span class="iconfont-archer">&#xe606;</span>
+                Note
+            </span>
+            <span class="sidebar-tag-name" data-tags="Gradle">
+                <span class="iconfont-archer">&#xe606;</span>
+                Gradle
+            </span>
+            <span class="sidebar-tag-name" data-tags="Flutter">
+                <span class="iconfont-archer">&#xe606;</span>
+                Flutter
+            </span>
+            <span class="sidebar-tag-name" data-tags="Dart">
+                <span class="iconfont-archer">&#xe606;</span>
+                Dart
+            </span>
+            <span class="sidebar-tag-name" data-tags="Book">
+                <span class="iconfont-archer">&#xe606;</span>
+                Book
+            </span>
+            <span class="sidebar-tag-name" data-tags="RecyclerView">
+                <span class="iconfont-archer">&#xe606;</span>
+                RecyclerView
+            </span>
+            <span class="sidebar-tag-name" data-tags="HTTP">
+                <span class="iconfont-archer">&#xe606;</span>
+                HTTP
+            </span>
+            <span class="sidebar-tag-name" data-tags="方法论">
+                <span class="iconfont-archer">&#xe606;</span>
+                方法论
+            </span>
+            <span class="sidebar-tag-name" data-tags="读书笔记">
+                <span class="iconfont-archer">&#xe606;</span>
+                读书笔记
+            </span>
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+        缺失模块，请参考主题文档进行安装配置：https://github.com/fi3ework/hexo-theme-archer#%E5%AE%89%E8%A3%85%E4%B8%BB%E9%A2%98
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+
+    </div>
+</div>
+
+        <!-- site-meta -->
+        <script>
+    var siteMetaRoot = "/"
+    if (siteMetaRoot === "undefined") {
+        siteMetaRoot = '/'
+    }
+    var siteMeta = {
+        url: "https://czj-dev.github.io",
+        root: siteMetaRoot,
+        author: "Nutcracker"
+    }
+</script>
+
+        <!-- import experimental options here -->
+        <!-- Custom Font -->
+    <!-- Check browser compatibility of CSS variables -->
+    <script>
+        if (browserSupportCSSVariables === undefined) {
+            var browserSupportCSSVariables = window.CSS && window.CSS.supports && window.CSS.supports('--a', 0);
+        }
+    </script>
+    <script>
+        if (browserSupportCSSVariables) {
+            var customFontName = 'Noto Sans SC:n3,n4,n5,n7'
+            var customFontUrl = 'https://fonts.googleapis.cnpmjs.org/css2?family=Noto+Sans+SC:wght@300;400;500;700&amp;display=swap'
+            if (!customFontName) {
+                console.log('Custom font name is not set or read failed');
+            }
+            if (!customFontUrl) {
+                console.log('Custom font url is not set or read failed');
+            }
+        } else {
+            console.error('Current browser doesn\'t support custom font.')
+        }
+    </script>
+    <script src="/scripts/customFontLoader.js" defer></script>
+
+        <!-- main func -->
+        <script src="/scripts/main.js"></script>
+        <!-- fancybox -->
+        <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.umd.js" onload="window.Fancybox.bind('[data-fancybox]')" defer></script>
+        <!-- algolia -->
+        <!-- busuanzi -->
+            <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+        <!-- async load share.js -->
+            <script src="/scripts/share.js" async></script>
+        <!-- mermaid -->
+            <script src='https://cdn.jsdelivr.net/npm/mermaid@8.11.0/dist/mermaid.min.js' onload="window.mermaid.initialize({theme: 'dark'})" async></script>
+    </body>
+</html>

@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="cn">
+    <!-- title -->
+<!-- keywords -->
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="Nutcracker">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="Nutcracker">
+        <meta name="keywords" content="Android,Live,Nutcracker">
+    <meta name="description" content="">
+    <meta name="description" content="前言这本书的上一版《从小工到专家》其实我就早有耳闻了，但是当时觉得这个翻译的名字很糟糕，且周围并没有人去推荐它，我就打消了看它的念头。然后今年闲暇下来发现这本书的再版，书籍的名称也变为了《程序员修炼之道》，抱着看闲书和京东打折的契机，把它买了下来。看完两章发现自己两年前错失了一部能快速获得经验，提高生产力的的书籍。书有可前浅尝者、有可吞食者，少数需咀嚼消化，这本书我认为就属于需要咀嚼消化的那种书，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《程序员修炼之道》">
+<meta property="og:url" content="https://czj-dev.github.io/2024/09/13/2024-09-13-program_developer_experience/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="前言这本书的上一版《从小工到专家》其实我就早有耳闻了，但是当时觉得这个翻译的名字很糟糕，且周围并没有人去推荐它，我就打消了看它的念头。然后今年闲暇下来发现这本书的再版，书籍的名称也变为了《程序员修炼之道》，抱着看闲书和京东打折的契机，把它买了下来。看完两章发现自己两年前错失了一部能快速获得经验，提高生产力的的书籍。书有可前浅尝者、有可吞食者，少数需咀嚼消化，这本书我认为就属于需要咀嚼消化的那种书，">
+<meta property="og:locale">
+<meta property="og:image" content="https://czj-dev.github.io/img/post-icon-xiulian-01.png">
+<meta property="article:published_time" content="2024-09-13T07:25:00.000Z">
+<meta property="article:modified_time" content="2024-09-13T07:50:58.882Z">
+<meta property="article:author" content="Nutcracker">
+<meta property="article:tag" content="Book">
+<meta property="article:tag" content="方法论">
+<meta property="article:tag" content="读书笔记">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://czj-dev.github.io/img/post-icon-xiulian-01.png">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="icon" href="/assets/favicon.ico">
+    <title>《程序员修炼之道》 · Base Station</title>
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+    (function (w) {
+        'use strict'
+        // rel=preload support test
+        if (!w.loadCSS) {
+            w.loadCSS = function () {}
+        }
+        // define on the loadCSS obj
+        var rp = (loadCSS.relpreload = {})
+        // rel=preload feature support test
+        // runs once and returns a function for compat purposes
+        rp.support = (function () {
+            var ret
+            try {
+                ret = w.document.createElement('link').relList.supports('preload')
+            } catch (e) {
+                ret = false
+            }
+            return function () {
+                return ret
+            }
+        })()
+
+        // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+        // then change that media back to its intended value on load
+        rp.bindMediaToggle = function (link) {
+            // remember existing media attr for ultimate state, or default to 'all'
+            var finalMedia = link.media || 'all'
+
+            function enableStylesheet() {
+                link.media = finalMedia
+            }
+
+            // bind load handlers to enable media
+            if (link.addEventListener) {
+                link.addEventListener('load', enableStylesheet)
+            } else if (link.attachEvent) {
+                link.attachEvent('onload', enableStylesheet)
+            }
+
+            // Set rel and non-applicable media type to start an async request
+            // note: timeout allows this to happen async to let rendering continue in IE
+            setTimeout(function () {
+                link.rel = 'stylesheet'
+                link.media = 'only x'
+            })
+            // also enable media after 3 seconds,
+            // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+            setTimeout(enableStylesheet, 3000)
+        }
+
+        // loop through link elements in DOM
+        rp.poly = function () {
+            // double check this to prevent external calls from running
+            if (rp.support()) {
+                return
+            }
+            var links = w.document.getElementsByTagName('link')
+            for (var i = 0; i < links.length; i++) {
+                var link = links[i]
+                // qualify links to those with rel=preload and as=style attrs
+                if (
+                    link.rel === 'preload' &&
+                    link.getAttribute('as') === 'style' &&
+                    !link.getAttribute('data-loadcss')
+                ) {
+                    // prevent rerunning on link
+                    link.setAttribute('data-loadcss', true)
+                    // bind listeners to toggle media back
+                    rp.bindMediaToggle(link)
+                }
+            }
+        }
+
+        // if unsupported, run the polyfill
+        if (!rp.support()) {
+            // run once at least
+            rp.poly()
+
+            // rerun poly on an interval until onload
+            var run = w.setInterval(rp.poly, 500)
+            if (w.addEventListener) {
+                w.addEventListener('load', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            } else if (w.attachEvent) {
+                w.attachEvent('onload', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            }
+        }
+
+        // commonjs
+        if (typeof exports !== 'undefined') {
+            exports.loadCSS = loadCSS
+        } else {
+            w.loadCSS = loadCSS
+        }
+    })(typeof global !== 'undefined' ? global : this)
+</script>
+
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .footer-fixed-btn,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(
+            -45deg,
+            #444 0,
+            #444 80px,
+            #333 80px,
+            #333 160px
+        );
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+</style>
+
+    <link id="stylesheet-fancybox" rel="preload" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link id="stylesheet-base" rel="preload" href="/css/style.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link id="stylesheet-mobile" rel="preload" href="/css/mobile.css" as="style" onload="this.onload=null;this.rel='stylesheet';this.media='screen and (max-width: 960px)'">
+    <link id="stylesheet-theme-dark" rel="preload" href="/css/dark.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <!-- 自定义样式 -->
+    <link rel="stylesheet" href="/css/custom.css">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js" as="script">
+    <link rel="preload" href="/font/Oswald-Regular.ttf" as="font" crossorigin>
+    <link rel="preload" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" as="font" crossorigin>
+    <!-- algolia -->
+    <!-- 百度统计  -->
+    <!-- 谷歌统计  -->
+    <!-- Google tag (gtag.js) -->
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ == undefined) {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js" />')
+        }
+    </script>
+        <body class="post-body">
+        <!-- header -->
+        <header class="header header-mobile">
+    <!-- top read progress line -->
+    <div class="header-element">
+        <div class="read-progress read-progress-feature"></div>
+    </div>
+    <!-- sidebar menu button -->
+    <div class="header-element">
+        <div class="header-sidebar-menu">
+            <div style="padding-left: 1px;">&#xe775;</div>
+        </div>
+    </div>
+    <!-- header actions -->
+    <div class="header-actions">
+        <!-- theme mode switch button -->
+        <span class="header-theme-btn header-element">
+            <i class="fas fa-adjust"></i>
+        </span>
+        <!-- back to home page text -->
+        <span class="home-link header-element">
+            <a href="/">Base Station</a>
+        </span>
+    </div>
+    <!-- toggle banner -->
+    <div class="banner">
+        <div class="blog-title header-element">
+            <a href="/">Base Station</a>
+        </div>
+        <div class="post-title header-element">
+            <a href="#" class="post-name">《程序员修炼之道》</a>
+        </div>
+    </div>
+</header>
+
+        <!-- fixed footer -->
+        <footer class="footer-fixed">
+    <!-- donate button -->
+
+    <!-- back to top button -->
+    <div class="footer-fixed-btn footer-fixed-btn--hidden back-top">
+        <div>&#xe639;</div>
+    </div>
+</footer>
+
+        <!-- wrapper -->
+        <div class="wrapper">
+            <div class="site-intro" style="    height:50vh;
+">
+    <!-- 主页  -->
+    <!-- 404页  -->
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/img/post-bg-book.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+                《程序员修炼之道》
+            <!-- 404 -->
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+                    读书笔记
+            <!-- 404 -->
+        </p>
+        <!-- 文章页 meta -->
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                    <div class="post-intro-tags" >
+        <a class="post-tag" href="javascript:void(0);" data-tags="Book">Book</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="方法论">方法论</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="读书笔记">读书笔记</a>
+</div>
+
+                <!-- 文章字数统计 -->
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">8.2k</span>阅读时长: <span class="post-count reading-time">27 min</span></span>
+                    </div>
+                <div class="post-intro-meta">
+                    <!-- 撰写日期 -->
+                    <span class="iconfont-archer post-intro-calander">&#xe676;</span>
+                    <span class="post-intro-time">2024/09/13</span>
+                    <!-- busuanzi -->
+                        <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                            <span class="iconfont-archer post-intro-busuanzi">&#xe602;</span>
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    <!-- 文章分享 -->
+                    <span class="share-wrapper">
+                        <span class="iconfont-archer share-icon">&#xe71d;</span>
+                        <span class="share-text">Share</span>
+                        <ul class="share-list">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+    </div>
+</div>
+
+            <script>
+  // get user agent
+  function getBrowserVersions() {
+    var u = window.navigator.userAgent
+    return {
+      userAgent: u,
+      trident: u.indexOf('Trident') > -1, //IE内核
+      presto: u.indexOf('Presto') > -1, //opera内核
+      webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+      gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+      mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+      ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+      android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+      iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+      iPad: u.indexOf('iPad') > -1, //是否为iPad
+      webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+      weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+      uc: u.indexOf('UCBrowser') > -1, //是否为android下的UC浏览器
+    }
+  }
+  var browser = {
+    versions: getBrowserVersions(),
+  }
+  console.log('userAgent: ' + browser.versions.userAgent)
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded')
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document
+        .getElementsByClassName('intro-title')[0]
+        .classList.add('intro-fade-in')
+      document
+        .getElementsByClassName('intro-subtitle')[0]
+        .classList.add('intro-fade-in')
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in')
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb() {
+    if (browser.versions.uc) {
+      console.log('UCBrowser')
+      fontLoaded()
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular'],
+        },
+        loading: function () {
+          // 所有字体开始加载
+          // console.log('font loading');
+        },
+        active: function () {
+          // 所有字体已渲染
+          fontLoaded()
+        },
+        inactive: function () {
+          // 字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout')
+          fontLoaded()
+        },
+        timeout: 5000, // Set the timeout to two seconds
+      })
+    }
+  }
+
+  function asyncErr() {
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document,
+      t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0]
+    o.src = u
+    if (cb) {
+      o.addEventListener(
+        'load',
+        function (e) {
+          cb(null, e)
+        },
+        false
+      )
+    }
+    if (err) {
+      o.addEventListener(
+        'error',
+        function (e) {
+          err(null, e)
+        },
+        false
+      )
+    }
+    s.parentNode.insertBefore(o, s)
+  }
+
+  var asyncLoadWithFallBack = function (arr, success, reject) {
+    var currReject = function () {
+      reject()
+      arr.shift()
+      if (arr.length) async(arr[0], success, currReject)
+    }
+
+    async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack(
+    [
+      'https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js',
+      'https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js',
+      "/lib/webfontloader.min.js",
+    ],
+    asyncCb,
+    asyncErr
+  )
+</script>
+
+            <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" alt="loading">
+            <div class="container container-unloaded">
+                <main class="main post-page">
+    <article class="article-entry">
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>这本书的上一版《从小工到专家》其实我就早有耳闻了，但是当时觉得这个翻译的名字很糟糕，且周围并没有人去推荐它，我就打消了看它的念头。然后今年闲暇下来发现这本书的再版，书籍的名称也变为了《程序员修炼之道》，抱着看闲书和京东打折的契机，把它买了下来。看完两章发现自己两年前错失了一部能快速获得经验，提高生产力的的书籍。书有可前浅尝者、有可吞食者，少数需咀嚼消化，这本书我认为就属于需要咀嚼消化的那种书，帮助你提取一些之前成功项目的的原因，也可以让你思考生活与工作遇到同一类问题的处理方式。</p>
+<h1 id="务实的方法"><a href="#务实的方法" class="headerlink" title="务实的方法"></a>务实的方法</h1><h2 id="人生是你的"><a href="#人生是你的" class="headerlink" title="人生是你的"></a>人生是你的</h2><blockquote>
+<p>我活着不是为了满足你的期望，正如你不是因为我的期望而活着<br>—— 李小龙</p>
+</blockquote>
+<p>软件开发在任何职业列表中，都绝对是你自己最能掌控的职业之一。我们的技能供不应求，我们的知识不限于地域，我们可以远程工作。我们收入颇丰。我们真的可以做到我们任何想做的事。但是总有一些原因导致开发者们拒绝改变，他们蜷缩在那里，期盼事情会自己变好，眼睁睁的看着自己的技能过时，再去抱怨世界日新月异，工作环境糟糕。</p>
+<p>虽然看起来作者有种何不食肉糜的感觉，但其实在现如今的行业划分里，软件开发确实是最能自己掌握的职业之一。互联网上基本上有你所需要的所有资料，而且即使你只会一种编程语言，今年你可以做金融，明年就可以无缝做购物，后年可以跑去做车载，你的职业经验仍然大部分适用。<strong>职业环境并不会对你的事业有很大的限制，能限制的只有你自己。</strong></p>
+<h2 id="我的源码被猫吃了"><a href="#我的源码被猫吃了" class="headerlink" title="我的源码被猫吃了"></a>我的源码被猫吃了</h2><blockquote>
+<p>如果你面临供应商帮不上忙这样的风险，就应该制定一个应急方案。如果磁盘挂起——你所有的源码都在里面，这就是你的错。跟你的老板说“我的源码都被猫吃了” 解决不了问题</p>
+</blockquote>
+<h3 id="团队信任"><a href="#团队信任" class="headerlink" title="团队信任"></a>团队信任</h3><p>你的团队需要你能信赖和依赖你——你也应该同样地放心依赖他们每个人</p>
+<ul>
+<li>不必直接掌控事情的各个方面</li>
+<li>表达你的思想，说出你的想法。缔造一个以信任为基础的健康环境</li>
+</ul>
+<h3 id="承担责任"><a href="#承担责任" class="headerlink" title="承担责任"></a>承担责任</h3><p>在承接需求或任务前，你必须分析超出你控制范围的风险情况，如果责任的伦理内含过于含糊，或是面对无法实现的情况，亦或是风险过大，你都有权不承担责任。在这个阶段就及时把问题抛出，重新评估任务的可行性或是明确风险情况的责任人</p>
+<p>在决定对一个结果承担责任时，要明白你将承接相关的义务。当你犯了错误，或是做出了错误的判断，诚实地承认它，并尝试给出选择</p>
+<p><strong>给出选择，而非借口</strong> 给出选择并非要求你一定像上文例子里一样，做事都有 plan B, 即使在世界末日都能从兜里掏一台时空穿梭器。而是你跑过去告诉他们坏消息前，最好能解释下做些什么才能挽回局面。队友和领导都很乐于与这种人公事，他们在这种场景下能以更低的成本去参与到新问题和新需求的处理中</p>
+<h2 id="软件的熵"><a href="#软件的熵" class="headerlink" title="软件的熵"></a>软件的熵</h2><p>虽然软件开发不受绝大多数物理法则的约束，但我们无法躲避来自熵增加重击。<strong>熵</strong>是一个物理学术语，它定义了一个系统的“无序”总量。不幸的是，热力学法则决定了宇宙中的熵会趋向最大化。而软件开发因为各种 Bug 的修复，需求的新增和补充，软件的复杂度和无序化也在逐步增加，本小节主要是探讨如何避免软件的熵的增加</p>
+<ul>
+<li>“破窗效应”——制定了规则就要需要严格遵守，例如 Code Review 、Code Lint 软件架构 等 ，这些规则都是为了保持软件的可读性以及降低程序的复杂性，既然制定了就要好好遵守，而非流于表面。窗户一旦开始破裂，运转良好的系统会迅速恶化。</li>
+<li>“领头羊效应”—— 在必要的时候，主动承担责任，做推动变革的催化剂。</li>
+<li>“温水煮青蛙”—— 留意大局，持续不断的审视你身边发生的事情，不要只专注你个人在做的事情。即使你只负责部分的事务，也需要对宏观上能影响你的事件保持敏锐。</li>
+</ul>
+<h2 id="做够好即可的软件"><a href="#做够好即可的软件" class="headerlink" title="做够好即可的软件"></a>做够好即可的软件</h2><blockquote>
+<p>为了追求更好，我们毁损了原已够好的<br>—— 莎士比亚《李尔王》</p>
+</blockquote>
+<p>现实世界不会让我们生产出真正完美的产品，尤其是没有 Bug 的软件。时间、技术、急躁合力对抗着我们。对软件开发者来说要明白以下几点</p>
+<ul>
+<li>将质量视为需求问题——对于你创建的系统，其应用领域和要达到的质量，必须作为系统需求的一部分加以讨论</li>
+<li>让用户参与权衡—— 无视用户的需求，一味的堆砌功能，一次次打磨代码，这是不专业的表现。你可能会承诺一个无法兑现的时间尺度，然后为了赶上截止日期，再回过头去删减工程。</li>
+<li>知道何时止步——不要让过度地修饰和精炼侵蚀掉一个完好的程序。继续前行，让代码在它该有的位置驻留一段时间。它或许不完美，不要紧的 —— 它就算不完美也没关系 (这部分代码既不影响性能，也不影响功能，你可能永远都不需要再改动它了)</li>
+</ul>
+<h2 id="知识组合"><a href="#知识组合" class="headerlink" title="知识组合"></a>知识组合</h2><blockquote>
+<p>投资知识，收益最佳<br>—— 本杰名·富兰克林</p>
+</blockquote>
+<p>知识和经验的确是你最重要的专业资产，可惜的是，它们是一种时效性资产。随着新技术的出现，以及语言和环境的发展，你的知识会变得过时 。不断变化的市场力量可能会使得经验变得陈旧而无关紧要。鉴于技术社会变化的速度越来越快，这种事情可能会发生得特别迅速。当你的知识价值下降时，你对于公司和客户的价值也在下降。想要阻止这一切的发生，学习新事物的能力是你重要的战略资产。</p>
+<p>管理知识组合和管理金融投资组合非常的类似：</p>
+<ol>
+<li>正规投资有<strong>定期投资</strong>的习惯<br>及时更新自己的专业视野，了解新的工具和技能，阅读相关的新闻和技术贴。</li>
+<li><strong>多样化</strong>是长线成功的关键<br>扩展自己的技能领域，熟悉的技能越多，越能适应变化</li>
+<li>聪明的投资者会<strong>平衡</strong>保守型和高风险形回报投资的<strong>组合</strong><br>及时了解新的行业动向，并尝试接触与学习，不要去当听众，主动参与。</li>
+<li>投资者用<strong>低买高卖</strong>来获得最大的回报<br>例如前些年的大数据、前端开发，又如现在的低代码以及车联网。它们在这时会有相较于平常较高的溢价，如果你有足够的能力和储备，那么你可以在工作回报上又较高的提升，但需要明确的是，在蓝海回归红海后，也可能有较大的风险。需要你有应对风险的能力</li>
+<li>定期审查和<strong>重新平衡投资</strong>组合<br>根据当前的行业趋势，去重新审视自己的技术树，调整自己学习的优先级</li>
+</ol>
+<blockquote>
+<p>是否在某个项目中使用这些技术或者是否把它放入你的简历中，这并不重要。学习的过程将扩展你的思维，使你向着新的可能性和新的做事方式扩展。思想的“异化授粉”（cross-pollination) 十分重要。设法把你所学的东西应用到你当前的项目中，即使你的项目没有使用该技术，你也可以借鉴一些想法</p>
+</blockquote>
+<h3 id="学习的机会"><a href="#学习的机会" class="headerlink" title="学习的机会"></a>学习的机会</h3><ul>
+<li>提前把一些资料准备在触手可及的地方，在有兴趣的时候能够及时拿到</li>
+<li>把找到答案当做一个个人挑战，去尝试用各种方法更新自己的知识组合</li>
+<li>不要把问题搁置，自己找不到答案，就去找出能找到答案的人。与他人交谈既可以帮你建立人际网络，在这个过程中也可以受益良多</li>
+</ul>
+<h3 id="批判性思维"><a href="#批判性思维" class="headerlink" title="批判性思维"></a>批判性思维</h3><blockquote>
+<p>Critically Analyze What You Read and Hear</p>
+</blockquote>
+<p>批判性思考读到的和听到的东西。你需要确保组合中的知识是精准的，未受到创作者的影响。</p>
+<p>批判性思维是一门完整的学科，这里起个头：</p>
+<ul>
+<li>问 “五个为什么” —— 在得到答案后继续为什么，来更接近本源。在日常沟通中要注意技巧，防止认为是挑衅而被揍</li>
+<li>谁从中受益——虽然听起来比较世俗，不过这样更容易理清脉络</li>
+<li>有什么背景——每件事都发生在它自己的背景下，这也是为何“能解决所有问题”的方案通常不存在，而那些兜售“最佳实践”的书或文章经不起推敲（好吐槽）</li>
+</ul>
+<h2 id="交流"><a href="#交流" class="headerlink" title="交流"></a>交流</h2><blockquote>
+<p>我认为被人从头打量到脚总比被人视而不见的好<br>—— 《九十岁的美女》</p>
+</blockquote>
+<p>只是拥有是不够的，还要看你如何包装它。即使拥有最好的想法、漂亮的代码、最务实的思想，如果不能和它人交流，最终都无法孕育出果实。</p>
+<p>把你的母语当做一门编程语言，像写代码一样用自然语言写文章，尊重DRY原则，ETC、自动化 等等（后续会提到）。</p>
+<ul>
+<li>了解听众 —— 根据听众不同，选择用不同的方式和风格描述你要介绍的系统</li>
+<li>明白自己想说什么 —— 写好大纲，提炼核心</li>
+<li>选择时机 —— 确定轻重缓急</li>
+<li>让听众参与——让听众参与,把会议变成一场谈话，你可以更有效地表达你自己的观点，还可以听取他们的反馈，汲取他们的智慧。</li>
+<li>发送文字前检查拼写和接收人</li>
+</ul>
+<h1 id="务实的方法-1"><a href="#务实的方法-1" class="headerlink" title="务实的方法"></a>务实的方法</h1><blockquote>
+<p>有一些技巧和方法适用于软件开发的所有层级，其中蕴含的思想几乎成了公理，实施过程中也非常通用。然而，这些方法很少被规范成文档。现在，这些想法和过程集中这里。形成了 DRY ETC 等原则，以及原型和便签等方法论</p>
+</blockquote>
+<h2 id="ETC-Easier-To-Change"><a href="#ETC-Easier-To-Change" class="headerlink" title="ETC (Easier To Change)"></a>ETC (Easier To Change)</h2><p>能适应使用者的就是好的设计。对代码而言，就是要顺应变化（让代码更容易阅读、解耦、单一职责、可替换）ETC（更容易变更） 是一种价值观念，而不是一条规则；当你在<strong>软件领域思考时，ETC 是个向导，它能帮助你在不同路线中选出一条</strong>。</p>
+<p>在你有能力辨别时，常识通常都不会错，有事如果你找不到线索，你可以做以下的事情</p>
+<ol>
+<li>假设不确定什么形式的改变会发生，那么就回到问题的可能产生的源头——让你的写的东西可替换。这样无论将来发生了什么，这块代码都不会称为障碍。</li>
+<li>把它当做培养直觉的一种方式。在工程日记中留下你面临的处境：你有哪些选择，以及改变的一些猜测。以便以后必须修改这块代码时，方便回顾。在在遇到类似的分叉口时，这会有所帮助。</li>
+</ol>
+<h2 id="DRY-Dot-Replay-You"><a href="#DRY-Dot-Replay-You" class="headerlink" title="DRY (Dot Replay You)"></a>DRY (Dot Replay You)</h2><p>知识并不稳定，知识会改变——通常频率还很高。可能只要和客户开个会，对需求的理解马上就变了。政府改了条规定，一些逻辑就过时了。当我们进行维护时，必须找到变更事物的表达——那些嵌入程序的知识胶囊。问题是，在规范、流程、开发的程序中复制知识太容易了，一旦我们动手这么做，就会招致维护的噩梦。想要可靠地开发软件，或让开发项目变得跟容易理解和维护，唯一的方法是遵循 <strong>DRY 原则—— 在一个系统中，每一处知识都必须单一、明确、权威的表达</strong></p>
+<p>DRY 指的不要重复自己，所以它并不是但指的“不要复制粘贴底代码”，这的确是 DRY 的组成部分，但这是很小的部分，一点都不重要。</p>
+<p>DRY 针对的是你对知识和意图的复制，它强调的是，如果两个地方表达的东西其实相同的，只是表达方式不同，那么它也违反了 DRY 原则。同理，如果两个地方的表达方式完全相同，但他们在不同模块中承担不同的职责，那么他们并不违反 DRY 原则。</p>
+<h3 id="Code-Lab"><a href="#Code-Lab" class="headerlink" title="Code Lab"></a>Code Lab</h3><ul>
+<li>统一访问原则——《面向对象软件构造》中描述：一个模块提供的服务都应该通过统一的约定来提供，该约定不应该表露出其实现是基于储存还是基于运算。</li>
+<li>你努力的方向，应该是孕育出一个更容易找到和复用已有事物的环境，而不是自己重新编写。若果复用不容易，人们就不会这么做。如果你未能复用，就有重复知识的风险</li>
+</ul>
+<h2 id="正交性"><a href="#正交性" class="headerlink" title="正交性"></a>正交性</h2><p>“正交性”是从几何学中借用来的术语。若两条直线相交后构成直角，它们就是正交。</p>
+<p><img src="/img/post-icon-xiulian-01.png" alt="线段 AB 与 CD 彼此正交"></p>
+<p>线段 AB 与 CD 彼此正交</p>
+<p> 在计算科学中，这个术语象征着独立性和解耦性。良好的架构系统中，两个模块之间应该相互独立，其中一个模块的修改不应该影响另一个模块。正交的系统可以提高生产力和降低风险，更好的应对不断变化的业务和需求。</p>
+<p>如何保持系统的正交性：</p>
+<ul>
+<li>保持代码解耦、避免全局数据、避免相似的函数</li>
+<li>养成不断质疑代码的习惯。有机会就重新组织、改善其结构性和正交性</li>
+<li>基于正交性设计和实现的系统更容易测试。因此编写单元测试本身就是一个有趣的正交性测试。做什么才能让单元测试构建并运行起来？如果需要导入系统其余的大部分代码，那么恭喜你就发现一个与系统其余部分没有很好解耦的模块</li>
+<li><strong>记录并评估和问题的修复方案和范围</strong>，对已经修复的问题归档和记录，在阅读报告中去分析每个 Bug 修复的所影响的模块和文件数量趋势。以此来发觉系统中不稳定的模块，或是设计的不正交的模块。</li>
+</ul>
+<h2 id="可逆性"><a href="#可逆性" class="headerlink" title="可逆性"></a>可逆性</h2><ul>
+<li>保持灵活的架构</li>
+<li>放弃追逐时尚</li>
+</ul>
+<h2 id="曳光弹"><a href="#曳光弹" class="headerlink" title="曳光弹"></a>曳光弹</h2><p>曳光弹能够快速抵达目标，枪手可以得到及时反馈——如果曳光弹集中了目标，那么之后的常规子弹也会被击中。</p>
+<p>同样地原则也适用于做项目。特别是在要构建一些从做过的东西时，我们可以进行曳光弹式的开发</p>
+<h3 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h3><ul>
+<li>能够构造一个在其中工作的框架（Core）</li>
+<li>能对进度有更好的感觉，通过对这些案例的更重，度量性能和向用户展示进度要容易的多</li>
+<li>更小的试错成本，你可以将核心部分快速同用户沟通展示，确认是否是它们想要的。以更快的速度，更小的成本收集到程序的反馈，并生成一个更准确的版本。</li>
+</ul>
+<h3 id="方法论"><a href="#方法论" class="headerlink" title="方法论"></a>方法论</h3><ul>
+<li>在需求评审和开发阶段，寻找需要的核心部分，那些定义了系统的部分，有重大风险的地方。然后对这部分排列优先级，优先从这里处理。</li>
+<li>注意曳光弹的场景是快速构建一个完整系统的雏形，并非是制作原型</li>
+</ul>
+<h3 id="与原型的区别"><a href="#与原型的区别" class="headerlink" title="与原型的区别"></a>与原型的区别</h3><p>原型制作生成的是一次性代码，曳光弹虽然简单，但它是完整的，是最终框架的组成部分。<strong>原型是用来验证方案的可行性，而曳光弹是用来验证系统的可行性</strong>。</p>
+<h2 id="原型制作"><a href="#原型制作" class="headerlink" title="原型制作"></a>原型制作</h2><blockquote>
+<p>原型制作是为了学习经验。它的价值不在于产生的代码，而在于吸取的教训。这正式原型的意义所在</p>
+</blockquote>
+<p>原型制作比完整的产品制作要便宜得多。因此我们可以通过制作原型来分析和暴露风险，以一种大幅减低成本的方式获得修正的机会。原型被设计出来，只是为了回答问题的答案，因此可以忽略很多不重要的细节。但如果你发现自己处在于一个不能放弃细节的环境中。那么可能曳光弹式开发更适合你。</p>
+<p>当你制作原型时，哪些细节可以忽略：</p>
+<ul>
+<li>正确性——你可以在适当的时候替代掉数据</li>
+<li>完整性——原型只需要满足优先的功能</li>
+<li>健壮性——错误和边界条件并不是必须的，你只需要验证特定的航线</li>
+<li>格    式—— 并不需要太多的注释和文档</li>
+</ul>
+<p>制作原型时，尽量推迟思考细节，你要确定的是，系统的各个部分是怎么结合形成一个整体的。</p>
+<h2 id="领域语言"><a href="#领域语言" class="headerlink" title="领域语言"></a>领域语言</h2><blockquote>
+<p>语言之界限，即是一个人世界之界限<br>——路德维希·维特根斯坦</p>
+</blockquote>
+<p>计算机语言会影响你怎样思考问题，影响你怎样看待信息的传播。每一门语言都有一个特性列表——静态类型、动态类型、mixin、函数式还是面向对象——所有这些对问题的解决方案，既可能是提供建议也可能扰乱视听。在一些案例中，<strong>高阶的程序员能跨越到下一个层级，不是用词汇表来编写代码，而直接用该领域的语言编程，直接使用该领域的词汇、语法和语义</strong>（DSL）</p>
+<p>对于传统的语言，例如 Java 这种，我们可能使用外部语言例如 XML 或者 JSON 需要编写额外的解析器，但是向现代语言例如 Kotlin 这种，它们对于 DSL 的支持是极为优秀的。我们可以通过现有的词汇表来轻松扩展出 DSL 语言来。</p>
+<p>从另一个角度思考，ChatGPT 以及 Copilot 的兴起和趋势。将编写业务代码的大部分工作交由 AI 来完成会提高我们的工作效率，理想情况下我们只需要提供边界完善和剪枝的操作。但是如何将业务需求转换为语言模型能够明确理解的文字，这也同样考验证的我们通过母语的编程能力，可以较为清晰的通过母语将需求与环境描述清楚，语言模型才能根据我们需要生成所需要的代码。我们在以后的需求场景可能要锻炼我们通过母语来编写伪代码的能力，以此来应对日新月异的 AI 发展，和提高自己的工作效率</p>
+<h2 id="估算"><a href="#估算" class="headerlink" title="估算"></a>估算</h2><p>在接收到一个问题或是需求时，我们通过对估算，可以快速判断该事件的可行性。而估算的前提是——<strong>对问题建模</strong>。当我们理解问题或是需求时，就开始为之建立一个粗略的思维框架模型。在建模的过程中，你可以发现一些表面上看不出来的潜在模式和过程。在得到模型后，就可以将其分解成组件，你需要发掘出这些组件如何交互的数学规则。</p>
+<h3 id="如何估算项目进度"><a href="#如何估算项目进度" class="headerlink" title="如何估算项目进度"></a>如何估算项目进度</h3><ul>
+<li>RERT（ Program Evaluation Review Techningue ）每个 PERT任务都有一个乐观的、一个可能的和一个悲观的估算，像这种带着范围值的估算，他能避免最常见的估算错误因素。</li>
+<li>增量开发：将任务分为不同阶段，在每次迭代后，提炼其中的经验，完善对进度的控制。</li>
+</ul>
+<p>问题建模也是之后让 AI 编程的核心方法论，只有通过建模的形式，我们才可以将需求或问题清晰表达，以及将各个节点拆分成组件，再讲这些组件的模型在未实现实际代码时就明确的划分其职责和功能</p>
+<h1 id="基础工具"><a href="#基础工具" class="headerlink" title="基础工具"></a>基础工具</h1><h2 id="纯文本"><a href="#纯文本" class="headerlink" title="纯文本"></a>纯文本</h2><p>作为程序员，我们基础材料不是木头或铁块，而是知识。我们把需求以知识的形式收集起来，然后在设计、实现出、测试和文档中表达这些知识。纯文本，则是我们认为是将知识持久地存储下来的最佳格式。</p>
+<p>所谓的纯文本并不是但只是指 txt 格式的文件，而是可以任何可以被人类直接阅读，编辑器可以直接解析的文本数据。纯文本的优势是</p>
+<ul>
+<li>防备老化的保险 —— 如今的很多知识软件的使用和更新都依赖于网络和维护，，当存储数据的应用程序生命周期结束后，如果它不支持导出纯文本数据，那么你在应用程序中存储的知识想要重新使用起来就极为困难了。</li>
+<li>易于检索——使用纯文本记录，我们可以无缝的使用版本管理来管理修改记录，通过 Shell 功能来任意搜索和匹配你的知识，也可以扔到一些文本编辑器中快速查找。而不需要依赖于特定的软件，和它们垃圾的检索功能（例如微信）</li>
+<li><strong>熟练使用编辑器以及 Shell</strong> —— 图形工具的好处自安于 WYSIWYG （所见即可得）；弱势之处是 WYSIAYG（所见即全部），如果图形工具的设计者没有为你的额外的需求设计钩子，那你就是做不到。而借助编辑器和 Shell 强大的生态和泛用性，你可以组合它们获得十分强大的能力，且这份知识还是通用的，它并不局限于某个 IDE 中。</li>
+<li><strong>充当配置项</strong> —— 配置项可以让你迫使你解除你的设计的耦合，从而带来更灵活可适应性更好的程序</li>
+</ul>
+<h2 id="工程日记"><a href="#工程日记" class="headerlink" title="工程日记"></a>工程日记</h2><p>日记的好处</p>
+<ul>
+<li>它比记忆更加可靠</li>
+<li>它为提供了一个地方，用来保存于当前任务无关的想法。这样你就可以继续专注正在做的事情，并指导这个伟大的想法不会被遗忘</li>
+<li>它就像一个橡皮鸭。当你停下来，把东西写上去的时候，大脑可能会换挡，几乎就像在和某个人说话一样——这是一个反思的好机会。你可以在开始做笔记的时候，突然意识到刚刚做的事情，也就是笔记的主题是完全错误的。</li>
+</ul>
+<p>还有一个额外的好处，你能时不时的想起很多年前你在做什么，会想起那些人、那些事，以及那些糟糕的衣服和发型。</p>
+<h1 id="务实的偏执"><a href="#务实的偏执" class="headerlink" title="务实的偏执"></a>务实的偏执</h1><blockquote>
+<p>自责中往往有种奢侈。我们自责时，总觉得别人无权再则被我们<br>—— 奥斯卡·王尔德《道林·格雷的画像》</p>
+</blockquote>
+<h3 id="BDC-契约式编程"><a href="#BDC-契约式编程" class="headerlink" title="BDC 契约式编程"></a>BDC 契约式编程</h3><h3 id="TDD-测试驱动开发"><a href="#TDD-测试驱动开发" class="headerlink" title="TDD 测试驱动开发"></a>TDD 测试驱动开发</h3><p>作者讲述了 BDC 和 TDD 的开发模式，主要是针对防御式编程和断言式编程的理念的推崇 —— 及在代码设计阶段把边界条件思考充分，并进行 Check . 在出现问题时，及早将异常抛出，避免进一步危害整个系统。这是一个合格程序员的基本功，也没有什么特别的方法论。其中值得称道就是断言编程的开关性，我们可以像一个 Google 源码一样，只在 debug 模式中开启断言，这样可以日常开发和测试流程时就把一些问题明显的暴露出来。而在生产模式中，秉承着用户优先和性能损耗的理念。我们可以关掉断言，补充日志。</p>
+<h3 id="很多时候，明天看起来会和今天差不多，但不要指望一定会这样"><a href="#很多时候，明天看起来会和今天差不多，但不要指望一定会这样" class="headerlink" title="很多时候，明天看起来会和今天差不多，但不要指望一定会这样"></a>很多时候，明天看起来会和今天差不多，但不要指望一定会这样</h3><ul>
+<li>在做设计与维护的时候，对超过可见范围的模块的维护和设计，并不一定需要浪费精力为不确定的未来做设计（徒增复杂性，像另一本书降到，Android 0.x 版本时，硬件是不支持 GPU 的，而负责开发的 Google 工程师在制作图形渲染这一块时，并没有设计整个系统，而是设计了一块虚拟的 GPU，当 Android 后续的版本支持 GPU 后，只需要将虚拟 GPU 的模块替换掉，系统的设计仍然保留），还不如将代码设计成可替换的。使代码可替换，还有助于提高内内聚性、解耦和 DRY，从而实现更好的设计。</li>
+<li>软件开发中，总是采取经过深思熟虑的小步骤，同时检查反馈，并在推进前不断调整。把反馈的速率当做速度限制，永远不要进行 “太大” 的任务步骤</li>
+</ul>
+<h1 id="并发"><a href="#并发" class="headerlink" title="并发"></a>并发</h1><p>并发性是指两个或更多个代码在执行过程中表现得像是在同时运行一样。并行性则值得是它们的确是在同一时刻运行。</p>
+<p>像获得并发性，需要在一个特殊的环境下运行下运行。当代码运行时，这个环境可以在其不同部分之间切换执行过程。这样的环境通常基于线程、进程、携程来实现</p>
+<p>像获得并行性，则需要又可以同时做两件事情的硬件，通常是同一 CPU 上的多核心，同一机器上的多个 CPU 或连接在一起的多台计算机。</p>
+<h1 id="编码"><a href="#编码" class="headerlink" title="编码"></a>编码</h1><ul>
+<li>时刻注意你在做什么，事情往往是慢慢失去控制的</li>
+<li>你能向一个更初级的程序员详细解释一下代码么？如果做不到，也许可能正在依赖某个巧合</li>
+<li>要按计划推行，无论这个计划是以什么形式存在</li>
+<li><strong>不要只测试代码，还要测试猜测。去实际试一下一些假设以及边界条件，确定你的代码在你所能预知的场景都能正常工作</strong></li>
+<li>为你的精力投放安排一个优先级。要把时间花在重要的方面。</li>
+</ul>
+<h2 id="重构"><a href="#重构" class="headerlink" title="重构"></a>重构</h2><p>软件开发最常见的隐喻是建筑的构建。商务人士对建筑的隐喻感到很舒服：它是科学的，可重复的，管理上有严格的汇报层次结构，等等。但实际上园艺的隐喻更接近于现实的软件开发：它更像一个有机体而非钻石堆砌，你需要不断观测花园的健康状态，根据需要对（土壤、职务、布局）做出调整。</p>
+<h3 id="如何重构"><a href="#如何重构" class="headerlink" title="如何重构"></a>如何重构</h3><ul>
+<li>不要试图让重构和添加功能同时进行</li>
+<li>在开始重构之前，确保有良好的拥有良好的测试环境。尽可能多地运行测试。这样，如果变更破坏了任何东西，都将尽快得知。</li>
+<li>采取简短慎重的步骤：将字段从一个类移动到另一个类，拆分方法，重命名变量。重构通常涉及对许多全局变量的修改，这些局部变量会导致更大范围的修改，若果保持小步骤，并在每个步骤之后进行测试，就能避免冗长的调试。</li>
+</ul>
+<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><p>测试的好处主要发生在你考虑测试以及编写测试的时候，而不是在运行测试的时候。</p>
+<p>你编写的所有软件都将进行测试 —— 如果不是你和你的团队测试，那就要由最终用户测试 —— 所以你最好计划对其进行彻底的测试。 一点预先的准备可以大大降低维护费用，减少客诉。</p>
+<h1 id="项目"><a href="#项目" class="headerlink" title="项目"></a>项目</h1><blockquote>
+<p>完美，不是在没有什么需要增加，而是在没有什么需要去掉时达到的</p>
+</blockquote>
+<h2 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h2><h3 id="挖掘需求"><a href="#挖掘需求" class="headerlink" title="挖掘需求"></a>挖掘需求</h3><p>找出用户为何要做特定事情的原因，而不只是他们目前做这件事的方式，这很重要。到最后，你的开发必须解决他们的商业问题，而不是满足他们陈述的需求。用户文档记载需求背后的原因将在每天进行实现决策时给你的团队带来无价的信息。</p>
+<h3 id="明确需求"><a href="#明确需求" class="headerlink" title="明确需求"></a>明确需求</h3><p>用户陈述的的要求并不一定是真正的需求。例如 “只有员工的上级和人事部门此案可以查看员工的档案” 这个陈述今天看来也许是个需求，但是由于它在陈述中嵌入了商业政策，而政策会经常改变，改变可能只是一些相对微妙的区别，但是对开发者来说就却有深远的影响。如果需求被陈述为 “只有人事部门才能查看员工档案” —— 开发者最后就可能编写在每次客户端访问时，进行明确的检查。但是如果陈述是 “只有授权的用户才可以访问员工档案”，开发者就可能设计一套完整的访问控制系统，当政策改变时，只有该系统的元数据需要修改。</p>
+<p>所以我们可能不并不想把他硬性的写入我们的需求中。最好的是把政策和需求文档分开，需求作为研发目标输出给开发者，而政策则是他们需要在实现中支持的事物类型的例子。最后，政策可以成为应用中的元数据。</p>
+<h3 id="需求文档"><a href="#需求文档" class="headerlink" title="需求文档"></a>需求文档</h3><p>制作需求文档时的一大危险是太过具体。好的需求文档会保持抽象。在涉及需求的地方，最简单的准确地反映商业需求要的陈述是最好的。这并非意味着你可以含糊不清 —— 你必须把底层的语义不变项当作需求进行捕捉，并把具体的或当前的工作实践当作政策进入文档。</p>
+<p>—— 需求不是架构。需求不是设计，也不是用户界面。需求是需要。</p>
+<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><ul>
+<li>对谜题的所有解决方案进行陈列，分解。并解释为何不能采用这个方案，确定么，是否能证明？</li>
+<li>自我提问，确定问题的核心以及当前的疑惑的是否是真正的问题还是外围的技术问题转移了注意力？</li>
+</ul>
+<h1 id="傲慢与偏见"><a href="#傲慢与偏见" class="headerlink" title="傲慢与偏见"></a>傲慢与偏见</h1><p>注重实效的程序员不会逃避责任。相反，我们乐于接受挑战，乐于使我们的专业知识广为认知。如果我们在负责一项设计，或是一段代码，我们是在做可以引以为豪的工作。</p>
+
+    </article>
+    <!-- license -->
+        <div class="license-wrapper">
+            <p>原文作者：<a href="https://czj-dev.github.io">Nutcracker</a>
+            <p>原文链接：<a href="https://czj-dev.github.io/2024/09/13/2024-09-13-program_developer_experience/">https://czj-dev.github.io/2024/09/13/2024-09-13-program_developer_experience/</a>
+            <p>发表日期：<a href="https://czj-dev.github.io/2024/09/13/2024-09-13-program_developer_experience/">September 13th 2024, 3:25:00 pm</a>
+            <p>更新日期：<a href="https://czj-dev.github.io/2024/09/13/2024-09-13-program_developer_experience/">September 13th 2024, 3:50:58 pm</a>
+            <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    <!-- paginator -->
+    <ul class="post-paginator">
+        <li class="next">
+        </li>
+        <li class="previous">
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2023/02/22/2023-02-20-android_preload_review/" title="Android 列表预加载分析">
+                    <div class="prevTitle">Android 列表预加载分析</div>
+                </a>
+        </li>
+    </ul>
+    <!-- comment -->
+        <div class="post-comment">
+            <!-- 来必力 City 版安装代码 -->
+
+            
+            
+            
+            <!-- utteranc评论 -->
+
+            <!-- partial('_partial/comment/changyan') -->
+            <!--PC版-->
+
+            
+                <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+    <div id="comment"></div>
+    <script>
+        new Valine({
+            el: '#comment',
+            notify:false,
+            verify:false,
+            appId: "IiPsw8Ob4JVxOMx3gayw548j-gzGzoHsz",
+            appKey: "0mXzTUSWpgkGqAO5TN7XfdtN",
+            placeholder: "",
+            path:window.location.pathname,
+            avatar:'mm'
+        });
+    </script>
+
+            
+        </div>
+    <!-- timeliness note -->
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+    <!-- Mathjax -->
+</main>
+
+                <!-- profile -->
+            </div>
+            <footer class="footer footer-unloaded">
+    <!-- social  -->
+        <div class="social">
+                            <a href="mailto:mrchenzhaojun@gmail.com" class="iconfont-archer email" title="email" ></a>
+                <a href="//github.com/czj-dev" class="iconfont-archer github" target="_blank" title="github"></a>
+                <a href="https://www.zhihu.com/people/chen-zhao-jun-27" class="iconfont-archer zhihu" target="_blank" title="zhihu"></a>
+                <a href="https://steamcommunity.com/id/NutcrackerX" class="iconfont-archer steam" target="_blank" title="steam"></a>
+
+        </div>
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- website approve for Chinese user -->
+    <!-- 不蒜子  -->
+        <div class="busuanzi-container">
+                <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+        </div>
+</footer>
+
+        </div>
+        <!-- toc -->
+            <div class="toc-wrapper toc-wrapper-loding" style=    top:50vh;
+>
+                <div class="toc-catalog">
+                    <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+                </div>
+                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8A%A1%E5%AE%9E%E7%9A%84%E6%96%B9%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text">务实的方法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%BA%E7%94%9F%E6%98%AF%E4%BD%A0%E7%9A%84"><span class="toc-number">2.1.</span> <span class="toc-text">人生是你的</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%88%91%E7%9A%84%E6%BA%90%E7%A0%81%E8%A2%AB%E7%8C%AB%E5%90%83%E4%BA%86"><span class="toc-number">2.2.</span> <span class="toc-text">我的源码被猫吃了</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%A2%E9%98%9F%E4%BF%A1%E4%BB%BB"><span class="toc-number">2.2.1.</span> <span class="toc-text">团队信任</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%BF%E6%8B%85%E8%B4%A3%E4%BB%BB"><span class="toc-number">2.2.2.</span> <span class="toc-text">承担责任</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BD%AF%E4%BB%B6%E7%9A%84%E7%86%B5"><span class="toc-number">2.3.</span> <span class="toc-text">软件的熵</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%81%9A%E5%A4%9F%E5%A5%BD%E5%8D%B3%E5%8F%AF%E7%9A%84%E8%BD%AF%E4%BB%B6"><span class="toc-number">2.4.</span> <span class="toc-text">做够好即可的软件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9F%A5%E8%AF%86%E7%BB%84%E5%90%88"><span class="toc-number">2.5.</span> <span class="toc-text">知识组合</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%A6%E4%B9%A0%E7%9A%84%E6%9C%BA%E4%BC%9A"><span class="toc-number">2.5.1.</span> <span class="toc-text">学习的机会</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%B9%E5%88%A4%E6%80%A7%E6%80%9D%E7%BB%B4"><span class="toc-number">2.5.2.</span> <span class="toc-text">批判性思维</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%A4%E6%B5%81"><span class="toc-number">2.6.</span> <span class="toc-text">交流</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8A%A1%E5%AE%9E%E7%9A%84%E6%96%B9%E6%B3%95-1"><span class="toc-number">3.</span> <span class="toc-text">务实的方法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#ETC-Easier-To-Change"><span class="toc-number">3.1.</span> <span class="toc-text">ETC (Easier To Change)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DRY-Dot-Replay-You"><span class="toc-number">3.2.</span> <span class="toc-text">DRY (Dot Replay You)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Code-Lab"><span class="toc-number">3.2.1.</span> <span class="toc-text">Code Lab</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%AD%A3%E4%BA%A4%E6%80%A7"><span class="toc-number">3.3.</span> <span class="toc-text">正交性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%AF%E9%80%86%E6%80%A7"><span class="toc-number">3.4.</span> <span class="toc-text">可逆性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9B%B3%E5%85%89%E5%BC%B9"><span class="toc-number">3.5.</span> <span class="toc-text">曳光弹</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E5%8A%BF"><span class="toc-number">3.5.1.</span> <span class="toc-text">优势</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E8%AE%BA"><span class="toc-number">3.5.2.</span> <span class="toc-text">方法论</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8E%E5%8E%9F%E5%9E%8B%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">3.5.3.</span> <span class="toc-text">与原型的区别</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%9F%E5%9E%8B%E5%88%B6%E4%BD%9C"><span class="toc-number">3.6.</span> <span class="toc-text">原型制作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%86%E5%9F%9F%E8%AF%AD%E8%A8%80"><span class="toc-number">3.7.</span> <span class="toc-text">领域语言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BC%B0%E7%AE%97"><span class="toc-number">3.8.</span> <span class="toc-text">估算</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E4%BC%B0%E7%AE%97%E9%A1%B9%E7%9B%AE%E8%BF%9B%E5%BA%A6"><span class="toc-number">3.8.1.</span> <span class="toc-text">如何估算项目进度</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9F%BA%E7%A1%80%E5%B7%A5%E5%85%B7"><span class="toc-number">4.</span> <span class="toc-text">基础工具</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BA%AF%E6%96%87%E6%9C%AC"><span class="toc-number">4.1.</span> <span class="toc-text">纯文本</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B7%A5%E7%A8%8B%E6%97%A5%E8%AE%B0"><span class="toc-number">4.2.</span> <span class="toc-text">工程日记</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8A%A1%E5%AE%9E%E7%9A%84%E5%81%8F%E6%89%A7"><span class="toc-number">5.</span> <span class="toc-text">务实的偏执</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#BDC-%E5%A5%91%E7%BA%A6%E5%BC%8F%E7%BC%96%E7%A8%8B"><span class="toc-number">5.0.1.</span> <span class="toc-text">BDC 契约式编程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TDD-%E6%B5%8B%E8%AF%95%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91"><span class="toc-number">5.0.2.</span> <span class="toc-text">TDD 测试驱动开发</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BE%88%E5%A4%9A%E6%97%B6%E5%80%99%EF%BC%8C%E6%98%8E%E5%A4%A9%E7%9C%8B%E8%B5%B7%E6%9D%A5%E4%BC%9A%E5%92%8C%E4%BB%8A%E5%A4%A9%E5%B7%AE%E4%B8%8D%E5%A4%9A%EF%BC%8C%E4%BD%86%E4%B8%8D%E8%A6%81%E6%8C%87%E6%9C%9B%E4%B8%80%E5%AE%9A%E4%BC%9A%E8%BF%99%E6%A0%B7"><span class="toc-number">5.0.3.</span> <span class="toc-text">很多时候，明天看起来会和今天差不多，但不要指望一定会这样</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B9%B6%E5%8F%91"><span class="toc-number">6.</span> <span class="toc-text">并发</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BC%96%E7%A0%81"><span class="toc-number">7.</span> <span class="toc-text">编码</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%87%8D%E6%9E%84"><span class="toc-number">7.1.</span> <span class="toc-text">重构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E9%87%8D%E6%9E%84"><span class="toc-number">7.1.1.</span> <span class="toc-text">如何重构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95"><span class="toc-number">7.1.2.</span> <span class="toc-text">测试</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%A1%B9%E7%9B%AE"><span class="toc-number">8.</span> <span class="toc-text">项目</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9C%80%E6%B1%82"><span class="toc-number">8.1.</span> <span class="toc-text">需求</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8C%96%E6%8E%98%E9%9C%80%E6%B1%82"><span class="toc-number">8.1.1.</span> <span class="toc-text">挖掘需求</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%98%8E%E7%A1%AE%E9%9C%80%E6%B1%82"><span class="toc-number">8.1.2.</span> <span class="toc-text">明确需求</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9C%80%E6%B1%82%E6%96%87%E6%A1%A3"><span class="toc-number">8.1.3.</span> <span class="toc-text">需求文档</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98"><span class="toc-number">8.2.</span> <span class="toc-text">问题</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%82%B2%E6%85%A2%E4%B8%8E%E5%81%8F%E8%A7%81"><span class="toc-number">9.</span> <span class="toc-text">傲慢与偏见</span></a></li></ol>
+            </div>
+        <!-- sidebar -->
+        <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+        <div class="sidebar-panel-archives">
+    <!-- 在 ejs 中将 archive 按照时间排序 -->
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 27
+        </div>
+        <!-- search  -->
+    </div>
+    <div class="post-archive">
+            <div class="archive-year"> 2024 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/13</span>
+            <a class="archive-post-title" href="/2024/09/13/2024-09-13-program_developer_experience/">《程序员修炼之道》</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2023 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/22</span>
+            <a class="archive-post-title" href="/2023/02/22/2023-02-20-android_preload_review/">Android 列表预加载分析</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2021 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/24</span>
+            <a class="archive-post-title" href="/2021/03/24/2021-03-25-thinking/">庸碌</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2020 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/22</span>
+            <a class="archive-post-title" href="/2020/05/22/2020-05-22-note_wiki_widget/">官方文档的重要性</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/11</span>
+            <a class="archive-post-title" href="/2020/05/11/2020-05-11-flutter_depth/">Flutter 深入探索</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/30</span>
+            <a class="archive-post-title" href="/2020/04/30/2020-04-30-dart_basic/">Dart 实践（一）</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/29</span>
+            <a class="archive-post-title" href="/2020/04/29/2020-04-29-book_read_01/">《精进：如何成为一个很厉害的人》阅读笔记 01</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2020/04/27/2020-04-27-flutter_application/">Flutter 实践</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2019 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/15</span>
+            <a class="archive-post-title" href="/2019/10/15/2019-10-15-retrofit-and-okHttp/">Retrofit与OkHttp源码解析</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/11</span>
+            <a class="archive-post-title" href="/2019/10/11/2019-10-11-HTTP_The_Definitive_Guide/">HTTP 权威指南阅读笔记（一）</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2018 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/26</span>
+            <a class="archive-post-title" href="/2018/05/26/2018-05-06-gradle_learning_notes_2/">Gradle的架构和api</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/28</span>
+            <a class="archive-post-title" href="/2018/04/28/2018-05-26-gradle_learning_notes_1/">Gradle的基础概念</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/19</span>
+            <a class="archive-post-title" href="/2018/04/19/2018-04-19-memory_management/">Android 内存管理机制</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/01</span>
+            <a class="archive-post-title" href="/2018/04/01/2018-04-04-andorid_thread/">Android 的线程和线程池</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/25</span>
+            <a class="archive-post-title" href="/2018/03/25/2018-03-25-andorid_view_working_principle/">Android View 工作原理</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/19</span>
+            <a class="archive-post-title" href="/2018/03/19/2018-03-19-andorid_view_event/">Android View 事件体系</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/18</span>
+            <a class="archive-post-title" href="/2018/03/18/2018-03-18-andorid_ipc/">Android IPC 机制</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/15</span>
+            <a class="archive-post-title" href="/2018/03/15/2018-03-15-andorid_exploration_book_read_01/">Android 艺术开发探索笔记</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2017 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/19</span>
+            <a class="archive-post-title" href="/2017/05/19/2017-05-19-android_databinding/">Data Binding学习笔记</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/08</span>
+            <a class="archive-post-title" href="/2017/03/08/2017-03-08-adapter/">适配器模式与外观模式</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/20</span>
+            <a class="archive-post-title" href="/2017/02/20/2017-02-20-factory/">工厂模式(factory Pettern)</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/08</span>
+            <a class="archive-post-title" href="/2017/02/08/2017-02-08-decorator/">装饰者模式(Decorator)</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/07</span>
+            <a class="archive-post-title" href="/2017/02/07/2017-02-07-observer/">观察者模式(Observer Pettern)</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/06</span>
+            <a class="archive-post-title" href="/2017/02/06/2017-02-06-annotation/">Android自定义注解</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/04</span>
+            <a class="archive-post-title" href="/2017/02/04/2017-02-04-Strategy/">策略模式(Strategy Pettern)</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/24</span>
+            <a class="archive-post-title" href="/2017/01/24/2017-01-24-rxjava_learning_notes/">RxAndroid学习笔记</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/23</span>
+            <a class="archive-post-title" href="/2017/01/23/2017-01-23-new_start/">Hello Blog</a>
+        </li>
+            </ul>
+    </div>
+</div>
+
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+            <span class="sidebar-tag-name" data-tags="生活">
+                <span class="iconfont-archer">&#xe606;</span>
+                生活
+            </span>
+            <span class="sidebar-tag-name" data-tags="Android">
+                <span class="iconfont-archer">&#xe606;</span>
+                Android
+            </span>
+            <span class="sidebar-tag-name" data-tags="基础">
+                <span class="iconfont-archer">&#xe606;</span>
+                基础
+            </span>
+            <span class="sidebar-tag-name" data-tags="Booklet">
+                <span class="iconfont-archer">&#xe606;</span>
+                Booklet
+            </span>
+            <span class="sidebar-tag-name" data-tags="Note">
+                <span class="iconfont-archer">&#xe606;</span>
+                Note
+            </span>
+            <span class="sidebar-tag-name" data-tags="Gradle">
+                <span class="iconfont-archer">&#xe606;</span>
+                Gradle
+            </span>
+            <span class="sidebar-tag-name" data-tags="Flutter">
+                <span class="iconfont-archer">&#xe606;</span>
+                Flutter
+            </span>
+            <span class="sidebar-tag-name" data-tags="Dart">
+                <span class="iconfont-archer">&#xe606;</span>
+                Dart
+            </span>
+            <span class="sidebar-tag-name" data-tags="Book">
+                <span class="iconfont-archer">&#xe606;</span>
+                Book
+            </span>
+            <span class="sidebar-tag-name" data-tags="RecyclerView">
+                <span class="iconfont-archer">&#xe606;</span>
+                RecyclerView
+            </span>
+            <span class="sidebar-tag-name" data-tags="HTTP">
+                <span class="iconfont-archer">&#xe606;</span>
+                HTTP
+            </span>
+            <span class="sidebar-tag-name" data-tags="方法论">
+                <span class="iconfont-archer">&#xe606;</span>
+                方法论
+            </span>
+            <span class="sidebar-tag-name" data-tags="读书笔记">
+                <span class="iconfont-archer">&#xe606;</span>
+                读书笔记
+            </span>
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+        缺失模块，请参考主题文档进行安装配置：https://github.com/fi3ework/hexo-theme-archer#%E5%AE%89%E8%A3%85%E4%B8%BB%E9%A2%98
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+
+    </div>
+</div>
+
+        <!-- site-meta -->
+        <script>
+    var siteMetaRoot = "/"
+    if (siteMetaRoot === "undefined") {
+        siteMetaRoot = '/'
+    }
+    var siteMeta = {
+        url: "https://czj-dev.github.io",
+        root: siteMetaRoot,
+        author: "Nutcracker"
+    }
+</script>
+
+        <!-- import experimental options here -->
+        <!-- Custom Font -->
+    <!-- Check browser compatibility of CSS variables -->
+    <script>
+        if (browserSupportCSSVariables === undefined) {
+            var browserSupportCSSVariables = window.CSS && window.CSS.supports && window.CSS.supports('--a', 0);
+        }
+    </script>
+    <script>
+        if (browserSupportCSSVariables) {
+            var customFontName = 'Noto Sans SC:n3,n4,n5,n7'
+            var customFontUrl = 'https://fonts.googleapis.cnpmjs.org/css2?family=Noto+Sans+SC:wght@300;400;500;700&amp;display=swap'
+            if (!customFontName) {
+                console.log('Custom font name is not set or read failed');
+            }
+            if (!customFontUrl) {
+                console.log('Custom font url is not set or read failed');
+            }
+        } else {
+            console.error('Current browser doesn\'t support custom font.')
+        }
+    </script>
+    <script src="/scripts/customFontLoader.js" defer></script>
+
+        <!-- main func -->
+        <script src="/scripts/main.js"></script>
+        <!-- fancybox -->
+        <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.umd.js" onload="window.Fancybox.bind('[data-fancybox]')" defer></script>
+        <!-- algolia -->
+        <!-- busuanzi -->
+            <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+        <!-- async load share.js -->
+            <script src="/scripts/share.js" async></script>
+        <!-- mermaid -->
+            <script src='https://cdn.jsdelivr.net/npm/mermaid@8.11.0/dist/mermaid.min.js' onload="window.mermaid.initialize({theme: 'dark'})" async></script>
+    </body>
+</html>
