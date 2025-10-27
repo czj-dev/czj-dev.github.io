@@ -1,5 +1,4 @@
 @echo off
-chcp 65001 >nul
 REM 部署脚本 - 将生成的public文件提交到master分支
 REM Windows版本
 
