@@ -1,0 +1,1283 @@
+<!DOCTYPE html>
+<html lang="cn">
+    <!-- title -->
+<!-- keywords -->
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="Nutcracker">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="Nutcracker">
+        <meta name="keywords" content="Claude Code,Commands,斜杠命令,AI 编程,工作流自动化,Android,Live,Nutcracker">
+    <meta name="description" content="">
+    <meta name="description" content="深入了解 Claude Code Commands 命令系统，从基础配置到高级工具调用，掌握构建个性化 AI 编程工作流的完整指南。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Claude Code Commands 指南">
+<meta property="og:url" content="https://czj-dev.github.io/2026/03/03/2026-03-03-claude_code_commands/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="深入了解 Claude Code Commands 命令系统，从基础配置到高级工具调用，掌握构建个性化 AI 编程工作流的完整指南。">
+<meta property="og:locale">
+<meta property="article:published_time" content="2026-03-03T13:00:00.000Z">
+<meta property="article:modified_time" content="2026-03-04T03:48:18.867Z">
+<meta property="article:author" content="Nutcracker">
+<meta property="article:tag" content="AI 助手">
+<meta property="article:tag" content="Claude Code">
+<meta property="article:tag" content="开发工具">
+<meta property="article:tag" content="技术教程">
+<meta name="twitter:card" content="summary">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="icon" href="/assets/favicon.ico">
+    <title>Claude Code Commands 指南 · Base Station</title>
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+    (function (w) {
+        'use strict'
+        // rel=preload support test
+        if (!w.loadCSS) {
+            w.loadCSS = function () {}
+        }
+        // define on the loadCSS obj
+        var rp = (loadCSS.relpreload = {})
+        // rel=preload feature support test
+        // runs once and returns a function for compat purposes
+        rp.support = (function () {
+            var ret
+            try {
+                ret = w.document.createElement('link').relList.supports('preload')
+            } catch (e) {
+                ret = false
+            }
+            return function () {
+                return ret
+            }
+        })()
+
+        // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+        // then change that media back to its intended value on load
+        rp.bindMediaToggle = function (link) {
+            // remember existing media attr for ultimate state, or default to 'all'
+            var finalMedia = link.media || 'all'
+
+            function enableStylesheet() {
+                link.media = finalMedia
+            }
+
+            // bind load handlers to enable media
+            if (link.addEventListener) {
+                link.addEventListener('load', enableStylesheet)
+            } else if (link.attachEvent) {
+                link.attachEvent('onload', enableStylesheet)
+            }
+
+            // Set rel and non-applicable media type to start an async request
+            // note: timeout allows this to happen async to let rendering continue in IE
+            setTimeout(function () {
+                link.rel = 'stylesheet'
+                link.media = 'only x'
+            })
+            // also enable media after 3 seconds,
+            // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+            setTimeout(enableStylesheet, 3000)
+        }
+
+        // loop through link elements in DOM
+        rp.poly = function () {
+            // double check this to prevent external calls from running
+            if (rp.support()) {
+                return
+            }
+            var links = w.document.getElementsByTagName('link')
+            for (var i = 0; i < links.length; i++) {
+                var link = links[i]
+                // qualify links to those with rel=preload and as=style attrs
+                if (
+                    link.rel === 'preload' &&
+                    link.getAttribute('as') === 'style' &&
+                    !link.getAttribute('data-loadcss')
+                ) {
+                    // prevent rerunning on link
+                    link.setAttribute('data-loadcss', true)
+                    // bind listeners to toggle media back
+                    rp.bindMediaToggle(link)
+                }
+            }
+        }
+
+        // if unsupported, run the polyfill
+        if (!rp.support()) {
+            // run once at least
+            rp.poly()
+
+            // rerun poly on an interval until onload
+            var run = w.setInterval(rp.poly, 500)
+            if (w.addEventListener) {
+                w.addEventListener('load', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            } else if (w.attachEvent) {
+                w.attachEvent('onload', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            }
+        }
+
+        // commonjs
+        if (typeof exports !== 'undefined') {
+            exports.loadCSS = loadCSS
+        } else {
+            w.loadCSS = loadCSS
+        }
+    })(typeof global !== 'undefined' ? global : this)
+</script>
+
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .footer-fixed-btn,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(
+            -45deg,
+            #444 0,
+            #444 80px,
+            #333 80px,
+            #333 160px
+        );
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+</style>
+
+    <link id="stylesheet-fancybox" rel="preload" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link id="stylesheet-base" rel="preload" href="/css/style.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link id="stylesheet-mobile" rel="preload" href="/css/mobile.css" as="style" onload="this.onload=null;this.rel='stylesheet';this.media='screen and (max-width: 960px)'">
+    <link id="stylesheet-theme-dark" rel="preload" href="/css/dark.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <!-- 自定义样式 -->
+    <link rel="stylesheet" href="/css/custom.css">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js" as="script">
+    <link rel="preload" href="/font/Oswald-Regular.ttf" as="font" crossorigin>
+    <link rel="preload" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" as="font" crossorigin>
+    <!-- algolia -->
+    <!-- 百度统计  -->
+    <!-- 谷歌统计  -->
+    <!-- Google tag (gtag.js) -->
+<meta name="generator" content="Hexo 8.1.1"></head>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ == undefined) {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js" />')
+        }
+    </script>
+        <body class="post-body">
+        <!-- header -->
+        <header class="header header-mobile">
+    <!-- top read progress line -->
+    <div class="header-element">
+        <div class="read-progress read-progress-feature"></div>
+    </div>
+    <!-- sidebar menu button -->
+    <div class="header-element">
+        <div class="header-sidebar-menu">
+            <div style="padding-left: 1px;">&#xe775;</div>
+        </div>
+    </div>
+    <!-- header actions -->
+    <div class="header-actions">
+        <!-- theme mode switch button -->
+        <span class="header-theme-btn header-element">
+            <i class="fas fa-adjust"></i>
+        </span>
+        <!-- back to home page text -->
+        <span class="home-link header-element">
+            <a href="/">Base Station</a>
+        </span>
+    </div>
+    <!-- toggle banner -->
+    <div class="banner">
+        <div class="blog-title header-element">
+            <a href="/">Base Station</a>
+        </div>
+        <div class="post-title header-element">
+            <a href="#" class="post-name">Claude Code Commands 指南</a>
+        </div>
+    </div>
+</header>
+
+        <!-- fixed footer -->
+        <footer class="footer-fixed">
+    <!-- donate button -->
+
+    <!-- back to top button -->
+    <div class="footer-fixed-btn footer-fixed-btn--hidden back-top">
+        <div>&#xe639;</div>
+    </div>
+</footer>
+
+        <!-- wrapper -->
+        <div class="wrapper">
+            <div class="site-intro" style="    height:50vh;
+">
+    <!-- 主页  -->
+    <!-- 404页  -->
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/img/post-bg-claude-code.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+                Claude Code Commands 指南
+            <!-- 404 -->
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+                    工具介绍
+            <!-- 404 -->
+        </p>
+        <!-- 文章页 meta -->
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                    <div class="post-intro-tags" >
+        <a class="post-tag" href="javascript:void(0);" data-tags="开发工具">开发工具</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="Claude Code">Claude Code</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="AI 助手">AI 助手</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="技术教程">技术教程</a>
+</div>
+
+                <!-- 文章字数统计 -->
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">4.5k</span>阅读时长: <span class="post-count reading-time">16 min</span></span>
+                    </div>
+                <div class="post-intro-meta">
+                    <!-- 撰写日期 -->
+                    <span class="iconfont-archer post-intro-calander">&#xe676;</span>
+                    <span class="post-intro-time">2026/03/03</span>
+                    <!-- busuanzi -->
+                        <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                            <span class="iconfont-archer post-intro-busuanzi">&#xe602;</span>
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    <!-- 文章分享 -->
+                    <span class="share-wrapper">
+                        <span class="iconfont-archer share-icon">&#xe71d;</span>
+                        <span class="share-text">Share</span>
+                        <ul class="share-list">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+    </div>
+</div>
+
+            <script>
+  // get user agent
+  function getBrowserVersions() {
+    var u = window.navigator.userAgent
+    return {
+      userAgent: u,
+      trident: u.indexOf('Trident') > -1, //IE内核
+      presto: u.indexOf('Presto') > -1, //opera内核
+      webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+      gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+      mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+      ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+      android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+      iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+      iPad: u.indexOf('iPad') > -1, //是否为iPad
+      webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+      weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+      uc: u.indexOf('UCBrowser') > -1, //是否为android下的UC浏览器
+    }
+  }
+  var browser = {
+    versions: getBrowserVersions(),
+  }
+  console.log('userAgent: ' + browser.versions.userAgent)
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded')
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document
+        .getElementsByClassName('intro-title')[0]
+        .classList.add('intro-fade-in')
+      document
+        .getElementsByClassName('intro-subtitle')[0]
+        .classList.add('intro-fade-in')
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in')
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb() {
+    if (browser.versions.uc) {
+      console.log('UCBrowser')
+      fontLoaded()
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular'],
+        },
+        loading: function () {
+          // 所有字体开始加载
+          // console.log('font loading');
+        },
+        active: function () {
+          // 所有字体已渲染
+          fontLoaded()
+        },
+        inactive: function () {
+          // 字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout')
+          fontLoaded()
+        },
+        timeout: 5000, // Set the timeout to two seconds
+      })
+    }
+  }
+
+  function asyncErr() {
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document,
+      t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0]
+    o.src = u
+    if (cb) {
+      o.addEventListener(
+        'load',
+        function (e) {
+          cb(null, e)
+        },
+        false
+      )
+    }
+    if (err) {
+      o.addEventListener(
+        'error',
+        function (e) {
+          err(null, e)
+        },
+        false
+      )
+    }
+    s.parentNode.insertBefore(o, s)
+  }
+
+  var asyncLoadWithFallBack = function (arr, success, reject) {
+    var currReject = function () {
+      reject()
+      arr.shift()
+      if (arr.length) async(arr[0], success, currReject)
+    }
+
+    async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack(
+    [
+      'https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js',
+      'https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js',
+      "/lib/webfontloader.min.js",
+    ],
+    asyncCb,
+    asyncErr
+  )
+</script>
+
+            <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" alt="loading">
+            <div class="container container-unloaded">
+                <main class="main post-page">
+    <article class="article-entry">
+        <h2 id="前言">前言</h2>
+<p>Claude Code 的强大之处在于<strong>可编程性</strong> —— 通过配置文件、命令系统、工具调用，你可以定制属于自己的 AI 编程工作流。本文聚焦于 Claude Code 的命令系统，也就是我们常说的 Commands，这是 Claude Code 中能极大提升效率的核心功能。</p>
+<blockquote>
+<p>“工具不应该只是工具，而应该是你工作方式的延伸。”</p>
+</blockquote>
+<h2 id="📌-基本信息">📌 基本信息</h2>
+<h2 id="Commands-简介">Commands 简介</h2>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>名称</td>
+<td>Claude Code Commands</td>
+</tr>
+<tr>
+<td>官方文档</td>
+<td><a target="_blank" rel="noopener" href="https://docs.anthropic.com/en/docs/claude-code/commands">https://docs.anthropic.com/en/docs/claude-code/commands</a></td>
+</tr>
+<tr>
+<td>存储位置</td>
+<td><code>~/.claude/commands/</code>（用户级）或 <code>.claude/commands/</code>（项目级）</td>
+</tr>
+<tr>
+<td>作用范围</td>
+<td>全局命令跨所有项目可用，项目级命令仅当前项目可用</td>
+</tr>
+<tr>
+<td>本质</td>
+<td>Markdown 文件 + YAML Frontmatter</td>
+</tr>
+</tbody>
+</table>
+<h2 id="Claude-Code-扩展体系">Claude Code 扩展体系</h2>
+<p>在深入 Commands 之前，先了解一下 Claude Code 的<strong>五种核心扩展机制</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>机制</th>
+<th>用途</th>
+<th>触发方式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Commands</strong></td>
+<td>手动触发的斜杠命令</td>
+<td><code>/命令名</code></td>
+</tr>
+<tr>
+<td><strong>Skills</strong></td>
+<td>可复用的提示模板</td>
+<td>自动识别或手动调用</td>
+</tr>
+<tr>
+<td><strong>Hooks</strong></td>
+<td>事件驱动的自动化脚本</td>
+<td>工具调用前后、会话结束等</td>
+</tr>
+<tr>
+<td><strong>Subagents</strong></td>
+<td>专注特定任务的子代理</td>
+<td>由主代理按需启动</td>
+</tr>
+<tr>
+<td><strong>MCP</strong></td>
+<td>连接外部服务的协议</td>
+<td>通过 MCP 服务器调用</td>
+</tr>
+</tbody>
+</table>
+<p>Anthropic 将这些机制统一为 <strong>Commands → Skills → Agents</strong> 的协作架构，让它们可以无缝配合。这意味着 Commands 可以调用 Skills，Skills 可以启动 Agents，形成完整的自动化链路。</p>
+<h4 id="核心扩展机制说明">核心扩展机制说明</h4>
+<ul>
+<li>
+<p><strong>MCP (Model Context Protocol)</strong>：连接 Claude Code 与外部服务（如自定义接口、第三方工具）的协议，让 Claude 能调用系统外的功能。</p>
+</li>
+<li>
+<p><strong>Subagents（子代理）</strong>：专注处理特定任务的独立代理实例，由主代理按需启动，用于拆解复杂任务或并行执行独立工作。</p>
+</li>
+<li>
+<p><strong>Hooks（钩子）</strong>：事件驱动的自动化脚本，在特定时机（如工具调用前后、会话结束时）自动执行，用于格式化代码、运行检查等。</p>
+</li>
+</ul>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">用户输入</span><br><span class="line">    ↓</span><br><span class="line">Commands（手动触发 /xxx）</span><br><span class="line">    ↓</span><br><span class="line">Skills（提供专业知识和流程）</span><br><span class="line">    ↓</span><br><span class="line">Agents（执行具体任务）</span><br></pre></td></tr></table></figure>
+<p>我们也从协作架构的一开始的 Commands 来详细了解，其他机制将在后续文章中详解。</p>
+<h2 id="🚀-快速入门：10-分钟创建第一个命令">🚀 快速入门：10 分钟创建第一个命令</h2>
+<h3 id="步骤-1：创建命令文件">步骤 1：创建命令文件</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> -p ~/.claude/commands</span><br><span class="line"><span class="built_in">cat</span> &gt; ~/.claude/commands/hello.md &lt;&lt; <span class="string">&#x27;EOF&#x27;</span></span><br><span class="line">---</span><br><span class="line">description: 向用户打招呼</span><br><span class="line">argument-hint: &lt;姓名&gt;</span><br><span class="line">---</span><br><span class="line"></span><br><span class="line">你好，**<span class="variable">$ARGUMENTS</span>**！很高兴见到你。</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+<h3 id="步骤-2：使用命令">步骤 2：使用命令</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/hello 张三</span><br></pre></td></tr></table></figure>
+<h3 id="步骤-3：进阶-带工具调用的命令">步骤 3：进阶 - 带工具调用的命令</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> &gt; ~/.claude/commands/time.md &lt;&lt; <span class="string">&#x27;EOF&#x27;</span></span><br><span class="line">---</span><br><span class="line">description: 显示当前时间</span><br><span class="line">argument-hint: [时区]</span><br><span class="line">allowed-tools:</span><br><span class="line">  - Bash</span><br><span class="line">---</span><br><span class="line"></span><br><span class="line">使用 Bash 工具获取当前时间：</span><br><span class="line">如果 <span class="variable">$ARGUMENTS</span> 为空，执行 `<span class="built_in">date</span>`</span><br><span class="line">否则执行 `TZ=<span class="variable">$ARGUMENTS</span> <span class="built_in">date</span>`</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+<p>使用示例：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/time                    <span class="comment"># 本地时间</span></span><br><span class="line">/time Asia/Shanghai      <span class="comment"># 北京时间</span></span><br></pre></td></tr></table></figure>
+<h2 id="🔄-Commands-与-Skills-的区别">🔄 Commands 与 Skills 的区别</h2>
+<p>有很多人发现 Skills 最简化的结构可能只有一个 <a target="_blank" rel="noopener" href="http://Skills.md">Skills.md</a> 与 <a target="_blank" rel="noopener" href="http://commands.md">commands.md</a> 基本没有差别，这里我们也简单的说明下两者的区别，这也是理解整个系统的关键：</p>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th><a target="_blank" rel="noopener" href="http://SKILL.md">SKILL.md</a></th>
+<th>Commands</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>本质</td>
+<td>普通文本文件</td>
+<td>系统级配置</td>
+</tr>
+<tr>
+<td>读取时机</td>
+<td>Claude 主动调用才能读取</td>
+<td>对话开始前就已加载</td>
+</tr>
+<tr>
+<td>作用范围</td>
+<td>仅作为&quot;提示内容&quot;</td>
+<td>直接影响运行环境</td>
+</tr>
+<tr>
+<td>工具注册</td>
+<td>❌ 不能</td>
+<td>✅ 可以</td>
+</tr>
+</tbody>
+</table>
+<p><strong>为什么 Commands 里的声明有效？</strong></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">用户发起对话</span><br><span class="line">    ↓</span><br><span class="line">平台/系统读取 Commands 配置</span><br><span class="line">    ↓</span><br><span class="line">真正地向 Claude 注册可用工具</span><br><span class="line">    ↓</span><br><span class="line">Claude 的工具列表里就有了这些工具</span><br></pre></td></tr></table></figure>
+<p>而 <a target="_blank" rel="noopener" href="http://SKILL.md">SKILL.md</a> 里的声明，只是让 Claude “看到一段文字说要用某工具”，它只能用已有的工具去模拟或替代。</p>
+<hr>
+<h2 id="⚡-核心特性">⚡ 核心特性</h2>
+<p>了解 Commands 是什么之后，你可能会问：它到底有什么特别之处？为什么不用普通的提示词就够了？Claude Code Commands 具有几个独特的能力，让它区别于普通的提示词：</p>
+<h3 id="1-系统级预加载">1. 系统级预加载</h3>
+<p>Commands 在<strong>对话开始前就已经被加载到系统配置中</strong>，这意味着：</p>
+<ul>
+<li>它们不需要 Claude 主动调用 <code>view</code> 工具来读取</li>
+<li>可以在 frontmatter 中直接注册可用工具</li>
+<li>拥有比 Skills 更高的优先级</li>
+</ul>
+<h3 id="2-工具注册能力">2. 工具注册能力</h3>
+<p>这是 Commands 最强大的特性之一。你可以在命令文件的 frontmatter 中声明 <code>allowed-tools</code>，这样 Claude 就会真正拥有这些工具的调用权限：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">description:</span> <span class="string">代码审查工具</span></span><br><span class="line"><span class="attr">allowed-tools:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">Read</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">Write</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">Edit</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">Bash</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">Grep</span></span><br><span class="line"><span class="meta">---</span></span><br></pre></td></tr></table></figure>
+<p><strong>注意</strong>：这点与 Skills 完全不同。Skills 里的工具声明只是&quot;建议&quot;，而 Commands 里的声明是&quot;授权&quot;，它和 Skills 的其他差异点我们后续会单独说明。</p>
+<h3 id="3-参数处理">3. 参数处理</h3>
+<p>Commands 支持 <code>$ARGUMENTS</code> 内置变量，可以捕获用户在命令后输入的所有内容：</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">description: 问候用户</span><br><span class="line"><span class="section">argument-hint: &lt;姓名&gt;</span></span><br><span class="line"><span class="section">---</span></span><br><span class="line">你好，$ARGUMENTS！很高兴见到你。</span><br></pre></td></tr></table></figure>
+<p>调用示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/hello X</span><br><span class="line"># $ARGUMENTS = &quot;X&quot;</span><br></pre></td></tr></table></figure>
+<p>这三个特性让 Commands 成为一个强大的工具，但在实际使用中，我发现很多人容易将它与另一个概念混淆——<strong>Skills</strong>。理解两者的区别，是真正掌握 Claude Code 的关键一步。</p>
+<h2 id="📝-Frontmatter-配置详解">📝 Frontmatter 配置详解</h2>
+<p>理解了 Commands 的本质和与 Skills 的区别后，让我们来详细看看如何配置一个 Command。</p>
+<p>每个命令文件都是 Markdown 文件，文件最开头是 YAML 格式的配置区，用 <code>---</code> 符号包围——这就是 <strong>Frontmatter（前置元数据配置区）</strong>。</p>
+<p>Frontmatter 定义了这个命令的元信息和行为约束，例如：</p>
+<ul>
+<li>这个命令是做什么的（<code>description</code>）</li>
+<li>接受什么参数（<code>argument-hint</code>）</li>
+<li>可以使用哪些工具（<code>allowed-tools</code>）</li>
+</ul>
+<p>它位于命令文件的<strong>第一行</strong>，在实际的命令内容之前。下面是一个完整的 Frontmatter 配置示例。</p>
+<h3 id="完整配置示例">完整配置示例</h3>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="comment"># 官方支持的配置项</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 命令描述</span></span><br><span class="line"><span class="attr">description:</span> <span class="string">创建</span> <span class="string">git</span> <span class="string">commit</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 参数提示</span></span><br><span class="line"><span class="attr">argument-hint:</span> <span class="string">&lt;提交消息类型&gt;</span> [<span class="string">--style=formal</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 允许使用的工具</span></span><br><span class="line"><span class="attr">allowed-tools:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">Read</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">Write</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">Bash</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">Grep</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 指定使用的模型</span></span><br><span class="line"><span class="attr">model:</span> <span class="string">claude-sonnet-4-6-20250929</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 禁用模型调用（用于纯文本替换）</span></span><br><span class="line"><span class="attr">disable-model-invocation:</span> <span class="literal">true</span></span><br><span class="line"><span class="meta">---</span></span><br></pre></td></tr></table></figure>
+<h3 id="字段说明">字段说明</h3>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th style="text-align:center">必填</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong><code>description</code></strong></td>
+<td>string</td>
+<td style="text-align:center">推荐</td>
+<td>命令的一句话描述</td>
+</tr>
+<tr>
+<td><code>argument-hint</code></td>
+<td>string</td>
+<td style="text-align:center">否</td>
+<td>输入/命令后显示的占位符</td>
+</tr>
+<tr>
+<td><strong><code>allowed-tools</code></strong></td>
+<td>array</td>
+<td style="text-align:center">否</td>
+<td>限制命令可调用的工具</td>
+</tr>
+<tr>
+<td><strong><code>model</code></strong></td>
+<td>string</td>
+<td style="text-align:center">否</td>
+<td>指定使用的模型</td>
+</tr>
+<tr>
+<td><code>disable-model-invocation</code></td>
+<td>boolean</td>
+<td style="text-align:center">否</td>
+<td>禁用模型调用</td>
+</tr>
+</tbody>
+</table>
+<h3 id="配置项使用场景">配置项使用场景</h3>
+<h4 id="model-字段使用场景"><code>model</code> 字段使用场景</h4>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">description:</span> <span class="string">高精度代码审查</span></span><br><span class="line"><span class="attr">model:</span> <span class="string">claude-sonnet-4-6-20250929</span></span><br><span class="line"><span class="attr">allowed-tools:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">Read</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">Write</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">Edit</span></span><br><span class="line"><span class="meta">---</span></span><br></pre></td></tr></table></figure>
+<p><strong>场景</strong>：复杂重构、架构设计、深度代码审查等需要高精度的任务，指定 Sonnet 模型确保输出质量。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">description:</span> <span class="string">简单文本替换</span></span><br><span class="line"><span class="attr">model:</span> <span class="string">claude-haiku-4-5-20250929</span></span><br><span class="line"><span class="attr">disable-model-invocation:</span> <span class="literal">true</span></span><br><span class="line"><span class="meta">---</span></span><br></pre></td></tr></table></figure>
+<p><strong>场景</strong>：轻量文本替换任务，指定 Haiku 轻量模型提升响应速度。</p>
+<h4 id="disable-model-invocation-字段使用场景"><code>disable-model-invocation</code> 字段使用场景</h4>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">description:</span> <span class="string">纯文本问候</span></span><br><span class="line"><span class="attr">disable-model-invocation:</span> <span class="literal">true</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="string">你好，$ARGUMENTS！</span></span><br></pre></td></tr></table></figure>
+<p><strong>场景</strong>：纯文本替换场景（问候命令、模板填充），禁用模型调用可减少响应时间。</p>
+<blockquote>
+<p><strong>小结</strong>：Frontmatter 配置定义了命令的行为边界，包括可用工具、模型选择、参数提示等，是编写高质量命令的基础。</p>
+</blockquote>
+<p>配置好了 Frontmatter，接下来就是编写命令的主体内容——如何调用工具完成任务。Commands 支持多种工具调用方式，让我逐一介绍。</p>
+<h2 id="🔧-工具调用语法">🔧 工具调用语法</h2>
+<h3 id="内置工具调用">内置工具调用</h3>
+<p>在 Commands 中，工具调用遵循标准语法格式。以下是直接的工具调用示例：</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">## 执行步骤</span></span><br><span class="line"></span><br><span class="line"><span class="section">### 步骤1：读取配置文件</span></span><br><span class="line">使用 Read 工具读取配置文件：</span><br><span class="line"><span class="bullet">-</span> file<span class="emphasis">_path: .claude/settings.json</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis">### 步骤2：搜索TODO注释</span></span><br><span class="line"><span class="emphasis">使用 Grep 工具搜索代码中的 TODO/FIXME 注释：</span></span><br><span class="line"><span class="emphasis">- pattern: (TODO|FIXME)</span></span><br><span class="line"><span class="emphasis">- path: src/</span></span><br><span class="line"><span class="emphasis">- glob: *.py</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis">### 步骤3：运行测试</span></span><br><span class="line"><span class="emphasis">使用 Bash 工具执行测试：</span></span><br><span class="line"><span class="emphasis">- command: npm run test</span></span><br></pre></td></tr></table></figure>
+<p>这种格式让工具调用更加清晰明确，便于 Claude 准确执行操作。</p>
+<p><strong>常用工具与典型场景</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>工具名</th>
+<th>功能</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong><code>Read</code></strong></td>
+<td>读取文件</td>
+<td>分析代码、读取配置</td>
+</tr>
+<tr>
+<td><strong><code>Write</code></strong></td>
+<td>写入文件</td>
+<td>创建文件、保存结果</td>
+</tr>
+<tr>
+<td><strong><code>Edit</code></strong></td>
+<td>编辑文件</td>
+<td>修改现有代码</td>
+</tr>
+<tr>
+<td><strong><code>Bash</code></strong></td>
+<td>执行命令</td>
+<td>运行脚本、Git操作</td>
+</tr>
+<tr>
+<td><code>WebSearch</code></td>
+<td>网络搜索</td>
+<td>获取最新信息</td>
+</tr>
+<tr>
+<td><strong><code>Grep</code></strong></td>
+<td>按内容搜索</td>
+<td>在代码中搜索关键词</td>
+</tr>
+<tr>
+<td><strong><code>Glob</code></strong></td>
+<td>按名称查找</td>
+<td>批量查找特定类型的文件</td>
+</tr>
+</tbody>
+</table>
+<h3 id="MCP-工具调用">MCP 工具调用</h3>
+<p>MCP（Model Context Protocol）是 Claude Code 的扩展协议，让你可以调用外部工具。调用 MCP 工具时，使用 <code>mcp__&lt;server-name&gt;__&lt;tool-name&gt;</code> 的格式：</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">description: 使用 MCP 搜索网络并整理结果</span><br><span class="line">argument-hint: &lt;搜索关键词&gt;</span><br><span class="line">allowed-tools:</span><br><span class="line"><span class="section">  - mcp<span class="strong">__web-search-prime__</span>webSearchPrime</span></span><br><span class="line"><span class="section">---</span></span><br><span class="line"></span><br><span class="line">使用 webSearchPrime 搜索 <span class="code">`$ARGUMENTS`</span>（限定最近一周内容，medium 详细度），</span><br><span class="line">将结果整理为易读格式展示，包含标题、链接和摘要。</span><br></pre></td></tr></table></figure>
+<h3 id="嵌套工具调用">嵌套工具调用</h3>
+<p>Commands 可以调用其他 Commands，实现多步骤工作流：</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">## 步骤一：代码审查</span></span><br><span class="line">调用 /review 命令，对当前代码进行审查</span><br><span class="line"></span><br><span class="line"><span class="section">## 步骤二：创建提交</span></span><br><span class="line">调用 /commit 命令，交互式拟定提交内容</span><br><span class="line"></span><br><span class="line"><span class="section">## 步骤三：推送到远程仓库</span></span><br><span class="line">使用 Bash 工具执行推送：</span><br><span class="line"><span class="bullet">-</span> command: git push</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>小结</strong>：通过标准语法格式描述工具调用，Claude 能够准确理解和执行。</p>
+</blockquote>
+<h2 id="📂-命令分组与优先级">📂 命令分组与优先级</h2>
+<h3 id="命令分组">命令分组</h3>
+<p>你可以在 <code>~/.claude/commands/</code> 下创建子目录来组织命令：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">~/.claude/commands/</span><br><span class="line">├── workflows/          # 多步骤工作流命令</span><br><span class="line">│   ├── feature-development.md</span><br><span class="line">│   └── smart-fix.md</span><br><span class="line">└── tools/              # 单一用途工具命令</span><br><span class="line">    ├── security-scan.md</span><br><span class="line">    └── api-scaffold.md</span><br></pre></td></tr></table></figure>
+<p>调用时使用命名空间前缀：<code>/workflows:feature-development</code> 或 <code>/tools:security-scan</code>。</p>
+<h3 id="优先级规则">优先级规则</h3>
+<p>当同名命令存在于多个位置时，按以下优先级：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1. 项目级（最高）: .claude/commands/</span><br><span class="line">2. 用户级: ~/.claude/commands/</span><br><span class="line">3. 内置命令（最低）</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>⚠️ <strong>重要</strong>：核心系统命令（如 <code>/clear</code>、<code>/help</code>、<code>/compact</code>、<code>/doctor</code> 等）是受保护的，不能被自定义命令覆盖。</p>
+</blockquote>
+<blockquote>
+<p><strong>小结</strong>：通过目录分组和优先级规则，有序管理命令库，避免命名冲突。</p>
+</blockquote>
+<h2 id="📄-完整实战示例：智能-Git-提交命令">📄 完整实战示例：智能 Git 提交命令</h2>
+<p>为了让你更直观地理解 Commands 的全貌，下面是一个完整的 <code>/commit</code> 命令示例。这个命令可以自动分析当前的 git 变更，然后生成规范的提交信息并提交代码。</p>
+<h3 id="命令文件位置">命令文件位置</h3>
+<p>你可以将此命令保存到 <code>~/.claude/commands/commit.md</code>，作为<strong>用户级全局命令</strong>使用。如果只想在当前项目中使用，可以保存到项目的 <code>.claude/commands/commit.md</code> 作为<strong>项目级命令</strong>。</p>
+<hr>
+<p>description: 分析变更并创建规范的 git commit argument-hint: “[可选：简要说明提交目的，附加 --push 可在提交后推送]” allowed-tools:</p>
+<ul>
+<li>Bash(git *: *)</li>
+<li>Read</li>
+<li>Grep</li>
+</ul>
+<hr>
+<h2 id="目标">目标</h2>
+<p>基于当前变更，生成并执行符合 <strong>Conventional Commits</strong> 规范的 git commit。</p>
+<h2 id="执行步骤">执行步骤</h2>
+<h3 id="1-收集变更信息">1. 收集变更信息</h3>
+<p>并行执行以下命令：</p>
+<ul>
+<li><code>git status</code> — 查看文件变更状态</li>
+<li><code>git diff HEAD</code> — 查看具体差异内容</li>
+<li><code>git log --oneline -10</code> — 了解项目现有提交风格</li>
+</ul>
+<h3 id="2-分析并生成提交信息">2. 分析并生成提交信息</h3>
+<p>根据变更内容和 <code>$ARGUMENTS</code>（若有），确定提交类型和范围：</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>feat</code></td>
+<td>新功能、新能力</td>
+</tr>
+<tr>
+<td><code>fix</code></td>
+<td>Bug 修复</td>
+</tr>
+<tr>
+<td><code>refactor</code></td>
+<td>重构（无功能变化）</td>
+</tr>
+<tr>
+<td><code>docs</code></td>
+<td>文档 / 注释更新</td>
+</tr>
+<tr>
+<td><code>test</code></td>
+<td>测试代码变更</td>
+</tr>
+<tr>
+<td><code>chore</code></td>
+<td>配置、构建、工具等</td>
+</tr>
+</tbody>
+</table>
+<p><strong>格式</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;type&gt;(&lt;scope&gt;): &lt;subject&gt;</span><br><span class="line"></span><br><span class="line">&lt;body&gt;</span><br><span class="line"></span><br><span class="line">&lt;footer&gt;</span><br></pre></td></tr></table></figure>
+<p><strong>约束</strong>：</p>
+<ul>
+<li><code>subject</code> 不超过 50 字符</li>
+<li><code>body</code> 说明<strong>为何</strong>这样改，而非罗列改了什么</li>
+<li>语言跟随 <code>$ARGUMENTS</code>：中文输入用中文，英文输入用英文，无输入默认中文</li>
+<li>不提交敏感或临时文件（<code>.env</code>、<code>*.log</code>、<code>node_modules</code> 等）</li>
+</ul>
+<p><strong>示例</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">feat(auth): 添加 OAuth2 登录支持</span><br><span class="line"></span><br><span class="line">现有的账密登录无法满足企业 SSO 需求，引入 OAuth2 PKCE 流程以支持</span><br><span class="line">第三方身份提供商，同时避免在客户端存储 client_secret。</span><br><span class="line"></span><br><span class="line">支持提供商：Google、GitHub、GitLab</span><br><span class="line">包含 token 自动刷新和登录状态持久化</span><br><span class="line"></span><br><span class="line">Closes #123</span><br></pre></td></tr></table></figure>
+<h3 id="3-确认并提交">3. 确认并提交</h3>
+<ol>
+<li>
+<p>向用户展示拟定的提交信息，<strong>等待确认</strong></p>
+</li>
+<li>
+<p>确认后执行：</p>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git add -Agit commit -m <span class="string">&quot;&lt;subject&gt;&quot;</span> -m <span class="string">&quot;&lt;body&gt;&quot;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>若 <code>$ARGUMENTS</code> 包含 <code>--push</code>，提交后执行 <code>git push</code></p>
+</li>
+</ol>
+<h2 id="使用示例">使用示例</h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/commit</span><br><span class="line">/commit 修复用户登录时 token 过期的问题</span><br><span class="line">/commit fix login token expiry issue --push</span><br></pre></td></tr></table></figure>
+<p>Claude 会：</p>
+<ol>
+<li>查看 git 变更</li>
+<li>分析这是 fix 类型的提交</li>
+<li>生成规范的提交信息：<code>fix(auth): 修复 token 过期后的自动刷新逻辑</code></li>
+<li>询问确认后执行提交</li>
+</ol>
+<p>输入：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/commit 添加用户资料页 --push</span><br></pre></td></tr></table></figure>
+<p>Claude 会：</p>
+<ol>
+<li>分析变更类型为 <code>feat</code></li>
+<li>生成提交信息并提交</li>
+<li>自动执行 <code>git push</code></li>
+</ol>
+<h3 id="适用场景">适用场景</h3>
+<p>这个命令适用于以下场景：</p>
+<ul>
+<li>日常开发的代码提交</li>
+<li>需要生成符合团队规范的提交信息</li>
+<li>避免手动输入复杂的 git 命令</li>
+<li>团队协作时保持提交风格一致</li>
+</ul>
+<h3 id="进阶使用">进阶使用</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 提交并推送</span></span><br><span class="line">/commit 新功能开发 --push</span><br><span class="line"></span><br><span class="line"><span class="comment"># 简洁提交（跳过确认）</span></span><br><span class="line">/commit fix: 修复登录bug</span><br><span class="line"></span><br><span class="line"><span class="comment"># 带上下文的提交</span></span><br><span class="line">/commit 完成用户认证模块，包含OAuth和JWT支持</span><br></pre></td></tr></table></figure>
+<p>这个例子展示了 Commands 的几个核心能力：工具权限控制、多步骤流程、参数处理、自然语言交互。你可以把它当成一个&quot;微型程序&quot;，只是用 Markdown 编写而已。</p>
+<h3 id="命令分组-2">命令分组</h3>
+<p>你可以在 <code>~/.claude/commands/</code> 下创建子目录来组织命令：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">~/.claude/commands/</span><br><span class="line">├── workflows/          # 多步骤工作流命令</span><br><span class="line">│   ├── feature-development.md</span><br><span class="line">│   └── smart-fix.md</span><br><span class="line">└── tools/              # 单一用途工具命令</span><br><span class="line">    ├── security-scan.md</span><br><span class="line">    └── api-scaffold.md</span><br></pre></td></tr></table></figure>
+<p>调用时使用命名空间前缀：<code>/workflows:feature-development</code> 或 <code>/tools:security-scan</code>。</p>
+<h3 id="优先级规则-2">优先级规则</h3>
+<p>当同名命令存在于多个位置时，按以下优先级：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1. 项目级（最高）: .claude/commands/</span><br><span class="line">2. 用户级: ~/.claude/commands/</span><br><span class="line">3. 内置命令（最低）</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>⚠️ <strong>重要</strong>：核心系统命令（如 <code>/clear</code>、<code>/help</code>、<code>/compact</code>、<code>/doctor</code> 等）是受保护的，不能被自定义命令覆盖。</p>
+</blockquote>
+<p>掌握了 Commands 的基本用法之后，如何写出高质量的命令？这里有一些经过实践验证的最佳实践，可以帮你少走弯路。</p>
+<h2 id="❓-常见问题与排错">❓ 常见问题与排错</h2>
+<h3 id="问题-1：自定义命令输入后无响应？">问题 1：自定义命令输入后无响应？</h3>
+<p><strong>排查清单</strong>：</p>
+<ul>
+<li>文件路径是否正确？用户级 <code>~/.claude/commands/</code>，项目级 <code>.claude/commands/</code></li>
+<li>文件扩展名是否为 <code>.md</code>？</li>
+<li>Frontmatter 格式是否正确（用 <code>---</code> 包围，缩进正确）？</li>
+<li>文件是否已保存？</li>
+</ul>
+<p><strong>快速检查</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ls</span> -la ~/.claude/commands/</span><br><span class="line"><span class="built_in">cat</span> ~/.claude/commands/your-command.md</span><br></pre></td></tr></table></figure>
+<hr>
+<h3 id="问题-2：命令执行速度很慢？">问题 2：命令执行速度很慢？</h3>
+<p><strong>优化建议</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>问题</th>
+<th>解决方案</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>模型选择不当</td>
+<td>简单任务用 Haiku，复杂任务用 Sonnet</td>
+</tr>
+<tr>
+<td>读取过多文件</td>
+<td>使用 Glob 精确定位，避免全目录扫描</td>
+</tr>
+<tr>
+<td>未禁用模型调用</td>
+<td>纯文本替换设置 <code>disable-model-invocation: true</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="💡-最佳实践">💡 最佳实践</h2>
+<h3 id="1-权限最小化原则">1. 权限最小化原则</h3>
+<p>只授予命令所需的最低权限。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ❌ 不安全：权限过大</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">description:</span> <span class="string">代码审查</span></span><br><span class="line"><span class="attr">allowed-tools:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">Write</span>  <span class="comment"># 审查不需要写入</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">Bash</span>   <span class="comment"># 审查不需要执行任意命令</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="comment"># ✅ 安全：权限最小化</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">description:</span> <span class="string">代码审查</span></span><br><span class="line"><span class="attr">allowed-tools:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">Read</span>   <span class="comment"># 只需读取代码</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">Grep</span>   <span class="comment"># 只需搜索内容</span></span><br><span class="line"><span class="meta">---</span></span><br></pre></td></tr></table></figure>
+<p><strong>Git 命令精确控制</strong>：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">allowed-tools:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">Bash(git status:</span> <span class="string">*)</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">Bash(git diff:</span> <span class="string">*)</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">Bash(git commit:</span> <span class="string">*)</span></span><br></pre></td></tr></table></figure>
+<hr>
+<h3 id="2-命令复用技巧">2. 命令复用技巧</h3>
+<p>将通用流程抽离为基础命令，通过嵌套调用实现复杂工作流。</p>
+<p><strong>不推荐</strong>（单一大命令）：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">description: 完整开发流程</span><br><span class="line">---</span><br><span class="line"></span><br><span class="line">## 步骤1：代码审查</span><br><span class="line">[详细流程...]</span><br><span class="line"></span><br><span class="line">## 步骤2：运行测试</span><br><span class="line">[详细流程...]</span><br><span class="line"></span><br><span class="line">## 步骤3：提交代码</span><br><span class="line">[详细流程...]</span><br></pre></td></tr></table></figure>
+<p><strong>推荐</strong>（拆分复用）：</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="section"># 基础命令：review.md</span></span><br><span class="line">---</span><br><span class="line">description: 代码审查</span><br><span class="line">allowed-tools:</span><br><span class="line"><span class="bullet">  -</span> Read</span><br><span class="line"><span class="section">  - Grep</span></span><br><span class="line"><span class="section">---</span></span><br><span class="line"></span><br><span class="line"><span class="section"># 组合命令：feature.md</span></span><br><span class="line">---</span><br><span class="line">description: 完整开发流程</span><br><span class="line">allowed-tools:</span><br><span class="line"><span class="section">  - Read</span></span><br><span class="line"><span class="section">---</span></span><br><span class="line"></span><br><span class="line">调用 /review 命令</span><br><span class="line">调用 /test 命令</span><br><span class="line">调用 /commit 命令</span><br></pre></td></tr></table></figure>
+<p><strong>优势</strong>：每个命令可独立使用，修改更灵活。</p>
+<hr>
+<h3 id="3-条件逻辑设计">3. 条件逻辑设计</h3>
+<p>虽然 Markdown 不支持编程逻辑，但通过精心设计的提示词可以实现条件分支：</p>
+<h2 id="执行逻辑">执行逻辑</h2>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">根据 $ARGUMENTS 的内容判断执行路径：</span><br><span class="line"></span><br><span class="line"><span class="strong">**情况1：参数包含&quot;深度&quot;或&quot;详细&quot;**</span></span><br><span class="line">→ 执行深度分析流程</span><br><span class="line">→ 输出完整报告（3000字以上）</span><br><span class="line"></span><br><span class="line"><span class="strong">**情况2：参数包含&quot;快速&quot;或&quot;简要&quot;**</span></span><br><span class="line">→ 执行快速分析</span><br><span class="line">→ 输出简要报告（500字以内）</span><br><span class="line"></span><br><span class="line"><span class="strong">**情况3：其他情况（默认）**</span></span><br><span class="line">→ 执行标准分析</span><br><span class="line">→ 输出标准报告（1500字）</span><br></pre></td></tr></table></figure>
+<hr>
+<h3 id="4-命令命名建议">4. 命令命名建议</h3>
+<ul>
+<li>使用动宾结构：<code>review-code</code>、<code>generate-docs</code></li>
+<li>避免 actionless 名词：<code>documentation</code>、<code>testing</code></li>
+<li>保持简洁：<code>test</code> 比 <code>run_tests</code> 更好</li>
+<li>连字符分隔：<code>api-scaffold</code> 比 <code>apiScaffold</code> 更易读</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>❌ 不推荐</th>
+<th>✅ 推荐</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>documentation</code></td>
+<td><code>generate-docs</code></td>
+</tr>
+<tr>
+<td><code>testing_runner</code></td>
+<td><code>test</code></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>小结</strong>：遵循权限最小化、命令复用、合理命名等原则，可以构建出既安全又高效的命令库。</p>
+</blockquote>
+<p>从零开始编写 Commands 到形成自己的命令库，是一个循序渐进的过程。最后，让我总结一下 Commands 的核心价值，并给你一些实践建议。</p>
+<h2 id="总结">总结</h2>
+<p>![alt][claude_code_commands_dense.png]</p>
+<p>Claude Code Commands 系统是一个被低估的强大功能。通过它，你可以：</p>
+<ol>
+<li><strong>注册真正可用的工具</strong>，而不是依赖 Claude 的&quot;理解&quot;</li>
+<li><strong>构建多步骤工作流</strong>，实现复杂任务的自动化</li>
+<li><strong>组织个人知识</strong>，形成可复用的命令库</li>
+</ol>
+<p>如果你还在停留在&quot;问个问题&quot;的阶段，不妨从创建第一个自定义命令开始。比如写一个 <code>/review</code> 命令来自动审查你的代码，或者 <code>/commit</code> 命令来生成规范的提交信息。</p>
+<p>这些小小的投入，会在日复一日的使用中产生巨大的回报。</p>
+<hr>
+<h2 id="参考资源">参考资源</h2>
+<p><strong>官方文档</strong>：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://docs.anthropic.com/en/docs/claude-code/commands">Claude Code Commands</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.vtrivedy.com/posts/claudecode-tools-reference">Tools Reference</a></li>
+<li><a target="_blank" rel="noopener" href="https://community.anthropic.com/">Claude Code 官方社区</a></li>
+</ul>
+<p><strong>社区资源</strong>：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/jarrodwatts/claude-code-config">claude-code-config</a> - 50+ 常用命令集合</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/affaan-m/everything-claude-code">Everything Claude Code</a> - Hackathon 冠军配置</li>
+</ul>
+
+    </article>
+    <!-- license -->
+        <div class="license-wrapper">
+            <p>原文作者：<a href="https://czj-dev.github.io">Nutcracker</a>
+            <p>原文链接：<a href="https://czj-dev.github.io/2026/03/03/2026-03-03-claude_code_commands/">https://czj-dev.github.io/2026/03/03/2026-03-03-claude_code_commands/</a>
+            <p>发表日期：<a href="https://czj-dev.github.io/2026/03/03/2026-03-03-claude_code_commands/">March 3rd 2026, 9:00:00 pm</a>
+            <p>更新日期：<a href="https://czj-dev.github.io/2026/03/03/2026-03-03-claude_code_commands/">March 4th 2026, 11:48:18 am</a>
+            <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    <!-- paginator -->
+    <ul class="post-paginator">
+        <li class="next">
+        </li>
+        <li class="previous">
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2024/09/13/2024-09-13-program_developer_experience/" title="《程序员修炼之道》阅读笔记">
+                    <div class="prevTitle">《程序员修炼之道》阅读笔记</div>
+                </a>
+        </li>
+    </ul>
+    <!-- comment -->
+        <div class="post-comment">
+            <!-- 来必力 City 版安装代码 -->
+
+            
+            
+            
+            <!-- utteranc评论 -->
+
+            <!-- partial('_partial/comment/changyan') -->
+            <!--PC版-->
+
+            
+            
+            
+        </div>
+    <!-- timeliness note -->
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+    <!-- Mathjax -->
+</main>
+
+                <!-- profile -->
+            </div>
+            <footer class="footer footer-unloaded">
+    <!-- social  -->
+        <div class="social">
+                            <a href="mailto:mrchenzhaojun@gmail.com" class="iconfont-archer email" title="email" ></a>
+                <a href="//github.com/czj-dev" class="iconfont-archer github" target="_blank" title="github"></a>
+                <a href="https://www.zhihu.com/people/chen-zhao-jun-27" class="iconfont-archer zhihu" target="_blank" title="zhihu"></a>
+                <a href="https://steamcommunity.com/id/NutcrackerX" class="iconfont-archer steam" target="_blank" title="steam"></a>
+
+        </div>
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- website approve for Chinese user -->
+    <!-- 不蒜子  -->
+        <div class="busuanzi-container">
+                <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+        </div>
+</footer>
+
+        </div>
+        <!-- toc -->
+            <div class="toc-wrapper toc-wrapper-loding" style=    top:50vh;
+>
+                <div class="toc-catalog">
+                    <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+                </div>
+                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%93%8C-%E5%9F%BA%E6%9C%AC%E4%BF%A1%E6%81%AF"><span class="toc-number">2.</span> <span class="toc-text">📌 基本信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Commands-%E7%AE%80%E4%BB%8B"><span class="toc-number">3.</span> <span class="toc-text">Commands 简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Claude-Code-%E6%89%A9%E5%B1%95%E4%BD%93%E7%B3%BB"><span class="toc-number">4.</span> <span class="toc-text">Claude Code 扩展体系</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E6%89%A9%E5%B1%95%E6%9C%BA%E5%88%B6%E8%AF%B4%E6%98%8E"><span class="toc-number">4.1.</span> <span class="toc-text">核心扩展机制说明</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%9A%80-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%EF%BC%9A10-%E5%88%86%E9%92%9F%E5%88%9B%E5%BB%BA%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%91%BD%E4%BB%A4"><span class="toc-number">5.</span> <span class="toc-text">🚀 快速入门：10 分钟创建第一个命令</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AD%A5%E9%AA%A4-1%EF%BC%9A%E5%88%9B%E5%BB%BA%E5%91%BD%E4%BB%A4%E6%96%87%E4%BB%B6"><span class="toc-number">5.1.</span> <span class="toc-text">步骤 1：创建命令文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AD%A5%E9%AA%A4-2%EF%BC%9A%E4%BD%BF%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="toc-number">5.2.</span> <span class="toc-text">步骤 2：使用命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AD%A5%E9%AA%A4-3%EF%BC%9A%E8%BF%9B%E9%98%B6-%E5%B8%A6%E5%B7%A5%E5%85%B7%E8%B0%83%E7%94%A8%E7%9A%84%E5%91%BD%E4%BB%A4"><span class="toc-number">5.3.</span> <span class="toc-text">步骤 3：进阶 - 带工具调用的命令</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%94%84-Commands-%E4%B8%8E-Skills-%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">6.</span> <span class="toc-text">🔄 Commands 与 Skills 的区别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E2%9A%A1-%E6%A0%B8%E5%BF%83%E7%89%B9%E6%80%A7"><span class="toc-number">7.</span> <span class="toc-text">⚡ 核心特性</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E7%B3%BB%E7%BB%9F%E7%BA%A7%E9%A2%84%E5%8A%A0%E8%BD%BD"><span class="toc-number">7.1.</span> <span class="toc-text">1. 系统级预加载</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%B7%A5%E5%85%B7%E6%B3%A8%E5%86%8C%E8%83%BD%E5%8A%9B"><span class="toc-number">7.2.</span> <span class="toc-text">2. 工具注册能力</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%8F%82%E6%95%B0%E5%A4%84%E7%90%86"><span class="toc-number">7.3.</span> <span class="toc-text">3. 参数处理</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%93%9D-Frontmatter-%E9%85%8D%E7%BD%AE%E8%AF%A6%E8%A7%A3"><span class="toc-number">8.</span> <span class="toc-text">📝 Frontmatter 配置详解</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%8C%E6%95%B4%E9%85%8D%E7%BD%AE%E7%A4%BA%E4%BE%8B"><span class="toc-number">8.1.</span> <span class="toc-text">完整配置示例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%97%E6%AE%B5%E8%AF%B4%E6%98%8E"><span class="toc-number">8.2.</span> <span class="toc-text">字段说明</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E9%A1%B9%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">8.3.</span> <span class="toc-text">配置项使用场景</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#model-%E5%AD%97%E6%AE%B5%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">8.3.1.</span> <span class="toc-text">model 字段使用场景</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#disable-model-invocation-%E5%AD%97%E6%AE%B5%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">8.3.2.</span> <span class="toc-text">disable-model-invocation 字段使用场景</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%94%A7-%E5%B7%A5%E5%85%B7%E8%B0%83%E7%94%A8%E8%AF%AD%E6%B3%95"><span class="toc-number">9.</span> <span class="toc-text">🔧 工具调用语法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E7%BD%AE%E5%B7%A5%E5%85%B7%E8%B0%83%E7%94%A8"><span class="toc-number">9.1.</span> <span class="toc-text">内置工具调用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MCP-%E5%B7%A5%E5%85%B7%E8%B0%83%E7%94%A8"><span class="toc-number">9.2.</span> <span class="toc-text">MCP 工具调用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B5%8C%E5%A5%97%E5%B7%A5%E5%85%B7%E8%B0%83%E7%94%A8"><span class="toc-number">9.3.</span> <span class="toc-text">嵌套工具调用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%93%82-%E5%91%BD%E4%BB%A4%E5%88%86%E7%BB%84%E4%B8%8E%E4%BC%98%E5%85%88%E7%BA%A7"><span class="toc-number">10.</span> <span class="toc-text">📂 命令分组与优先级</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E5%88%86%E7%BB%84"><span class="toc-number">10.1.</span> <span class="toc-text">命令分组</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E5%85%88%E7%BA%A7%E8%A7%84%E5%88%99"><span class="toc-number">10.2.</span> <span class="toc-text">优先级规则</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%93%84-%E5%AE%8C%E6%95%B4%E5%AE%9E%E6%88%98%E7%A4%BA%E4%BE%8B%EF%BC%9A%E6%99%BA%E8%83%BD-Git-%E6%8F%90%E4%BA%A4%E5%91%BD%E4%BB%A4"><span class="toc-number">11.</span> <span class="toc-text">📄 完整实战示例：智能 Git 提交命令</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E6%96%87%E4%BB%B6%E4%BD%8D%E7%BD%AE"><span class="toc-number">11.1.</span> <span class="toc-text">命令文件位置</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%AE%E6%A0%87"><span class="toc-number">12.</span> <span class="toc-text">目标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%A7%E8%A1%8C%E6%AD%A5%E9%AA%A4"><span class="toc-number">13.</span> <span class="toc-text">执行步骤</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E6%94%B6%E9%9B%86%E5%8F%98%E6%9B%B4%E4%BF%A1%E6%81%AF"><span class="toc-number">13.1.</span> <span class="toc-text">1. 收集变更信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%88%86%E6%9E%90%E5%B9%B6%E7%94%9F%E6%88%90%E6%8F%90%E4%BA%A4%E4%BF%A1%E6%81%AF"><span class="toc-number">13.2.</span> <span class="toc-text">2. 分析并生成提交信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E7%A1%AE%E8%AE%A4%E5%B9%B6%E6%8F%90%E4%BA%A4"><span class="toc-number">13.3.</span> <span class="toc-text">3. 确认并提交</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B"><span class="toc-number">14.</span> <span class="toc-text">使用示例</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">14.1.</span> <span class="toc-text">适用场景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9B%E9%98%B6%E4%BD%BF%E7%94%A8"><span class="toc-number">14.2.</span> <span class="toc-text">进阶使用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E5%88%86%E7%BB%84-2"><span class="toc-number">14.3.</span> <span class="toc-text">命令分组</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E5%85%88%E7%BA%A7%E8%A7%84%E5%88%99-2"><span class="toc-number">14.4.</span> <span class="toc-text">优先级规则</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E2%9D%93-%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E4%B8%8E%E6%8E%92%E9%94%99"><span class="toc-number">15.</span> <span class="toc-text">❓ 常见问题与排错</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%97%AE%E9%A2%98-1%EF%BC%9A%E8%87%AA%E5%AE%9A%E4%B9%89%E5%91%BD%E4%BB%A4%E8%BE%93%E5%85%A5%E5%90%8E%E6%97%A0%E5%93%8D%E5%BA%94%EF%BC%9F"><span class="toc-number">15.1.</span> <span class="toc-text">问题 1：自定义命令输入后无响应？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%97%AE%E9%A2%98-2%EF%BC%9A%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E9%80%9F%E5%BA%A6%E5%BE%88%E6%85%A2%EF%BC%9F"><span class="toc-number">15.2.</span> <span class="toc-text">问题 2：命令执行速度很慢？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%92%A1-%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5"><span class="toc-number">16.</span> <span class="toc-text">💡 最佳实践</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E6%9D%83%E9%99%90%E6%9C%80%E5%B0%8F%E5%8C%96%E5%8E%9F%E5%88%99"><span class="toc-number">16.1.</span> <span class="toc-text">1. 权限最小化原则</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%91%BD%E4%BB%A4%E5%A4%8D%E7%94%A8%E6%8A%80%E5%B7%A7"><span class="toc-number">16.2.</span> <span class="toc-text">2. 命令复用技巧</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E6%9D%A1%E4%BB%B6%E9%80%BB%E8%BE%91%E8%AE%BE%E8%AE%A1"><span class="toc-number">16.3.</span> <span class="toc-text">3. 条件逻辑设计</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%A7%E8%A1%8C%E9%80%BB%E8%BE%91"><span class="toc-number">17.</span> <span class="toc-text">执行逻辑</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E5%91%BD%E4%BB%A4%E5%91%BD%E5%90%8D%E5%BB%BA%E8%AE%AE"><span class="toc-number">17.1.</span> <span class="toc-text">4. 命令命名建议</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">18.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%BA%90"><span class="toc-number">19.</span> <span class="toc-text">参考资源</span></a></li></ol>
+            </div>
+        <!-- sidebar -->
+        <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+        <div class="sidebar-panel-archives">
+    <!-- 在 ejs 中将 archive 按照时间排序 -->
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 12
+        </div>
+        <!-- search  -->
+    </div>
+    <div class="post-archive">
+            <div class="archive-year"> 2026 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/03</span>
+            <a class="archive-post-title" href="/2026/03/03/2026-03-03-claude_code_commands/">Claude Code Commands 指南</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2024 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/13</span>
+            <a class="archive-post-title" href="/2024/09/13/2024-09-13-program_developer_experience/">《程序员修炼之道》阅读笔记</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2023 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/22</span>
+            <a class="archive-post-title" href="/2023/02/22/2023-02-20-android_preload_review/">Android 列表预加载分析</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2020 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/30</span>
+            <a class="archive-post-title" href="/2020/04/30/2020-04-30-dart_basic/">Dart 实践（一）</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2018 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/26</span>
+            <a class="archive-post-title" href="/2018/05/26/2018-05-06-gradle_learning_notes_2/">Gradle的架构和api</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/28</span>
+            <a class="archive-post-title" href="/2018/04/28/2018-05-26-gradle_learning_notes_1/">Gradle的基础概念</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/01</span>
+            <a class="archive-post-title" href="/2018/04/01/2018-04-04-andorid_thread/">Android 的线程和线程池</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/25</span>
+            <a class="archive-post-title" href="/2018/03/25/2018-03-25-andorid_view_working_principle/">Android View 工作原理</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/19</span>
+            <a class="archive-post-title" href="/2018/03/19/2018-03-19-andorid_view_event/">Android View 事件体系</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/18</span>
+            <a class="archive-post-title" href="/2018/03/18/2018-03-18-andorid_ipc/">Android IPC 机制</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/15</span>
+            <a class="archive-post-title" href="/2018/03/15/2018-03-15-andorid_exploration_book_read_01/">Android 艺术开发探索笔记</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2017 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/19</span>
+            <a class="archive-post-title" href="/2017/05/19/2017-05-19-android_databinding/">Data Binding学习笔记</a>
+        </li>
+            </ul>
+    </div>
+</div>
+
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+            <span class="sidebar-tag-name" data-tags="Android">
+                <span class="iconfont-archer">&#xe606;</span>
+                Android
+            </span>
+            <span class="sidebar-tag-name" data-tags="Note">
+                <span class="iconfont-archer">&#xe606;</span>
+                Note
+            </span>
+            <span class="sidebar-tag-name" data-tags="Gradle">
+                <span class="iconfont-archer">&#xe606;</span>
+                Gradle
+            </span>
+            <span class="sidebar-tag-name" data-tags="Flutter">
+                <span class="iconfont-archer">&#xe606;</span>
+                Flutter
+            </span>
+            <span class="sidebar-tag-name" data-tags="Dart">
+                <span class="iconfont-archer">&#xe606;</span>
+                Dart
+            </span>
+            <span class="sidebar-tag-name" data-tags="基础">
+                <span class="iconfont-archer">&#xe606;</span>
+                基础
+            </span>
+            <span class="sidebar-tag-name" data-tags="读书笔记">
+                <span class="iconfont-archer">&#xe606;</span>
+                读书笔记
+            </span>
+            <span class="sidebar-tag-name" data-tags="方法论">
+                <span class="iconfont-archer">&#xe606;</span>
+                方法论
+            </span>
+            <span class="sidebar-tag-name" data-tags="Book">
+                <span class="iconfont-archer">&#xe606;</span>
+                Book
+            </span>
+            <span class="sidebar-tag-name" data-tags="RecyclerView">
+                <span class="iconfont-archer">&#xe606;</span>
+                RecyclerView
+            </span>
+            <span class="sidebar-tag-name" data-tags="Booklet">
+                <span class="iconfont-archer">&#xe606;</span>
+                Booklet
+            </span>
+            <span class="sidebar-tag-name" data-tags="开发工具">
+                <span class="iconfont-archer">&#xe606;</span>
+                开发工具
+            </span>
+            <span class="sidebar-tag-name" data-tags="Claude Code">
+                <span class="iconfont-archer">&#xe606;</span>
+                Claude Code
+            </span>
+            <span class="sidebar-tag-name" data-tags="AI 助手">
+                <span class="iconfont-archer">&#xe606;</span>
+                AI 助手
+            </span>
+            <span class="sidebar-tag-name" data-tags="技术教程">
+                <span class="iconfont-archer">&#xe606;</span>
+                技术教程
+            </span>
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+        缺失模块，请参考主题文档进行安装配置：https://github.com/fi3ework/hexo-theme-archer#%E5%AE%89%E8%A3%85%E4%B8%BB%E9%A2%98
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+
+    </div>
+</div>
+
+        <!-- site-meta -->
+        <script>
+    var siteMetaRoot = "/"
+    if (siteMetaRoot === "undefined") {
+        siteMetaRoot = '/'
+    }
+    var siteMeta = {
+        url: "https://czj-dev.github.io",
+        root: siteMetaRoot,
+        author: "Nutcracker"
+    }
+</script>
+
+        <!-- import experimental options here -->
+        <!-- Custom Font -->
+    <!-- Check browser compatibility of CSS variables -->
+    <script>
+        if (browserSupportCSSVariables === undefined) {
+            var browserSupportCSSVariables = window.CSS && window.CSS.supports && window.CSS.supports('--a', 0);
+        }
+    </script>
+    <script>
+        if (browserSupportCSSVariables) {
+            var customFontName = 'Noto Sans SC:n3,n4,n5,n7'
+            var customFontUrl = 'https://fonts.googleapis.cnpmjs.org/css2?family=Noto+Sans+SC:wght@300;400;500;700&amp;display=swap'
+            if (!customFontName) {
+                console.log('Custom font name is not set or read failed');
+            }
+            if (!customFontUrl) {
+                console.log('Custom font url is not set or read failed');
+            }
+        } else {
+            console.error('Current browser doesn\'t support custom font.')
+        }
+    </script>
+    <script src="/scripts/customFontLoader.js" defer></script>
+
+        <!-- main func -->
+        <script src="/scripts/main.js"></script>
+        <!-- fancybox -->
+        <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.umd.js" onload="window.Fancybox.bind('[data-fancybox]')" defer></script>
+        <!-- algolia -->
+        <!-- busuanzi -->
+            <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+        <!-- async load share.js -->
+            <script src="/scripts/share.js" async></script>
+        <!-- mermaid -->
+            <script src='https://cdn.jsdelivr.net/npm/mermaid@8.11.0/dist/mermaid.min.js' onload="window.mermaid.initialize({theme: 'dark'})" async></script>
+    </body>
+</html>
