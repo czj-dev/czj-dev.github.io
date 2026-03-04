@@ -40,7 +40,7 @@ external_link:
   exclude: ""
 filename_case: 0
 render_drafts: false
-post_asset_folder: false
+post_asset_folder: true
 relative_link: false
 future: true
 highlight:
@@ -55,6 +55,31 @@ prismjs:
   preprocess: true
   line_number: true
   tab_replace: ""
+
+markdown:
+  preset: "default"
+  render:
+    html: true
+    xhtmlOut: false
+    langPrefix: "language-"
+    breaks: true
+    linkify: true
+    typographer: true
+    quotes: "“”‘’"
+  anchors:
+    level: 2
+    collisionSuffix: ""
+    permalink: false
+    permalinkClass: "header-anchor"
+    permalinkSide: "left"
+    permalinkSymbol: "¶"
+    case: 0
+    separator: "-"
+  images:
+    lazyload: true
+    prepend_root: true
+    post_asset: true
+  inline: true # https://markdown-it.github.io/markdown-it/#MarkdownIt.renderInline
 
 # Home page setting
 # path: Root path for your blogs index page. (default = '')

@@ -132,8 +132,8 @@ comment:
   # Youyan  site: http://www.uyan.cc/
   youyan_uid: 
   # Valine  site: https://valine.js.org/
-  valine_appId: IiPsw8Ob4JVxOMx3gayw548j-gzGzoHsz
-  valine_appKey: 0mXzTUSWpgkGqAO5TN7XfdtN
+  valine_appId:
+  valine_appKey:
   valine_placeHolder: 
   # gitalk site: https://github.com/gitalk/gitalk/
   # Value 'true' is recommended for gitalk_pathname_id setting

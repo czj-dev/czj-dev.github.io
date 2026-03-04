@@ -3,7 +3,10 @@
         <%_ const truncateLength = typeof theme.truncate_length === 'number' ? theme.truncate_length : 300 _%>
         <%_ let _content = undefined _%>
         <%_ let showReadMoreButton = false _%>
-        <%_ if(!!_post.excerpt) { _%>
+        <%_ if(!!_post.summary) { _%>
+            <%_ _content = _post.summary _%>
+            <%_ showReadMoreButton = true _%>
+        <%_ } else if(!!_post.excerpt) { _%>
             <%_ _content = _post.excerpt _%>
             <%_ showReadMoreButton = true _%>
         <%_ } else if (!!_post.abstract) { _%>

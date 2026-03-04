@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Claude Code Commands 指南：打造你的专属 AI 工作流
+title: Claude Code Commands 指南
 subtitle: 工具介绍
 date: 2026-03-03 21:00:00
 author: Nutcracker
@@ -18,6 +18,7 @@ tags:
   - Claude Code
   - AI 助手
   - 技术教程
+summary: Claude Code Commands 指南全面介绍命令系统的核心特性，包括系统级预加载、工具注册能力、参数处理机制、Frontmatter 配置详解、工具调用语法、命令分组与优先级规则、最佳实践以及完整的智能 Git 提交命令实战示例。
 ---
 
 ## 前言
@@ -574,29 +575,7 @@ cat ~/.claude/commands/your-command.md
 ```
 
 ---
-
-### 问题 2：Claude 提示 "无工具调用权限"？
-
-**常见原因**：
-- `allowed-tools` 配置缺失
-- 工具名称拼写错误（区分大小写：`Bash` 而非 `bash`）
-- 工具权限范围过窄
-
-**示例修复**：
-```yaml
-# ❌ 错误
-allowed-tools:
-  - bash
-  - read
-
-# ✅ 正确
-allowed-tools:
-  - Bash
-  - Read
-```
-
----
-### 问题 3：命令执行速度很慢？
+### 问题 2：命令执行速度很慢？
 
 **优化建议**：
 | 问题 | 解决方案 |
@@ -726,6 +705,9 @@ allowed-tools:
 从零开始编写 Commands 到形成自己的命令库，是一个循序渐进的过程。最后，让我总结一下 Commands 的核心价值，并给你一些实践建议。
 
 ## 总结
+
+![alt][claude_code_commands_dense.png]
+
 
 Claude Code Commands 系统是一个被低估的强大功能。通过它，你可以：
 
