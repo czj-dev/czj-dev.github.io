@@ -1,0 +1,21 @@
+<!-- giscus 评论（GitHub Discussions） -->
+<%_ if (theme.comment && theme.comment.giscus_repo) { _%>
+<section class="comments">
+  <script src="https://giscus.app/client.js"
+    data-repo="<%= theme.comment.giscus_repo %>"
+    data-repo-id="<%= theme.comment.giscus_repo_id %>"
+    data-category="<%= theme.comment.giscus_category %>"
+    data-category-id="<%= theme.comment.giscus_category_id %>"
+    data-mapping="<%= theme.comment.giscus_mapping || 'pathname' %>"
+    data-strict="0"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="top"
+    data-theme="<%= theme.comment.giscus_theme || 'preferred_color_scheme' %>"
+    data-lang="zh-CN"
+    data-loading="lazy"
+    crossorigin="anonymous"
+    async>
+  </script>
+</section>
+<%_ } _%>
