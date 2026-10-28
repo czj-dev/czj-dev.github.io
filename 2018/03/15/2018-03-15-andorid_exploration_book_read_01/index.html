@@ -617,6 +617,7 @@
         <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
         <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
         <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+        <li class="sidebar-tab-notes"><span class="iconfont-archer">&#xe60a;</span><span class="tab-name">Note</span></li>
     </ul>
     <div class="sidebar-content sidebar-content-show-archive">
         <div class="sidebar-panel-archives">
@@ -740,6 +741,10 @@
                 <span class="iconfont-archer">&#xe606;</span>
                 基础
             </span>
+            <span class="sidebar-tag-name" data-tags="RecyclerView">
+                <span class="iconfont-archer">&#xe606;</span>
+                RecyclerView
+            </span>
             <span class="sidebar-tag-name" data-tags="Gradle">
                 <span class="iconfont-archer">&#xe606;</span>
                 Gradle
@@ -759,10 +764,6 @@
             <span class="sidebar-tag-name" data-tags="技术教程">
                 <span class="iconfont-archer">&#xe606;</span>
                 技术教程
-            </span>
-            <span class="sidebar-tag-name" data-tags="RecyclerView">
-                <span class="iconfont-archer">&#xe606;</span>
-                RecyclerView
             </span>
             <span class="sidebar-tag-name" data-tags="工具">
                 <span class="iconfont-archer">&#xe606;</span>
@@ -801,6 +802,14 @@
     </div>
     <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
     <div class="sidebar-categories-list"></div>
+</div>
+
+        <div class="sidebar-panel-notes">
+    <div class="sidebar-notes-list"></div>
+    <div class="iconfont-archer sidebar-notes-empty">&#xe678;</div>
+    <div class="sidebar-notes-viewall">
+        <a href="/memos/">查看全部 &rarr;</a>
+    </div>
 </div>
 
     </div>
@@ -842,6 +851,62 @@
         }
     </script>
     <script src="/scripts/customFontLoader.js" defer></script>
+
+        <!-- site-wide custom hooks (css/js) -->
+        
+<link rel="stylesheet" href="/css/site-custom.css">
+<script>
+(function () {
+    if (!window.jQuery) return;
+    jQuery(function ($) {
+        /* ---- 侧边栏第四个 tab（Note）：main.js 只处理 0-2，此处接管并修补互斥 ---- */
+        var $tabs = $('.sidebar-tabs'), $content = $('.sidebar-content');
+        function clearActive() {
+            [0, 1, 2, 3].forEach(function (i) {
+                $tabs.removeClass('sidebar-tabs-active-' + i);
+                $content.removeClass('sidebar-content-active-' + i);
+            });
+        }
+        $('.sidebar-tab-notes').on('click', function () {
+            clearActive();
+            $tabs.addClass('sidebar-tabs-active-3');
+            $content.addClass('sidebar-content-active-3');
+            loadNotes();
+        });
+        // main.js 的 switchTo 只清 0-2，从 Note 切回时需手动清 3
+        $('.sidebar-tab-archives,.sidebar-tab-tags,.sidebar-tab-categories').on('click', function () {
+            $tabs.removeClass('sidebar-tabs-active-3');
+            $content.removeClass('sidebar-content-active-3');
+        });
+
+        var notesLoaded = false;
+        function loadNotes() {
+            if (notesLoaded) return;
+            notesLoaded = true;
+            $.getJSON(window.siteMeta.root + 'memos/memos.json').done(function (items) {
+                if (!items || !items.length) { $('.sidebar-notes-empty').show(); return; }
+                var pad = function (x) { return (x < 10 ? '0' : '') + x; };
+                var $ul = $('<ul class="sidebar-notes-list-inner">');
+                items.slice(0, 30).forEach(function (m) {
+                    var d = new Date(m.date);
+                    var dateStr = pad(d.getMonth() + 1) + '/' + pad(d.getDate());
+                    var title = m.text || '[图片]';
+                    if (m.photos) title += ' [' + m.photos + '图]';
+                    $('<li class="meta-post-item">')
+                        .append($('<span class="meta-post-date">').text(dateStr))
+                        .append($('<a class="meta-post-title">')
+                            .attr('href', window.siteMeta.root + 'memos/#m-' + m.slug)
+                            .text(title))
+                        .appendTo($ul);
+                });
+                $('.sidebar-notes-list').empty().append($ul);
+            }).fail(function () {
+                $('.sidebar-notes-empty').show();
+            });
+        }
+    });
+})();
+</script>
 
         <!-- main func -->
         <script src="/scripts/main.js"></script>

@@ -1,0 +1,128 @@
+/* Archer sidebar 浅色模式适配（全站）
+ * Archer 原生将 sidebar 写死为深色面板（style.css: .sidebar{background:#222}），
+ * dark.css 不参与 sidebar 配色 → light 模式下侧栏仍是黑色。
+ * 本文件通过 :has() 探测 head 中 dark.css 的生效状态（dark 时 rel=stylesheet，light 时整个 link 被移除）：
+ * 仅 light 模式命中 → 侧栏浅色化；dark 模式不命中 → 保持原生深色。
+ */
+
+html:not(:has(link#stylesheet-theme-dark[rel='stylesheet'])) .sidebar {
+    background-color: #fff;
+    box-shadow: 1px 0 8px rgba(0, 0, 0, 0.08);
+}
+
+/* tabs（Archive / Tag / Cate） */
+html:not(:has(link#stylesheet-theme-dark[rel='stylesheet'])) .sidebar-tabs li,
+html:not(:has(link#stylesheet-theme-dark[rel='stylesheet'])) .sidebar-tabs li .tab-name {
+    color: #8a97a8;
+}
+
+/* archives 面板 */
+html:not(:has(link#stylesheet-theme-dark[rel='stylesheet'])) .total-archive {
+    color: #8a97a8;
+}
+html:not(:has(link#stylesheet-theme-dark[rel='stylesheet'])) .archive-year {
+    color: #3c4858;
+}
+html:not(:has(link#stylesheet-theme-dark[rel='stylesheet'])) .archive-post-date {
+    color: #a0a8b5;
+}
+html:not(:has(link#stylesheet-theme-dark[rel='stylesheet'])) .archive-post-title {
+    color: #3c4858;
+}
+html:not(:has(link#stylesheet-theme-dark[rel='stylesheet'])) .archive-post-title:hover {
+    color: #f75357;
+}
+
+/* tags / categories 面板 */
+html:not(:has(link#stylesheet-theme-dark[rel='stylesheet'])) .sidebar-tag-name,
+html:not(:has(link#stylesheet-theme-dark[rel='stylesheet'])) .sidebar-category-name {
+    color: #3c4858;
+    border-color: #e4e9f0;
+}
+html:not(:has(link#stylesheet-theme-dark[rel='stylesheet'])) .sidebar-tags-empty,
+html:not(:has(link#stylesheet-theme-dark[rel='stylesheet'])) .sidebar-categories-empty {
+    color: #c4ccd6;
+}
+
+/* 文章列表项（main.js 动态生成） */
+html:not(:has(link#stylesheet-theme-dark[rel='stylesheet'])) .meta-post-date {
+    color: #a0a8b5;
+}
+html:not(:has(link#stylesheet-theme-dark[rel='stylesheet'])) .meta-post-title {
+    color: #3c4858;
+}
+html:not(:has(link#stylesheet-theme-dark[rel='stylesheet'])) .meta-post-title:hover {
+    color: #f75357;
+}
+
+/* 滚动条（原生为白色系，浅色面板上不可见） */
+html:not(:has(link#stylesheet-theme-dark[rel='stylesheet'])) .sidebar-panel-archives::-webkit-scrollbar,
+html:not(:has(link#stylesheet-theme-dark[rel='stylesheet'])) .sidebar-tags-name::-webkit-scrollbar,
+html:not(:has(link#stylesheet-theme-dark[rel='stylesheet'])) .sidebar-categories-name::-webkit-scrollbar,
+html:not(:has(link#stylesheet-theme-dark[rel='stylesheet'])) .sidebar-tags-list::-webkit-scrollbar,
+html:not(:has(link#stylesheet-theme-dark[rel='stylesheet'])) .sidebar-categories-list::-webkit-scrollbar {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+html:not(:has(link#stylesheet-theme-dark[rel='stylesheet'])) .sidebar-panel-archives::-webkit-scrollbar-thumb,
+html:not(:has(link#stylesheet-theme-dark[rel='stylesheet'])) .sidebar-tags-name::-webkit-scrollbar-thumb,
+html:not(:has(link#stylesheet-theme-dark[rel='stylesheet'])) .sidebar-categories-name::-webkit-scrollbar-thumb,
+html:not(:has(link#stylesheet-theme-dark[rel='stylesheet'])) .sidebar-tags-list::-webkit-scrollbar-thumb,
+html:not(:has(link#stylesheet-theme-dark[rel='stylesheet'])) .sidebar-categories-list::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+/* ================= 侧边栏第四个 tab（Note）布局适配 =================
+ * 主题原生 3 tab：容器 width:300%、panel 各 33.33%、平移步长 33.33%（均为编译产物不可改）
+ * 此处覆盖为 4 tab 几何：容器 400%、panel 各 25%、步长 25% */
+
+.sidebar-content {
+    width: 400%;
+}
+.sidebar-content > div {
+    width: calc(25% - 2rem);
+    flex-shrink: 0;
+}
+.sidebar-content-active-1 {
+    transform: translate3d(-25%, 0, 0);
+}
+.sidebar-content-active-2 {
+    transform: translate3d(-50%, 0, 0);
+}
+.sidebar-content-active-3 {
+    transform: translate3d(-75%, 0, 0);
+}
+.sidebar-tabs-active-3::after {
+    transform: translate3d(300%, 0, 0);
+}
+
+/* Note 面板 */
+.sidebar-panel-notes {
+    padding: 1rem;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+}
+.sidebar-notes-list-inner {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.sidebar-notes-empty {
+    display: none;
+    color: #666;
+    padding: 1.5rem 0;
+    text-align: center;
+}
+.sidebar-notes-viewall {
+    padding: 0.9rem 0.2rem 0.4rem;
+    font-size: 0.75rem;
+    border-top: 1px solid rgba(128, 128, 128, 0.25);
+    margin-top: 0.6rem;
+}
+.sidebar-notes-viewall a {
+    color: #f75357;
+    text-decoration: none;
+}
+.sidebar-notes-viewall a:hover {
+    text-decoration: underline;
+}
