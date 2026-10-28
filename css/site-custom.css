@@ -72,8 +72,24 @@ html:not(:has(link#stylesheet-theme-dark[rel='stylesheet'])) .sidebar-categories
 }
 
 /* ================= 侧边栏第四个 tab（Note）布局适配 =================
- * 主题原生 3 tab：容器 width:300%、panel 各 33.33%、平移步长 33.33%（均为编译产物不可改）
- * 此处覆盖为 4 tab 几何：容器 400%、panel 各 25%、步长 25% */
+ * 主题原生 3 tab：容器 width:300%、panel 各 33.33%、tab 各 33.33%、平移步长 33.33%（均为编译产物不可改）
+ * 此处覆盖为 4 tab 几何：容器 400%、panel/tab 各 25%、步长 25% */
+
+/* tab 统一覆盖：flex 居中（原生枚举了 archives/tags/categories 三个 class，Note 未命中）+ 四等分宽度 */
+.sidebar-tabs li {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    width: 25%;
+    height: 100%;
+    cursor: pointer;
+}
+.sidebar-tabs li .iconfont-archer {
+    pointer-events: none;
+    margin: 0 0.5rem 0 0;
+    font-size: 1.5rem;
+}
 
 .sidebar-content {
     width: 400%;
@@ -93,6 +109,10 @@ html:not(:has(link#stylesheet-theme-dark[rel='stylesheet'])) .sidebar-categories
 }
 .sidebar-tabs-active-3::after {
     transform: translate3d(300%, 0, 0);
+}
+/* 指示条宽度：原生 33.33%（3 等分），四等分后改 25% */
+.sidebar-tabs::after {
+    width: 25%;
 }
 
 /* Note 面板 */
