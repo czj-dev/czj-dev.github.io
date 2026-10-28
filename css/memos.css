@@ -194,18 +194,38 @@
     opacity: 0.85;
 }
 
-/* ---- memos-body（对齐 about-body 的布局规则，主题 mobile.css 为编译产物不可改） ---- */
+/* ---- memos-body 布局（对齐 about-body；主题 css 为编译产物不可改，此处等价复刻） ---- */
+/* 桌面：main 去左偏移居中成列（同 style.css 的 .about-body main{margin:0}） */
+.memos-body main {
+    margin: 0;
+}
+/* 桌面：intro 标题区（同 style.css 的 .about-body .site-intro-meta/.intro-title） */
 .memos-body .site-intro-meta {
-    min-width: 0;
-    width: calc(95% - 2rem);
+    width: 50%;
+    min-width: 42.8125rem;
+    margin: 0 auto;
+    align-items: flex-start;
 }
 .memos-body .intro-title {
-    font-size: 2.6rem;
-    line-height: 3rem;
-    max-width: 100%;
+    font-size: 4rem;
+    line-height: 5.3rem;
+    color: #fff;
+    margin: 0;
 }
-.memos-body .main {
-    width: 95%;
+/* 窄屏 ≤960px（对齐 mobile.css 断点与规则） */
+@media (max-width: 960px) {
+    .memos-body .site-intro-meta {
+        min-width: 0;
+        width: calc(95% - 2rem);
+    }
+    .memos-body .intro-title {
+        font-size: 2.6rem;
+        line-height: 3rem;
+        max-width: 100%;
+    }
+    .memos-body .main {
+        width: 95%;
+    }
 }
 
 /* ---- 分页 ---- */
