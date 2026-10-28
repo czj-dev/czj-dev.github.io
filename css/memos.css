@@ -1,0 +1,222 @@
+/* Memos 时间轴页 — 独立样式，不依赖主题构建链
+ * 暗色模式：跟随 Archer 的 dark.css link 插拔，由 memos.ejs 内脚本切换 data-theme */
+
+.memos-page {
+    --memo-bg: #ffffff;
+    --memo-border: rgba(0, 0, 0, 0.08);
+    --memo-text: #3c4858;
+    --memo-text-sub: #8a97a8;
+    --memo-line: #e4e9f0;
+    --memo-node: #5b8def;
+    --memo-hover: rgba(0, 0, 0, 0.04);
+}
+.memos-page[data-theme='dark'] {
+    --memo-bg: #2c2c31;
+    --memo-border: rgba(255, 255, 255, 0.08);
+    --memo-text: #c7cdd6;
+    --memo-text-sub: #7d8590;
+    --memo-line: #44454a;
+    --memo-node: #5b8def;
+    --memo-hover: rgba(255, 255, 255, 0.05);
+}
+
+.memos-header {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    margin: 1.5rem 0 2rem;
+}
+.memos-page-title {
+    font-size: 1.6rem;
+    font-weight: 600;
+    margin: 0;
+    color: var(--memo-text);
+}
+.memos-total {
+    color: var(--memo-text-sub);
+    font-size: 0.85rem;
+}
+
+/* ---- 时间轴 ---- */
+.memos-timeline {
+    position: relative;
+    padding-left: 1.4rem;
+    margin-left: 0.6rem;
+}
+.memos-timeline::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.4rem;
+    bottom: 0.4rem;
+    width: 2px;
+    background: var(--memo-line);
+    border-radius: 1px;
+}
+.timeline-month {
+    position: relative;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--memo-text-sub);
+    margin: 1.8rem 0 1rem;
+    letter-spacing: 0.05em;
+}
+.timeline-month:first-child {
+    margin-top: 0;
+}
+
+.memo-card {
+    position: relative;
+    display: flex;
+    gap: 0.7rem;
+    margin-bottom: 1.6rem;
+    padding: 0.9rem 1rem;
+    background: var(--memo-bg);
+    border: 1px solid var(--memo-border);
+    border-radius: 10px;
+    transition: background 0.2s ease;
+}
+.memo-card:hover {
+    background: var(--memo-hover);
+}
+.memo-card:target {
+    border-color: var(--memo-node);
+    box-shadow: 0 0 0 3px rgba(91, 141, 239, 0.15);
+}
+.memo-node {
+    position: absolute;
+    left: -1.4rem;
+    top: 1.2rem;
+    width: 10px;
+    height: 10px;
+    margin-left: -4px;
+    border-radius: 50%;
+    background: var(--memo-node);
+    box-shadow: 0 0 0 3px var(--memo-bg);
+}
+.memo-avatar {
+    flex: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.memo-main {
+    flex: 1;
+    min-width: 0;
+}
+.memo-head {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    margin-bottom: 0.3rem;
+}
+.memo-name {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--memo-text);
+}
+.memo-time {
+    font-size: 0.8rem;
+    color: var(--memo-text-sub);
+    text-decoration: none;
+}
+.memo-time:hover {
+    text-decoration: underline;
+}
+.memo-text {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: var(--memo-text);
+    word-break: break-word;
+    overflow-wrap: anywhere;
+}
+.memo-text p {
+    margin: 0 0 0.5rem;
+}
+.memo-text p:last-child {
+    margin-bottom: 0;
+}
+.memo-text pre,
+.memo-text code {
+    font-size: 0.85em;
+    background: var(--memo-hover);
+    border-radius: 4px;
+}
+.memo-text pre {
+    padding: 0.6rem 0.8rem;
+    overflow-x: auto;
+}
+.memo-text code {
+    padding: 0.1em 0.35em;
+}
+.memo-text pre code {
+    padding: 0;
+    background: none;
+}
+
+/* ---- 画廊 ---- */
+.memo-gallery {
+    display: grid;
+    gap: 6px;
+    max-width: 440px;
+    margin-top: 0.6rem;
+}
+.memo-gallery[data-count='1'] {
+    grid-template-columns: minmax(0, 400px);
+    max-width: 400px;
+}
+.memo-gallery[data-count='1'] .gallery-item img {
+    aspect-ratio: 4 / 3;
+}
+.memo-gallery[data-count='2'],
+.memo-gallery[data-count='3'] {
+    grid-template-columns: repeat(3, 1fr);
+}
+.memo-gallery:not([data-count='1']) {
+    grid-template-columns: repeat(3, 1fr);
+}
+.gallery-item {
+    display: block;
+    border-radius: 8px;
+    overflow: hidden;
+    line-height: 0;
+    background: var(--memo-hover);
+}
+.gallery-item img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    transition: opacity 0.15s ease;
+    cursor: zoom-in;
+}
+.gallery-item:hover img {
+    opacity: 0.85;
+}
+
+/* ---- 分页 ---- */
+.memos-pagenav {
+    margin: 2.5rem 0;
+}
+
+/* ---- 移动端 ---- */
+@media (max-width: 600px) {
+    .memos-timeline {
+        padding-left: 1rem;
+        margin-left: 0.2rem;
+    }
+    .memo-card {
+        padding: 0.7rem 0.75rem;
+    }
+    .memo-gallery,
+    .memo-gallery[data-count='1'] {
+        max-width: 100%;
+        grid-template-columns: repeat(3, 1fr);
+    }
+    .memo-gallery[data-count='1'] {
+        grid-template-columns: minmax(0, 1fr);
+    }
+    .memo-gallery[data-count='1'] .gallery-item img {
+        aspect-ratio: 4 / 3;
+    }
+}
