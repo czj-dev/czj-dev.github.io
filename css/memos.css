@@ -194,6 +194,20 @@
     opacity: 0.85;
 }
 
+/* ---- memos-body（对齐 about-body 的布局规则，主题 mobile.css 为编译产物不可改） ---- */
+.memos-body .site-intro-meta {
+    min-width: 0;
+    width: calc(95% - 2rem);
+}
+.memos-body .intro-title {
+    font-size: 2.6rem;
+    line-height: 3rem;
+    max-width: 100%;
+}
+.memos-body .main {
+    width: 95%;
+}
+
 /* ---- 分页 ---- */
 .memos-pagenav {
     margin: 2.5rem 0;
