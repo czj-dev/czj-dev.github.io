@@ -211,6 +211,23 @@
 .gallery-item {
     position: relative;
 }
+/* 动态照片：视频层覆盖静帧，播放时淡入 */
+.gallery-item-video .live-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.15s ease;
+}
+.gallery-item-video.is-playing .live-video {
+    opacity: 1;
+}
+.gallery-item-video.is-playing::after {
+    display: none;
+}
 
 /* ---- memos-body 布局（对齐 about-body；主题 css 为编译产物不可改，此处等价复刻） ---- */
 /* 桌面：main 去左偏移居中成列（同 style.css 的 .about-body main{margin:0}） */
