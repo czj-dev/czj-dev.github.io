@@ -193,6 +193,24 @@
 .gallery-item:hover img {
     opacity: 0.85;
 }
+/* 视频项播放角标 */
+.gallery-item-video::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0.55rem 0 0.55rem 0.9rem;
+    border-color: transparent transparent transparent rgba(255, 255, 255, 0.9);
+    filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.4));
+    pointer-events: none;
+}
+.gallery-item {
+    position: relative;
+}
 
 /* ---- memos-body 布局（对齐 about-body；主题 css 为编译产物不可改，此处等价复刻） ---- */
 /* 桌面：main 去左偏移居中成列（同 style.css 的 .about-body main{margin:0}） */
