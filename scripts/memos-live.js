@@ -3,14 +3,18 @@
  *
  * 交互模型（对齐 iPhone 相册网格）：
  *   单击  → 原地播放；播放中单击 → 暂停回静帧；播放结束 → 自动回静帧
- *   双击  → Fancybox 视频灯箱（Fancybox 5 可选，缺省时降级新窗口打开）
+ *   双击  → 放行原生 Fancybox 灯箱（动态项带 data-fancybox，起始项/翻页/caption 全原生）
+ *
+ * 实现要点：handler 注册在 document capture 阶段——
+ *   单击时 preventDefault + stopPropagation 阻断 Fancybox 的委托；
+ *   双击的第二击不拦截，事件自然冒泡给 Fancybox 原生打开。
  *
  * 用法：
  *   new LiveGallery()                                  // 默认 .gallery-item-video
  *   new LiveGallery({ itemSelector: '.x', dblclickWindow: 300 })
  *
  * DOM 约定：
- *   <a class="gallery-item-video" data-video="x.mp4">
+ *   <a class="gallery-item-video" data-video="x.mp4" data-fancybox="组名" href="x.mp4">
  *     <img src="静帧.jpg">  <video class="live-video" muted playsinline preload="none">
  *   </a>
  */
@@ -30,24 +34,23 @@
         this._clickTimer = null;
         this._lastItem = null;
         var self = this;
-        document.addEventListener('click', function (e) { self._handleClick(e); });
+        document.addEventListener('click', function (e) { self._handleClick(e); }, true);
     }
 
     LiveGallery.prototype._handleClick = function (e) {
-        var item = e.target.closest ? e.target.closest(this.opts.itemSelector) : null;
-        if (!item) return;
-        e.preventDefault();
-        e.stopPropagation();
+        var item = e.target && e.target.closest ? e.target.closest(this.opts.itemSelector) : null;
+        if (!item) return; // 非动态项：不干预，Fancybox 原生处理
 
-        // 双击（同 item 的第二次 click 落在窗口期内）
+        // 双击：第二击放行 → 事件冒泡给 Fancybox 原生打开（起始于本项）
         if (this._lastItem === item) {
             this._lastItem = null;
             clearTimeout(this._clickTimer);
             this._stop(item);
-            this._lightbox(item);
             return;
         }
-        // 第一次点击：等窗口期，未被第二击消费则视为单击
+        // 单击：capture 阶段拦截，阻断 Fancybox 委托
+        e.preventDefault();
+        e.stopPropagation();
         this._lastItem = item;
         var self = this;
         clearTimeout(this._clickTimer);
@@ -76,15 +79,6 @@
         var v = item.querySelector(this.opts.videoSelector);
         if (v) { v.pause(); v.currentTime = 0; }
         item.classList.remove('is-playing');
-    };
-
-    LiveGallery.prototype._lightbox = function (item) {
-        var src = item.getAttribute('data-video') || item.getAttribute('href');
-        if (global.Fancybox && typeof global.Fancybox.show === 'function') {
-            global.Fancybox.show([{ src: src, type: 'html5video' }]);
-        } else {
-            global.open(src, '_blank');
-        }
     };
 
     global.LiveGallery = LiveGallery;
