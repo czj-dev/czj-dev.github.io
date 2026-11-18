@@ -1,0 +1,1423 @@
+<!DOCTYPE html>
+<html lang="cn">
+    <!-- title -->
+
+
+    
+
+<!-- keywords -->
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="Nutcracker">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="Nutcracker">
+    
+        <meta name="keywords" content="Android,Live,Nutcracker">
+    
+    <meta name="description" content="">
+    <meta name="description" content="如何对待时间 瑞典心理学家林德沃(Lindvall)提出,具有平衡式时间视角的人，在内心具有一种“延伸的当下感（extended now ）,既可以“从当来审视过去”，也可以“视未来存于当下”，他应具有囊括“过去”和“未来的”包容性。 这种既不疏离也不漠视未来的当下感，显然与享乐主义视角差别明显，它显示了一个人对事件所应具有的责任感，既以更严肃（虽不一定是更迫切）的态度来对待时间。这与梁漱溟先生的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《精进：如何成为一个很厉害的人》阅读笔记 01">
+<meta property="og:url" content="https://czj-dev.github.io/2020/04/29/2020-04-29-book_read_01/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="如何对待时间 瑞典心理学家林德沃(Lindvall)提出,具有平衡式时间视角的人，在内心具有一种“延伸的当下感（extended now ）,既可以“从当来审视过去”，也可以“视未来存于当下”，他应具有囊括“过去”和“未来的”包容性。 这种既不疏离也不漠视未来的当下感，显然与享乐主义视角差别明显，它显示了一个人对事件所应具有的责任感，既以更严肃（虽不一定是更迫切）的态度来对待时间。这与梁漱溟先生的">
+<meta property="og:locale">
+<meta property="article:published_time" content="2020-04-29T14:39:00.000Z">
+<meta property="article:modified_time" content="2021-12-18T13:07:07.063Z">
+<meta property="article:author" content="Nutcracker">
+<meta property="article:tag" content="Book">
+<meta name="twitter:card" content="summary">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="icon" href="/assets/favicon.ico">
+    
+    <title>《精进：如何成为一个很厉害的人》阅读笔记 01 · Base Station</title>
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+    (function (w) {
+        'use strict'
+        // rel=preload support test
+        if (!w.loadCSS) {
+            w.loadCSS = function () {}
+        }
+        // define on the loadCSS obj
+        var rp = (loadCSS.relpreload = {})
+        // rel=preload feature support test
+        // runs once and returns a function for compat purposes
+        rp.support = (function () {
+            var ret
+            try {
+                ret = w.document.createElement('link').relList.supports('preload')
+            } catch (e) {
+                ret = false
+            }
+            return function () {
+                return ret
+            }
+        })()
+
+        // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+        // then change that media back to its intended value on load
+        rp.bindMediaToggle = function (link) {
+            // remember existing media attr for ultimate state, or default to 'all'
+            var finalMedia = link.media || 'all'
+
+            function enableStylesheet() {
+                link.media = finalMedia
+            }
+
+            // bind load handlers to enable media
+            if (link.addEventListener) {
+                link.addEventListener('load', enableStylesheet)
+            } else if (link.attachEvent) {
+                link.attachEvent('onload', enableStylesheet)
+            }
+
+            // Set rel and non-applicable media type to start an async request
+            // note: timeout allows this to happen async to let rendering continue in IE
+            setTimeout(function () {
+                link.rel = 'stylesheet'
+                link.media = 'only x'
+            })
+            // also enable media after 3 seconds,
+            // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+            setTimeout(enableStylesheet, 3000)
+        }
+
+        // loop through link elements in DOM
+        rp.poly = function () {
+            // double check this to prevent external calls from running
+            if (rp.support()) {
+                return
+            }
+            var links = w.document.getElementsByTagName('link')
+            for (var i = 0; i < links.length; i++) {
+                var link = links[i]
+                // qualify links to those with rel=preload and as=style attrs
+                if (
+                    link.rel === 'preload' &&
+                    link.getAttribute('as') === 'style' &&
+                    !link.getAttribute('data-loadcss')
+                ) {
+                    // prevent rerunning on link
+                    link.setAttribute('data-loadcss', true)
+                    // bind listeners to toggle media back
+                    rp.bindMediaToggle(link)
+                }
+            }
+        }
+
+        // if unsupported, run the polyfill
+        if (!rp.support()) {
+            // run once at least
+            rp.poly()
+
+            // rerun poly on an interval until onload
+            var run = w.setInterval(rp.poly, 500)
+            if (w.addEventListener) {
+                w.addEventListener('load', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            } else if (w.attachEvent) {
+                w.attachEvent('onload', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            }
+        }
+
+        // commonjs
+        if (typeof exports !== 'undefined') {
+            exports.loadCSS = loadCSS
+        } else {
+            w.loadCSS = loadCSS
+        }
+    })(typeof global !== 'undefined' ? global : this)
+</script>
+
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20211217" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="/css/dark.css?v=20211217" as="style">
+    <link rel="stylesheet" href="/css/dark.css" media="(prefers-color-scheme: dark)">
+    <link rel="stylesheet" href="/css/mobile.css?v=20211217" media="(max-width: 960px)">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js?v=20211217" as="script">
+    <link rel="preload" href="/scripts/dark.js?v=20211217" as="script">
+    <link rel="preload" href="/font/Oswald-Regular.ttf" as="font" crossorigin>
+    <link rel="preload" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" as="font" crossorigin>
+    <!-- algolia -->
+    
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ == undefined) {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js" />')
+        }
+    </script>
+    
+        <body class="post-body">
+    
+        <!-- header -->
+        <header class="header header-mobile">
+    <!-- top read progress line -->
+    <div class="header-element">
+        <div class="read-progress"></div>
+    </div>
+    <!-- sidebar menu button -->
+    <div class="header-element">
+        
+            <div class="header-sidebar-menu">
+        
+            
+                <div style="padding-left: 1px;">&#xe775;</div>
+            
+        </div>
+    </div>
+    <!-- header actions -->
+    <div class="header-actions">
+        <!-- theme mode switch button -->
+        <span class="header-theme-btn header-element">
+            <i class="fas fa-adjust"></i>
+        </span>
+        <!-- back to home page text -->
+        <span class="home-link header-element">
+            <a href=/>Base Station</a>
+        </span>
+    </div>
+    <!-- toggle banner for post layout -->
+    
+        
+            <div class="banner">
+        
+            <div class="blog-title header-element">
+                <a href="/">Base Station</a>
+            </div>
+            <div class="post-title header-element">
+                <a href="#" class="post-name">《精进：如何成为一个很厉害的人》阅读笔记 01</a>
+            </div>
+        </div>
+    
+</header>
+
+        <!-- fixed footer -->
+        <footer class="footer-fixed">
+    <!-- back to top button -->
+    <div class="footer-fixed-element">
+        
+            <div class="back-top back-top-hidden">
+        
+        
+            <div>&#xe639;</div>
+        
+        </div>
+    </div>
+</footer>
+
+        <!-- wrapper -->
+        <div class="wrapper">
+            <div class="site-intro" style="
+
+
+
+
+
+
+
+    height:50vh;
+
+">
+    
+    <!-- 主页  -->
+    
+        
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/img/home-bg-o.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+                《精进：如何成为一个很厉害的人》阅读笔记 01
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+                
+                    第一章：时间
+                
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页 meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="Book">Book</a>
+    
+</div>
+
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">2.7k</span>阅读时长: <span class="post-count reading-time">9 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <!-- 撰写日期 -->
+                    <span class="iconfont-archer post-intro-calander">&#xe676;</span>
+                    <span class="post-intro-time">2020/04/29</span>
+                    <!-- busuanzi -->
+                    
+                        <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                            <span class="iconfont-archer post-intro-busuanzi">&#xe602;</span>
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    
+                    <!-- 文章分享 -->
+                    <span class="share-wrapper">
+                        <span class="iconfont-archer share-icon">&#xe71d;</span>
+                        <span class="share-text">Share</span>
+                        <ul class="share-list">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+
+            <script>
+  // get user agent
+  function getBrowserVersions() {
+    var u = window.navigator.userAgent
+    return {
+      userAgent: u,
+      trident: u.indexOf('Trident') > -1, //IE内核
+      presto: u.indexOf('Presto') > -1, //opera内核
+      webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+      gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+      mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+      ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+      android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+      iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+      iPad: u.indexOf('iPad') > -1, //是否为iPad
+      webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+      weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+      uc: u.indexOf('UCBrowser') > -1, //是否为android下的UC浏览器
+    }
+  }
+  var browser = {
+    versions: getBrowserVersions(),
+  }
+  console.log('userAgent: ' + browser.versions.userAgent)
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded')
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document
+        .getElementsByClassName('intro-title')[0]
+        .classList.add('intro-fade-in')
+      document
+        .getElementsByClassName('intro-subtitle')[0]
+        .classList.add('intro-fade-in')
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in')
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb() {
+    if (browser.versions.uc) {
+      console.log('UCBrowser')
+      fontLoaded()
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular'],
+        },
+        loading: function () {
+          // 所有字体开始加载
+          // console.log('font loading');
+        },
+        active: function () {
+          // 所有字体已渲染
+          fontLoaded()
+        },
+        inactive: function () {
+          // 字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout')
+          fontLoaded()
+        },
+        timeout: 5000, // Set the timeout to two seconds
+      })
+    }
+  }
+
+  function asyncErr() {
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document,
+      t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0]
+    o.src = u
+    if (cb) {
+      o.addEventListener(
+        'load',
+        function (e) {
+          cb(null, e)
+        },
+        false
+      )
+    }
+    if (err) {
+      o.addEventListener(
+        'error',
+        function (e) {
+          err(null, e)
+        },
+        false
+      )
+    }
+    s.parentNode.insertBefore(o, s)
+  }
+
+  var asyncLoadWithFallBack = function (arr, success, reject) {
+    var currReject = function () {
+      reject()
+      arr.shift()
+      if (arr.length) async(arr[0], success, currReject)
+    }
+
+    async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack(
+    [
+      'https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js',
+      'https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js',
+      "/lib/webfontloader.min.js",
+    ],
+    asyncCb,
+    asyncErr
+  )
+</script>
+
+            <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+            <div class="container container-unloaded">
+                <main class="main post-page">
+    <article class="article-entry">
+        <h2 id="如何对待时间"><a href="#如何对待时间" class="headerlink" title="如何对待时间"></a>如何对待时间</h2><blockquote>
+<p>瑞典心理学家林德沃(Lindvall)提出,具有平衡式时间视角的人，在内心具有一种“延伸的当下感（extended now ）,既可以“从当来审视过去”，也可以“视未来存于当下”，他应具有囊括“过去”和“未来的”包容性。</p>
+<p>这种既不疏离也不漠视未来的当下感，显然与享乐主义视角差别明显，它显示了一个人对事件所应具有的责任感，既以更严肃（虽不一定是更迫切）的态度来对待时间。这与梁漱溟先生的“郑重”一说便不谋而合了。近百年前人文学者的自我审思与新近基于实证的科学观点实现了相会，这是件多么奇妙的事！</p>
+</blockquote>
+<p>林德沃提出的对待时间的十条建议：</p>
+<ol>
+<li><p>生活在当下——不瞻前顾后，不左顾右盼，不患得患失；</p>
+</li>
+<li><p>严肃地对待时间——审慎、郑重地思考时间对我们的价值并用好它；</p>
+</li>
+<li><p>留意自己拥有的空间并享受它——找到自己的“独享时刻”，不要疲于奔命</p>
+</li>
+<li><p>反思自己与其他人的时间视角——认识到自己和他人时间视角的异同，换位思考；</p>
+</li>
+<li><p>从现在出发联结过去——过去并没有远去，它对今天仍具有意义；</p>
+</li>
+<li><p>并不完全沉浸于过去——比过去更重要的是现在</p>
+</li>
+<li><p>制定实现目标的计划——未来视角让我们行动更加有序</p>
+</li>
+<li><p>平衡计划和非计划时间——由于随机性和不可预见因素的影响，我们的生活不能完全被计划，平衡计划和非计划就是在未来视角和现在视角之间找到平衡点；</p>
+</li>
+<li><p>视未来于当下——未来并非遥不可及，它就出现在即将到来的每一分每一秒；</p>
+</li>
+<li><p>对未来保持积极的态度——既然未来难以预测，那么以积极的心态面对它们让我们在当下更有行动力。</p>
+</li>
+</ol>
+<h2 id="制定合理的远期未来和近期未来"><a href="#制定合理的远期未来和近期未来" class="headerlink" title="制定合理的远期未来和近期未来"></a>制定合理的远期未来和近期未来</h2><blockquote>
+<p>远期未来的视角下，人们倾向用抽象、概括的方式去思考。这种思考视角常常缺乏细节，更多考虑的是这件事情对自己的价值和意义,从而导致缺乏可行性。</p>
+<p>而在近期未来的视角下，人们更容易做到具体的情境中去考虑，想得到更多的不是“要不要做”而是“怎么去做”。这种思考视角虽然会考虑事情的可行性和实用性，但是它会让我们倾向于去做可行性更高、更容易实现的事情，而回避更有意义同时也更有挑战性的事。</p>
+</blockquote>
+<p>想要处理好 “远期未来”和“近期未来”，我们可以采用下面两个策略：</p>
+<ol>
+<li>近期未来要为远期未来服务，使得远期未来的目标更加具体化、情景化和可实施。</li>
+<li>降低近期未来中的 “非期望性行为” 的便利性，主动增加挑战的难度。例如人为的给自己的一些行为增设门槛，来达到增加获得目标成本。</li>
+</ol>
+<h2 id="收益半衰期"><a href="#收益半衰期" class="headerlink" title="收益半衰期"></a>收益半衰期</h2><h4 id="什么是半衰期"><a href="#什么是半衰期" class="headerlink" title="什么是半衰期"></a>什么是半衰期</h4><blockquote>
+<p>半衰期最早是物理学中的概念，指放射性元素中半数原子核发生衰变所需要的时间，半衰期越短，衰变越快；半衰期越长，衰变越慢。不同元素的半衰期差别非常大，短的不到0.01 秒，长的可达几亿年。后来，许多其他学科也沿用了半衰期的概念。医学中，药物的半衰期是指药物在生物体内浓度下降一半所需要的时间。元素的半衰期属于该元素的固有属性，不受个体影响，而药物的浓度半衰期则会因为个体体质不同而有所差异。</p>
+<p>在生活中我们常常只关注到到一件事情在发生时带给我们的即刻的好处，而忽略了这一好处是否可以持续继续下去，产生长期的效果。</p>
+</blockquote>
+<h4 id="通过收益指和半衰期来指定计划"><a href="#通过收益指和半衰期来指定计划" class="headerlink" title="通过收益指和半衰期来指定计划"></a>通过收益指和半衰期来指定计划</h4><p>通过引入收益值与半衰期相结合，我们可以将事情像四象限法则那样分为四个角度，分别是：</p>
+<ul>
+<li><strong>高收益、长半衰期</strong></li>
+<li><strong>高收益、短半衰期</strong></li>
+<li><strong>低收益、长半衰期</strong></li>
+<li><strong>低收益、短半衰期</strong></li>
+</ul>
+<p>相比四象限法则来说，通过收益和半衰期制定的计划矛盾更小，但是更为抽象。这就需要我们在具体实行的时候需要有行动规则：</p>
+<ul>
+<li>收益高地无关紧要，只要不是短半衰期的事情，只要这个收益可以被累加，就尽管去做</li>
+<li>不要只盯着那些“高大上”的事情。一些不重要、不紧急的事情，只要对你有长期的益处、仍旧可以用。</li>
+</ul>
+<h4 id="通过收益指和半衰期来辨别事物"><a href="#通过收益指和半衰期来辨别事物" class="headerlink" title="通过收益指和半衰期来辨别事物"></a>通过收益指和半衰期来辨别事物</h4><p><strong>我们可以用半衰期看自己，也可以用来看他人、看历史。</strong></p>
+<blockquote>
+<p>时间自有偏爱。回首历史，一些杰出的人物在历史上留下了独特的印记。即便星移斗转，时移世易，他们以及他们各自的经典作品，仍被今天的人记起和谈论。</p>
+</blockquote>
+<p>所以那些经典的书籍读物,它们自己本身已经通过时间的发酵，散发出阵阵的书香，证明了自己具有超长半衰期且有较高的附加价值。</p>
+<p>而微博、朋友圈、碎片化阅读等等，很多明显无法通过时间值尺的筛选。通过半衰期的角度去筛选过滤信息，你就有更多富裕的时间、精力和头脑来主动寻找和吸收有价值的信息。</p>
+<blockquote>
+<p>如果我们多了解那些历史长河中的杰出人物，就会发现他们往往是不为潮流所动的人，升值常常带点偏执，而且他们都发下了自己独特的才能，并且努力地、义无反顾去把这个才能发挥至最大。“像那些伟大的先贤看齐”，并非是要亦步亦趋地重走那些先贤的道路，毕竟时代已全然不同，而是选择像他们一样，走一条自主选择并且可以一往无前的路。</p>
+<p>当我们用“时间之尺”丈量历史中的自己，与那些杰出人士相遇、交谈，你就会发现，与同时代人做比较相比没那么重要，更没有必要在这种比较重自我怀疑、自怨自艾。人生那么短，路有那么长，你好好好走就是了。</p>
+</blockquote>
+<h2 id="时间管理"><a href="#时间管理" class="headerlink" title="时间管理"></a>时间管理</h2><h4 id="起源"><a href="#起源" class="headerlink" title="起源"></a>起源</h4><blockquote>
+<p>时间如一套严苛的规则，规范着我们的生活：什么时候睡觉不仅取决于有没有睡意，也取决于时钟所标识的时间；什么时候吃饭不仅取决于有没有饿，也取决于有没有到 “饭点” 。这种情况可不是在人类早期文明便有的，据美国社会哲学家刘易斯 芒福德在《技术与文明》中所述，机械时钟的最早使用始于 13 世纪欧洲的寺院，用于帮助人们准时参加宗教活动。而直到公元 1345 年左右，欧洲人才开始普遍接受一小时分为 60 分钟，把一分钟分成 60 秒。也是从那时起，时间作为一种社会活动的参照框架，把人的生活从大自然的背景中分离出来。之后的几个世纪，时钟走出宗教领域，在人类的经济活动中扮演了关键角色。芒福德甚至认为，工业革命中最关键的机器不是蒸汽机，而是时钟。而到了现代社会，时间更是被推上了神坛。</p>
+<p>在这种背景下，“时间管理”应运而生，还成了今天的一门显学。它教我们如何设定任务目标，如何将任务分解，如何区分重要和紧急，如何把事情列成清单并设定好时间，如何把控好自己的工作效率….这些方法无疑都有一定的作用，但不过都是”技术层面的解决”。</p>
+<p>所谓 “技术层面的解决” ，是指对问题的表面部分实施干预，而忽视了问题深处的根源。其后果是，问题的表面部分在短暂消失后又再次出现，甚至愈演愈烈。时间管理中提倡的很多办法，并不是要让人们逃离现代境遇所构造的牢笼，反而是要对其进行技术性强化，教会我们更加精细更加严苛的分隔生命时间。</p>
+<p>我们原本就是因为快而痛苦，可时间管理却教我们更快。</p>
+</blockquote>
+<h4 id="利弊"><a href="#利弊" class="headerlink" title="利弊"></a>利弊</h4><p>时间管理并不是完全负面的，在一些情况下对于提升人们的效率和工作业绩有一定的帮助，但是人们的主观感受却常常于此并不一致，会依然觉得时间不够用，事情永远都做不完，甚至为为此心力交瘁。因为人们无法完全预估到未来会发生的事情，从而导致计划外的事情发生迫使原本的计划在既定期限难以完成或是勉强完成。这种计划即使能运行下去，心理负荷也会越来越大，到最后齿轮崩坏。 </p>
+<h4 id="平衡"><a href="#平衡" class="headerlink" title="平衡"></a>平衡</h4><ul>
+<li><strong>区分快慢</strong> 做事情想清楚什么应该求 “快”，什么事情应该求 “慢”。</li>
+<li><strong>分配深浅（时间块）</strong> 如番茄时钟一样（类比不大准确，番茄时钟必须以 25 分钟为一个时间块显示在这套体系中是不大合理的），我们需要给求快的事件一个完整时间块，在沉浸式的模式中，我们的效率无疑是非常高的，而慢的事件我们也不应该过于苛责，从而获得高质量的休闲满足</li>
+</ul>
+<h2 id="Tips"><a href="#Tips" class="headerlink" title="Tips:"></a>Tips:</h2><ul>
+<li><strong>用平衡的观点看待过去、现在和未来，用郑重的态度过好当下的生活，并联结起过去和未来。</strong></li>
+<li><strong>明确工作和生活的界限，用未来视角工作，用享乐主义生活</strong></li>
+<li><strong>使用 “时间之尺” ，审视时间的长期价值，尽可能的删减非必要事件</strong></li>
+<li><strong>让“远期未来” 更加具体，为 “近期未来”挑战</strong> </li>
+<li><strong>把握好做事的节奏，区分“求快”的事件和“求慢”的事件。</strong></li>
+<li><strong>提升时间使用的 “深度” ，减少被动式休闲的比例，保持至少一项长期的业余爱好</strong></li>
+</ul>
+
+    </article>
+    <!-- license -->
+    
+        <div class="license-wrapper">
+            <p>原文作者：<a href="https://czj-dev.github.io">Nutcracker</a>
+            <p>原文链接：<a href="https://czj-dev.github.io/2020/04/29/2020-04-29-book_read_01/">https://czj-dev.github.io/2020/04/29/2020-04-29-book_read_01/</a>
+            <p>发表日期：<a href="https://czj-dev.github.io/2020/04/29/2020-04-29-book_read_01/">April 29th 2020, 10:39:00 pm</a>
+            <p>更新日期：<a href="https://czj-dev.github.io/2020/04/29/2020-04-29-book_read_01/">December 18th 2021, 9:07:07 pm</a>
+            <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2020/04/30/2020-04-30-dart_basic/" title="Dart 实践（一）">
+                    <div class="nextTitle">Dart 实践（一）</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2020/04/27/2020-04-27-flutter_application/" title="Flutter 实践">
+                    <div class="prevTitle">Flutter 实践</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- comment -->
+    
+        <div class="post-comment">
+            <!-- 来必力 City 版安装代码 -->
+
+
+            
+
+            
+
+            
+
+            <!-- utteranc评论 -->
+
+
+            <!-- partial('_partial/comment/changyan') -->
+            <!--PC版-->
+
+
+            
+            
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+    <div id="comment"></div>
+    <script>
+        new Valine({
+            el: '#comment',
+            notify:false,
+            verify:false,
+            appId: "IiPsw8Ob4JVxOMx3gayw548j-gzGzoHsz",
+            appKey: "0mXzTUSWpgkGqAO5TN7XfdtN",
+            placeholder: "",
+            path:window.location.pathname,
+            avatar:'mm'
+        });
+    </script>
+
+
+        </div>
+    
+    <!-- timeliness note -->
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+    
+    <!-- Mathjax -->
+    
+</main>
+
+                <!-- profile -->
+                
+            </div>
+            <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+        <div class="social">
+            
+    
+        
+            
+                <a href="mailto:mrchenzhaojun@gmail.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/czj-dev" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a href="https://www.zhihu.com/people/chen-zhao-jun-27" class="iconfont-archer zhihu" target="_blank" title=zhihu></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a href="https://steamcommunity.com/id/Mr9527/" class="iconfont-archer steam" target="_blank" title=steam></a>
+            
+        
+    
+        
+    
+        
+    
+
+
+        </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- website approve for Chinese user -->
+    
+    <!-- 不蒜子  -->
+    
+        <div class="busuanzi-container">
+            
+             
+                <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+            
+        </div>
+    	
+</footer>
+
+        </div>
+        <!-- toc -->
+        
+            <div class="toc-wrapper toc-wrapper-loding" style=
+
+
+
+
+
+
+
+    top:50vh;
+
+>
+                <div class="toc-catalog">
+                    <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+                </div>
+                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E5%AF%B9%E5%BE%85%E6%97%B6%E9%97%B4"><span class="toc-number">1.</span> <span class="toc-text">如何对待时间</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%B6%E5%AE%9A%E5%90%88%E7%90%86%E7%9A%84%E8%BF%9C%E6%9C%9F%E6%9C%AA%E6%9D%A5%E5%92%8C%E8%BF%91%E6%9C%9F%E6%9C%AA%E6%9D%A5"><span class="toc-number">2.</span> <span class="toc-text">制定合理的远期未来和近期未来</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%94%B6%E7%9B%8A%E5%8D%8A%E8%A1%B0%E6%9C%9F"><span class="toc-number">3.</span> <span class="toc-text">收益半衰期</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%8D%8A%E8%A1%B0%E6%9C%9F"><span class="toc-number">3.0.1.</span> <span class="toc-text">什么是半衰期</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%80%9A%E8%BF%87%E6%94%B6%E7%9B%8A%E6%8C%87%E5%92%8C%E5%8D%8A%E8%A1%B0%E6%9C%9F%E6%9D%A5%E6%8C%87%E5%AE%9A%E8%AE%A1%E5%88%92"><span class="toc-number">3.0.2.</span> <span class="toc-text">通过收益指和半衰期来指定计划</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%80%9A%E8%BF%87%E6%94%B6%E7%9B%8A%E6%8C%87%E5%92%8C%E5%8D%8A%E8%A1%B0%E6%9C%9F%E6%9D%A5%E8%BE%A8%E5%88%AB%E4%BA%8B%E7%89%A9"><span class="toc-number">3.0.3.</span> <span class="toc-text">通过收益指和半衰期来辨别事物</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%97%B6%E9%97%B4%E7%AE%A1%E7%90%86"><span class="toc-number">4.</span> <span class="toc-text">时间管理</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%B5%B7%E6%BA%90"><span class="toc-number">4.0.1.</span> <span class="toc-text">起源</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%A9%E5%BC%8A"><span class="toc-number">4.0.2.</span> <span class="toc-text">利弊</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B9%B3%E8%A1%A1"><span class="toc-number">4.0.3.</span> <span class="toc-text">平衡</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Tips"><span class="toc-number">5.</span> <span class="toc-text">Tips:</span></a></li></ol>
+            </div>
+        
+        <!-- sidebar -->
+        <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+        <div class="sidebar-panel-archives">
+    <!-- 在 ejs 中将 archive 按照时间排序 -->
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 26
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+        
+            
+            
+            <div class="archive-year"> 2023 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/22</span>
+            <a class="archive-post-title" href="/2023/02/22/2023-02-20-android_preload_review/">Android 列表预加载分析</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2021 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/24</span>
+            <a class="archive-post-title" href="/2021/03/24/2021-03-25-thinking/">庸碌</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2020 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/22</span>
+            <a class="archive-post-title" href="/2020/05/22/2020-05-22-note_wiki_widget/">官方文档的重要性</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/11</span>
+            <a class="archive-post-title" href="/2020/05/11/2020-05-11-flutter_depth/">Flutter 深入探索</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/30</span>
+            <a class="archive-post-title" href="/2020/04/30/2020-04-30-dart_basic/">Dart 实践（一）</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/29</span>
+            <a class="archive-post-title" href="/2020/04/29/2020-04-29-book_read_01/">《精进：如何成为一个很厉害的人》阅读笔记 01</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2020/04/27/2020-04-27-flutter_application/">Flutter 实践</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2019 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/15</span>
+            <a class="archive-post-title" href="/2019/10/15/2019-10-15-retrofit-and-okHttp/">Retrofit与OkHttp源码解析</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/11</span>
+            <a class="archive-post-title" href="/2019/10/11/2019-10-11-HTTP_The_Definitive_Guide/">HTTP 权威指南阅读笔记（一）</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2018 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/26</span>
+            <a class="archive-post-title" href="/2018/05/26/2018-05-06-gradle_learning_notes_2/">Gradle的架构和api</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/28</span>
+            <a class="archive-post-title" href="/2018/04/28/2018-05-26-gradle_learning_notes_1/">Gradle的基础概念</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/19</span>
+            <a class="archive-post-title" href="/2018/04/19/2018-04-19-memory_management/">Android 内存管理机制</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/01</span>
+            <a class="archive-post-title" href="/2018/04/01/2018-04-04-andorid_thread/">Android 的线程和线程池</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/25</span>
+            <a class="archive-post-title" href="/2018/03/25/2018-03-25-andorid_view_working_principle/">Android View 工作原理</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/19</span>
+            <a class="archive-post-title" href="/2018/03/19/2018-03-19-andorid_view_event/">Android View 事件体系</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/18</span>
+            <a class="archive-post-title" href="/2018/03/18/2018-03-18-andorid_ipc/">Android IPC 机制</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/15</span>
+            <a class="archive-post-title" href="/2018/03/15/2018-03-15-andorid_exploration_book_read_01/">Android 艺术开发探索笔记</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2017 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/19</span>
+            <a class="archive-post-title" href="/2017/05/19/2017-05-19-android_databinding/">Data Binding学习笔记</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/08</span>
+            <a class="archive-post-title" href="/2017/03/08/2017-03-08-adapter/">适配器模式与外观模式</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/20</span>
+            <a class="archive-post-title" href="/2017/02/20/2017-02-20-factory/">工厂模式(factory Pettern)</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/08</span>
+            <a class="archive-post-title" href="/2017/02/08/2017-02-08-decorator/">装饰者模式(Decorator)</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/07</span>
+            <a class="archive-post-title" href="/2017/02/07/2017-02-07-observer/">观察者模式(Observer Pettern)</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/06</span>
+            <a class="archive-post-title" href="/2017/02/06/2017-02-06-annotation/">Android自定义注解</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/04</span>
+            <a class="archive-post-title" href="/2017/02/04/2017-02-04-Strategy/">策略模式(Strategy Pettern)</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/24</span>
+            <a class="archive-post-title" href="/2017/01/24/2017-01-24-rxjava_learning_notes/">RxAndroid学习笔记</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/23</span>
+            <a class="archive-post-title" href="/2017/01/23/2017-01-23-new_start/">Hello Blog</a>
+        </li>
+    
+    </div>
+</div>
+
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+        
+            <span class="sidebar-tag-name" data-tags="生活">
+                <span class="iconfont-archer">&#xe606;</span>
+                生活
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Android">
+                <span class="iconfont-archer">&#xe606;</span>
+                Android
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="基础">
+                <span class="iconfont-archer">&#xe606;</span>
+                基础
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Booklet">
+                <span class="iconfont-archer">&#xe606;</span>
+                Booklet
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Note">
+                <span class="iconfont-archer">&#xe606;</span>
+                Note
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Gradle">
+                <span class="iconfont-archer">&#xe606;</span>
+                Gradle
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="HTTP">
+                <span class="iconfont-archer">&#xe606;</span>
+                HTTP
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Flutter">
+                <span class="iconfont-archer">&#xe606;</span>
+                Flutter
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Book">
+                <span class="iconfont-archer">&#xe606;</span>
+                Book
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Dart">
+                <span class="iconfont-archer">&#xe606;</span>
+                Dart
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="RecyclerView">
+                <span class="iconfont-archer">&#xe606;</span>
+                RecyclerView
+            </span>
+        
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+        缺失模块，请参考主题文档进行安装配置：https://github.com/fi3ework/hexo-theme-archer#%E5%AE%89%E8%A3%85%E4%B8%BB%E9%A2%98
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+
+    </div>
+</div>
+
+        <!-- site-meta -->
+        <script>
+    var siteMetaRoot = "/"
+    if (siteMetaRoot === "undefined") {
+        siteMetaRoot = '/'
+    }
+    var siteMeta = {
+        url: "https://czj-dev.github.io",
+        root: siteMetaRoot,
+        author: "Nutcracker"
+    }
+</script>
+
+        <!-- import experimental options here -->
+        <!-- Custom Font -->
+
+
+        <!-- main func -->
+        <script src="/scripts/main.js?v=20211217"></script>
+        <!-- dark mode -->
+        <script src="/scripts/dark.js?v=20211217"></script>
+        <!-- fancybox -->
+        <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" defer></script>
+        <!-- algolia -->
+        
+        <!-- busuanzi -->
+        
+            <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+        
+        <!-- CNZZ -->
+        
+        <!-- async load share.js -->
+        
+            <script src="/scripts/share.js?v=20211217" async></script>
+        
+        <!-- mermaid -->
+        
+    </body>
+</html>
